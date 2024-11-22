@@ -128,17 +128,17 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
     //! Draws the clock tick marks around the outside edges of the screen.
     //! @param dc Device context
-    private function drawHashMarks(dc as Dc) as Void {
-        var width = dc.getWidth();
-        var height = dc.getHeight();
+    private function drawHashMarks(dc as Dc, numberOfHashes as Lang.Numeric, hashLength as Lang.Numeric, penWidth as Lang.Numeric, hashColor as Graphics.ColorType) as Void {
+
+        dc.setPenWidth(penWidth);
+        dc.setColor(hashColor, hashColor);
 
         // Draw hashmarks differently depending on screen geometry.
         if (System.SCREEN_SHAPE_ROUND == _screenShape) {
-            var outerRad = width / 2;
-            var innerRad = outerRad - 5;
+            var outerRad = dc.getWidth() / 2;
+            var innerRad = outerRad - hashLength;
             // Loop through each 1 minute block and draw tick marks.
-            dc.setPenWidth(1);
-            for (var i = 0; i <= 2 * Math.PI; i += (Math.PI / 30)) {
+            for (var i = 0; i <= 2 * Math.PI; i += (2.0 * Math.PI / numberOfHashes)) {
                 // Partially unrolled loop to draw two tickmarks in 15 minute block.
                 var sY = outerRad + innerRad * Math.sin(i);
                 var eY = outerRad + outerRad * Math.sin(i);
@@ -146,6 +146,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
                 var eX = outerRad + outerRad * Math.cos(i);
                 dc.drawLine(sX, sY, eX, eY);
             }
+/*
             // Loop through each 5 minute block and draw tick marks.
             innerRad = outerRad - 20;
             for (var i = Math.PI / 6; i <= 11 * Math.PI / 6; i += (Math.PI / 6)) {
@@ -179,6 +180,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
                                 [upperX + 1, height - 12],
                                 [coords[i] + 1, height - 2]]);
             }
+*/
         }
     }
 
@@ -227,8 +229,9 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
                               [0, 0]]);
 */
         // Draw the tick marks around the edges of the screen
-        targetDc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_DK_GRAY);
-        drawHashMarks(targetDc);
+        drawHashMarks(targetDc, 12, 20, 5, Graphics.COLOR_WHITE);
+        drawHashMarks(targetDc, 60, 8, 1, Graphics.COLOR_WHITE);
+        drawHashMarks(targetDc, 24, 5, 5, Graphics.COLOR_BLUE);
 
         // Draw the do-not-disturb icon if we support it and the setting is enabled
         if (System.getDeviceSettings().doNotDisturb && (null != _dndIcon)) {
@@ -416,14 +419,14 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         var sX, sY;
         var eX, eY;
         var outerRad = width / 2;
-        var innerRad = outerRad - 7;
+        var innerRad = outerRad - 5;
         var stringMark = "00";
         
 		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
-		dc.setPenWidth(1);
+		dc.setPenWidth(2);
         // draw 24/360 tick marks.
         var hour=0;
-        for (var i = 0; i < 2 * Math.PI ; i += (Math.PI / 12)) {
+        for (var i = -Math.PI/2.0; i < 3 * Math.PI/2.0 ; i += (Math.PI / 12)) {
             hour++;
             sY = outerRad + innerRad * Math.sin(i);
             eY = outerRad + outerRad * Math.sin(i);
@@ -431,7 +434,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             eX = outerRad + outerRad * Math.cos(i);
             dc.drawLine(sX, sY, eX, eY);
             stringMark = hour.toLong();
-            dc.drawText(sX, sY, Graphics.FONT_XTINY, stringMark, Graphics.TEXT_JUSTIFY_CENTER);
+//            dc.drawText(sX, sY, Graphics.FONT_XTINY, stringMark, Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 

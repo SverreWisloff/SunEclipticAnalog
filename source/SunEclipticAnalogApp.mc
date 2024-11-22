@@ -51,4 +51,6 @@ class SunEclipticAnalogWatch extends Application.AppBase {
     public function getSettingsView() as [Views] or [Views, InputDelegates] or Null {
         return [new $.SunEclipticAnalogSettingsView(), new $.SunEclipticAnalogSettingsDelegate()];
     }
+
+   
 }
