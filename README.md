@@ -47,10 +47,10 @@ a mc-fork: https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - 20241113: Establised. Copied from  `Sample`. API 1.2. Watches with circle-face.
 
 ## TODO
-- [] Calculate the size of graphic elements (clock hands) proportional to the clock's size (in pixels)
-- [] Draw sun to background
-- [] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
-- [] Find SunCalc in different languages to read how other projects forks suncalc
+- [ ] Calculate the size of graphic elements (clock hands) proportional to the clock's size (in pixels)
+- [ ] Draw sun to background
+- [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
+- [ ] Find SunCalc in different languages to read how other projects forks suncalc
 - [x] How to calculate sun trajectory?
 - [x] Lære dato / tid i monkey-c
 - [x] Create a *debug* watchface where the solar calculations can be developed and tested.
