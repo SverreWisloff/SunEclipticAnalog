@@ -35,6 +35,9 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         _screenShape = System.getDeviceSettings().screenShape;
         _fullScreenRefresh = true;
         _partialUpdatesAllowed = (WatchUi.WatchFace has :onPartialUpdate);
+
+        System.println("::initialize");
+
     }
 
     //! Configure the layout of the watchface for this device
@@ -146,41 +149,6 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
                 var eX = outerRad + outerRad * Math.cos(i);
                 dc.drawLine(sX, sY, eX, eY);
             }
-/*
-            // Loop through each 5 minute block and draw tick marks.
-            innerRad = outerRad - 20;
-            for (var i = Math.PI / 6; i <= 11 * Math.PI / 6; i += (Math.PI / 6)) {
-                // Partially unrolled loop to draw two tickmarks in 15 minute block.
-                var sY = outerRad + innerRad * Math.sin(i);
-                var eY = outerRad + outerRad * Math.sin(i);
-                var sX = outerRad + innerRad * Math.cos(i);
-                var eX = outerRad + outerRad * Math.cos(i);
-                dc.drawLine(sX, sY, eX, eY);
-                i += Math.PI / 6;
-                sY = outerRad + innerRad * Math.sin(i);
-                eY = outerRad + outerRad * Math.sin(i);
-                sX = outerRad + innerRad * Math.cos(i);
-                eX = outerRad + outerRad * Math.cos(i);
-                dc.drawLine(sX, sY, eX, eY);
-            }
-        } else {
-            // TODO: HANDLE A RECT WATCH
-            var coords = [0, width / 4, (3 * width) / 4, width];
-            for (var i = 0; i < coords.size(); i++) {
-                var dx = ((width / 2.0) - coords[i]) / (height / 2.0);
-                var upperX = coords[i] + (dx * 10);
-                // Draw the upper hash marks.
-                dc.fillPolygon([[coords[i] - 1, 2],
-                                [upperX - 1, 12],
-                                [upperX + 1, 12],
-                                [coords[i] + 1, 2]]);
-                // Draw the lower hash marks.
-                dc.fillPolygon([[coords[i] - 1, height - 2],
-                                [upperX - 1, height - 12],
-                                [upperX + 1, height - 12],
-                                [coords[i] + 1, height - 2]]);
-            }
-*/
         }
     }
 
@@ -196,11 +164,33 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         // TODO - Draw sun to background
     }
 
+    public function drawPolygon(dc as Dc, points as Lang.Array<Graphics.Point2D>) as Void {
+        if (points.size() > 2) {
+            // Draw outline
+            for (var i = 0; i < points.size(); i++) {
+                var endX, endY;
+                var startX = points[i][0];
+                var startY = points[i][1];
+                if (i < points.size()-1 ){
+                    endX = points[i+1][0];
+                    endY = points[i+1][1];
+                }
+                else{
+                    endX = points[0][0];
+                    endY = points[0][1];
+                }
+                dc.drawLine(startX, startY, endX, endY);
+            }
+        }
+    }
+
     //! Handle the update event
     //! @param dc Device context
     public function onUpdate(dc as Dc) as Void {
         var clockTime = System.getClockTime();
         var targetDc = null;
+
+        System.println("::onUpdate");
 
         // We always want to refresh the full screen when we get a regular onUpdate call.
         _fullScreenRefresh = true;
@@ -219,19 +209,15 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         // Fill the entire background with Black.
         targetDc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_WHITE);
         targetDc.fillRectangle(0, 0, dc.getWidth(), dc.getHeight());
-
 /*
         // Draw a grey triangle over the upper right half of the screen.
         targetDc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_DK_GRAY);
-        targetDc.fillPolygon([[0, 0],
-                              [targetDc.getWidth(), 0],
-                              [targetDc.getWidth(), targetDc.getHeight()],
-                              [0, 0]]);
+        targetDc.fillPolygon([[0, 0],[targetDc.getWidth(), 0],[targetDc.getWidth(), targetDc.getHeight()],[0, 0]]);
 */
         // Draw the tick marks around the edges of the screen
-        drawHashMarks(targetDc, 12, 20, 5, Graphics.COLOR_WHITE);
-        drawHashMarks(targetDc, 60, 8, 1, Graphics.COLOR_WHITE);
-        drawHashMarks(targetDc, 24, 5, 5, Graphics.COLOR_BLUE);
+        drawHashMarks(targetDc, 12, 20, 3, Graphics.COLOR_WHITE);  //12 Houre marks
+        drawHashMarks(targetDc, 60, 8, 1, Graphics.COLOR_LT_GRAY); //60 Minute marks
+        //drawHashMarks(targetDc, 24, 3, 3, Graphics.COLOR_BLUE);  //24 Houre (sun) marks
 
         // Draw the do-not-disturb icon if we support it and the setting is enabled
         if (System.getDeviceSettings().doNotDisturb && (null != _dndIcon)) {
@@ -246,13 +232,17 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             var hourHandAngle = (((clockTime.hour % 12) * 60) + clockTime.min);
             hourHandAngle = hourHandAngle / (12 * 60.0);
             hourHandAngle = hourHandAngle * Math.PI * 2;
-            targetDc.fillPolygon(generateHandCoordinates(_screenCenterPoint, hourHandAngle, HOUR_HAND_LENGTH, 0, dc.getWidth() / 50));
+            targetDc.fillPolygon(generateHandCoordinates(_screenCenterPoint, hourHandAngle, HOUR_HAND_LENGTH/2.5, 0, dc.getWidth() / 30));
+            drawPolygon(targetDc, generateHandCoordinates(_screenCenterPoint, hourHandAngle, HOUR_HAND_LENGTH, 0, dc.getWidth() / 30));
+            System.println("draw hour hand");
         }
 
         if (_screenCenterPoint != null) {
             // Draw the minute hand.
             var minuteHandAngle = (clockTime.min / 60.0) * Math.PI * 2;
-            targetDc.fillPolygon(generateHandCoordinates(_screenCenterPoint, minuteHandAngle, MINUTE_HAND_LENGTH, 0, dc.getWidth() / 80));
+            targetDc.fillPolygon(generateHandCoordinates(_screenCenterPoint, minuteHandAngle, MINUTE_HAND_LENGTH/2.5, 0, dc.getWidth() / 40));
+            drawPolygon(targetDc, generateHandCoordinates(_screenCenterPoint, minuteHandAngle, MINUTE_HAND_LENGTH, 0, dc.getWidth() / 40));
+            System.println("draw minute hand");
         }
 
         // Draw the arbor in the center of the screen.
@@ -306,6 +296,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
             if (_screenCenterPoint != null) {
                 dc.fillPolygon(generateHandCoordinates(_screenCenterPoint, secondHand, SECOND_HAND_LENGTH, 20, dc.getWidth() / 120));
+                System.println("draw second hand");
             }
         }
 
@@ -340,6 +331,8 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         // If we're not doing a full screen refresh we need to re-draw the background
         // before drawing the updated second hand position. Note this will only re-draw
         // the background in the area specified by the previously computed clipping region.
+        System.println("::onPartialUpdate");
+
         if (!_fullScreenRefresh) {
             drawBackground(dc);
         }
@@ -358,6 +351,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             // Draw the second hand to the screen.
             dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
             dc.fillPolygon(secondHandPoints);
+            System.println("draw second hand");      
         }
     }
 
@@ -396,9 +390,10 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     //! second before outputting the new one.
     //! @param dc Device context
     private function drawBackground(dc as Dc) as Void {
-        System.println("::drawBackground");
         var width = dc.getWidth();
         var height = dc.getHeight();
+
+        System.println("::drawBackground");
 
         // If we have an offscreen buffer that has been written to
         // draw it to the screen.
@@ -420,7 +415,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         var eX, eY;
         var outerRad = width / 2;
         var innerRad = outerRad - 5;
-        var stringMark = "00";
+        var stringMark="00";
         
 		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
 		dc.setPenWidth(2);
