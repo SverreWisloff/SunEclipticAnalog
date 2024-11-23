@@ -54,3 +54,6 @@ a mc-fork: https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 [x] How to calculate sun trajectory?
 [x] Lære dato / tid i monkey-c
 [x] Create a *debug* watchface where the solar calculations can be developed and tested.
+
+## Screenshot
+![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/master/screenshot/screenshot_20241123.jpg?raw=true)
