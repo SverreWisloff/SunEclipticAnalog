@@ -11,6 +11,8 @@ import Toybox.System;
 import Toybox.Time;
 import Toybox.Time.Gregorian;
 import Toybox.WatchUi;
+import SunCalcModule;
+using Toybox.Activity;
 
 //! This implements an analog watch face
 //! Original design by Austen Harbour
@@ -152,16 +154,77 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         }
     }
 
-    //! Draws the clock tick marks around the outside edges of the screen.
-    //! @param dc Device context
     private function drawSun(dc as Dc) as Void {
-        var width = dc.getWidth();
-        var height = dc.getHeight();
-
-        var dataString = "123";
-//        dc.drawText(width / 2, height / 2, Graphics.FONT_SYSTEM_XTINY, dataString, Graphics.TEXT_JUSTIFY_CENTER);
-        drawString(dc, width / 2, height / 2, dataString);
+        var dataString = "Sun";
+       
         // TODO - Draw sun to background
+        var today = Time.today();
+        var now = Time.now();
+        var momentNow = new Time.Moment(now.value() );        
+        // for testing now = new Time.Moment(1483225200);
+        var moment = new Time.Moment(now.value() * Time.Gregorian.SECONDS_PER_DAY);
+        var days = ((moment.value() - today.value()) / Time.Gregorian.SECONDS_PER_DAY).toNumber();
+
+        var sunTimes = new solarTimes();
+        var lat = 59.837330;
+        var lng = 10.460190;
+        var altitude = 0.0;
+        var angle_deg = -0.833;
+
+        var activityInfo = Activity.getActivityInfo();
+        var location = activityInfo.currentLocation;
+        if (location!=null){
+            lat = location[0];
+            lng = location[1];
+            altitude = activityInfo.altitude;
+        }
+
+
+// TODO
+/*
+using Toybox.Position;
+using Toybox.System;
+Position.enableLocationEvents(Position.LOCATION_ONE_SHOT, method(:onPosition));
+
+function onPosition(info) {
+    var myLocation = info.position.toRadians();
+    System.println(myLocation[0]); // latitude (e.g. 0.678197)
+    System.println(myLocation[1]); // longitude (e.g -1.654588)
+}
+
+=========== OR =================
+
+        location = activityInfo.currentLocation;
+        if (location) {
+            location = activityInfo.currentLocation.toRadians();
+            app.Storage.setValue("location", location);
+        } else {
+            location = app.Storage.getValue("location");
+        }
+        if (location!=null){
+            suncalc.xxx;
+        }
+
+*/
+        sunTimes = SunCalcModule.getTimes(momentNow.value(), lat, lng, altitude, angle_deg);
+        System.println( SunCalcModule.PrintTime(sunTimes.solarRise, "Sun Rise: ") );
+        System.println( SunCalcModule.PrintTime(sunTimes.solarNoon, "Sun Noon: ") );
+        System.println( SunCalcModule.PrintTime(sunTimes.solarSet, "Sun Set: ") );  
+
+        dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarRise);
+        drawString(dc, dc.getWidth() / 2, 5*dc.getHeight() / 10, dataString);
+        dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarNoon);
+        drawString(dc, dc.getWidth() / 2, 6*dc.getHeight() / 10, dataString);
+        dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarSet);
+        drawString(dc, dc.getWidth() / 2, 7*dc.getHeight() / 10, dataString);
+
+        dc.setPenWidth(3);
+        dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_ORANGE);
+        var degreeStart = -30+90;
+        var degreeEnd = 40+90;
+        //LocaleTimeAsDesimalHour(sunTimes.solarRise); TODO!!!!!!!!!!!
+        dc.drawArc(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2-3, Graphics.ARC_COUNTER_CLOCKWISE , degreeStart, degreeEnd);
+
     }
 
     public function drawPolygon(dc as Dc, points as Lang.Array<Graphics.Point2D>) as Void {
@@ -279,10 +342,13 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         // Output the offscreen buffers to the main display if required.
         drawBackground(dc);
 
+        //Draw sun-info
+        drawSun(dc);        
+
         // Draw the battery percentage directly to the main screen.
         var dataString = (System.getSystemStats().battery + 0.5).toNumber().toString() + "%";
         dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(width / 2, 3 * height / 4, Graphics.FONT_XTINY, dataString, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(width / 2,  7*height / 20, Graphics.FONT_XTINY, dataString, Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_partialUpdatesAllowed) {
             // If this device supports partial updates and they are currently
@@ -407,8 +473,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             dc.drawBitmap(0, height / 4, _dateBuffer);
         } else {
             // Otherwise, draw it from scratch.
-            drawDateString(dc, width / 2, height / 4);
-            drawSun(dc);
+            // TODO - whats this?
         }
         
         var sX, sY;

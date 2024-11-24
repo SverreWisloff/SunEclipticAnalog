@@ -6,7 +6,6 @@
 
 *The goal of this project is to create an analog watchface that displays the sun's path on the sky*
 
-
 ## Resources
 
 A collection of Garmin applications: https://github.com/bombsimon/awesome-garmin
@@ -15,7 +14,8 @@ A collection of Garmin applications: https://github.com/bombsimon/awesome-garmin
 It seems that it is "leaflet" Agafonkin who is behind the suncalc code that is used almost everywhere to calculate sunrise, sunset, and the sun's path in the sky.
 Kildekoden finnes her: https://github.com/mourner/suncalc
 
-a mc-fork: https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
+Sundance: Both a  mc-fork, and rotated fonts for 24-hours at the perimeter  
+https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 
 ## Notes to self while coding
 
@@ -40,6 +40,7 @@ a mc-fork: https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - VS Code: Ctrl + Shift + P: `Monkey C`
 
 ## Log
+- 20241124: First verion of SunCalc.mc
 - 20241123: SunCalc.js written by 'Leaflet' Agafonkin
 - 20241122: drawHashMarks
 - 20241118: How to draw text rotated? [Scalable font](https://forums.garmin.com/developer/connect-iq/f/discussion/336765/bitmap-transformation) Samplecode: TrueTypeFonts. `drawAngledText` and `getVectorFont`. Deside to not rotate text because of lack of backward compatibility
@@ -51,6 +52,8 @@ a mc-fork: https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - [ ] Draw sun to background
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
 - [ ] Find SunCalc in different languages to read how other projects forks suncalc
+- [ ] Finishing first simple version of drawSun()
+- [ ] Get the position in a cheap way (without turning the GPS on)
 - [x] How to calculate sun trajectory?
 - [x] Lære dato / tid i monkey-c
 - [x] Create a *debug* watchface where the solar calculations can be developed and tested.
