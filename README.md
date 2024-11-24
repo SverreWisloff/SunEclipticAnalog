@@ -53,6 +53,7 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
 - [ ] Find SunCalc in different languages to read how other projects forks suncalc
 - [ ] Finishing first simple version of drawSun()
+- [ ] Draw arv and sun-noon
 - [ ] Get the position in a cheap way (without turning the GPS on)
 - [x] How to calculate sun trajectory?
 - [x] Lære dato / tid i monkey-c
