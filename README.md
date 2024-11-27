@@ -57,6 +57,7 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - [ ] Test south hemisphere
 - [ ] Test midnight sun and Polar Night
 - [ ] Finishing first simple version of drawSun()
+- [ ] Draw arv and sun-noon
 - [ ] Get the position in a cheap way (without turning the GPS on)
 - [x] How to calculate sun trajectory?
 - [x] Lære dato / tid i monkey-c
