@@ -5,6 +5,7 @@
 ## SunEclipticAnalog
 
 *The goal of this project is to create an analog watchface that displays the sun's path on the sky*
+Forutsetter rund klokke
 
 ## Resources
 
@@ -40,6 +41,7 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - VS Code: Ctrl + Shift + P: `Monkey C`
 
 ## Log
+- 20241127: Hour2clockCoord(), drawSun()
 - 20241124: First verion of SunCalc.mc
 - 20241123: SunCalc.js written by 'Leaflet' Agafonkin
 - 20241122: drawHashMarks
@@ -52,6 +54,8 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - [ ] Draw sun to background
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
 - [ ] Find SunCalc in different languages to read how other projects forks suncalc
+- [ ] Test south hemisphere
+- [ ] Test midnight sun and Polar Night
 - [ ] Finishing first simple version of drawSun()
 - [ ] Get the position in a cheap way (without turning the GPS on)
 - [x] How to calculate sun trajectory?
@@ -59,4 +63,4 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - [x] Create a *debug* watchface where the solar calculations can be developed and tested.
 
 ## Screenshot
-![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241123.png?raw=true)
+![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241127.png?raw=true)

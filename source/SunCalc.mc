@@ -189,9 +189,9 @@ module SunCalcModule
 
     function LocaleTimeAsDesimalHour( timeUnix ) {
         var Moment = new Time.Moment(timeUnix);
-        var desimalHour = 0.0;
+        var desimalHour = 0.0000001 ;
         var infoDate = Gregorian.info(Moment, Time.FORMAT_SHORT);
-        desimalHour = infoDate.hour + (infoDate.min/60);
+        desimalHour = infoDate.hour + (infoDate.min/60.0);
         // e.g. 18.73
         return desimalHour;
     }
@@ -200,11 +200,10 @@ module SunCalcModule
         var Moment = new Time.Moment(timeUnix);
         var infoDate = Gregorian.info(Moment, Time.FORMAT_SHORT);
         var dateString = Lang.format(
-            "$1$:$2$:$3$",
+            "$1$:$2$",
             [
                 infoDate.hour.format("%02u"),
-                infoDate.min.format("%02u"),
-                infoDate.sec.format("%02u"),
+                infoDate.min.format("%02u")
             ]
         );
         // e.g. "18:43:57"

@@ -154,8 +154,29 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         }
     }
 
+    //Calcululate from 24hour to clock-coord on perimeter
+    private function Hour2clockCoord(dc as Dc, desimal24hour as Lang.Double, offsetFromPerimeter as Lang.Numeric){
+        var angleRad = (desimal24hour / 12.0 * Math.PI) - 3.0*Math.PI/2.0 ;
+        var x = dc.getHeight()/2 + (dc.getHeight()/2 - offsetFromPerimeter)*Math.cos(angleRad);
+        var y = dc.getWidth()/2  + (dc.getWidth()/2  - offsetFromPerimeter)*Math.sin(angleRad);
+        
+        var coord = new Array<Double>[2];        
+        
+        coord[0]=x;
+        coord[1]=y;
+
+        return coord;
+        //   o-----------------> 
+        //   |\  angle       x
+        //   | \
+        //   |  \
+        //   |   \
+        //   V y
+        //     
+    }
+
     private function drawSun(dc as Dc) as Void {
-        var dataString = "Sun";
+        var dataString;
        
         // TODO - Draw sun to background
         var today = Time.today();
@@ -206,10 +227,11 @@ function onPosition(info) {
         }
 
 */
+
         sunTimes = SunCalcModule.getTimes(momentNow.value(), lat, lng, altitude, angle_deg);
-        System.println( SunCalcModule.PrintTime(sunTimes.solarRise, "Sun Rise: ") );
-        System.println( SunCalcModule.PrintTime(sunTimes.solarNoon, "Sun Noon: ") );
-        System.println( SunCalcModule.PrintTime(sunTimes.solarSet, "Sun Set: ") );  
+//        System.println( SunCalcModule.PrintTime(sunTimes.solarRise, "Sun Rise: ") );
+//        System.println( SunCalcModule.PrintTime(sunTimes.solarNoon, "Sun Noon: ") );
+//        System.println( SunCalcModule.PrintTime(sunTimes.solarSet, "Sun Set: ") ); 
 
         dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarRise);
         drawString(dc, dc.getWidth() / 2, 5*dc.getHeight() / 10, dataString);
@@ -218,13 +240,30 @@ function onPosition(info) {
         dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarSet);
         drawString(dc, dc.getWidth() / 2, 7*dc.getHeight() / 10, dataString);
 
-        dc.setPenWidth(3);
-        dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_ORANGE);
-        var degreeStart = -30+90;
-        var degreeEnd = 40+90;
-        //LocaleTimeAsDesimalHour(sunTimes.solarRise); TODO!!!!!!!!!!!
-        dc.drawArc(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2-3, Graphics.ARC_COUNTER_CLOCKWISE , degreeStart, degreeEnd);
+        var solarRiseHour = SunCalcModule.LocaleTimeAsDesimalHour(sunTimes.solarRise); 
+        var solarSetHour  = SunCalcModule.LocaleTimeAsDesimalHour(sunTimes.solarSet); 
 
+        // Draw daytaime-arc
+        dc.setPenWidth(3);
+        dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_YELLOW);
+        var degreeStart = solarRiseHour /24.0*360.0 -90;
+        var degreeEnd = solarSetHour /24.0*360.0 -90; 
+        dc.drawArc(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2-1, Graphics.ARC_COUNTER_CLOCKWISE , degreeStart, degreeEnd);
+
+        //Draw sun
+        var coord;
+        var nowHour = 5.0;
+        var offsetFromPerimeter = 5;
+        var sunSize = 10;
+        nowHour = SunCalcModule.LocaleTimeAsDesimalHour(momentNow.value()); 
+        coord = Hour2clockCoord(dc , nowHour , offsetFromPerimeter);
+        dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_YELLOW);
+        if ( (nowHour>solarRiseHour && nowHour<solarSetHour) ){
+            dc.fillCircle(coord[0], coord[1], sunSize);
+        }
+        else {
+            dc.drawCircle(coord[0], coord[1], sunSize);
+        }
     }
 
     public function drawPolygon(dc as Dc, points as Lang.Array<Graphics.Point2D>) as Void {
