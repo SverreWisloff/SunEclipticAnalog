@@ -5,18 +5,33 @@
 ## SunEclipticAnalog
 
 *The goal of this project is to create an analog watchface that displays the sun's path on the sky*
-Forutsetter rund klokke
+
+Assumes a round watchface
 
 ## Resources
 
 A collection of Garmin applications: https://github.com/bombsimon/awesome-garmin
 
-## Sun calculations
-It seems that it is "leaflet" Agafonkin who is behind the suncalc code that is used almost everywhere to calculate sunrise, sunset, and the sun's path in the sky.
-Kildekoden finnes her: https://github.com/mourner/suncalc
+## Example code for sun calculations
+It seems that it is "leaflet" Agafonkin who is behind the suncalc code that is used almost everywhere to calculate sunrise, sunset, and the sun's path in the sky. Sourcecode: https://github.com/mourner/suncalc
+
+| Navn  | språk | link   |
+|-------|-------|--------|
+| SunCalc - @mourner | `js` | [Github](https://github.com/mourner/suncalc) |
+| Sundance - cizi | `monkeyC` | [Github](https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc) |
+| SunCalc - haraldh | `monkeyC` | [Github](https://github.com/haraldh/SunCalc) [mc](https://github.com/haraldh/SunCalc/blob/master/source/SunCalc.mc)|
+|runst-sun | `rust` |[Github](https://github.imc.re/flosse/rust-sun) [rust](https://github.imc.re/flosse/rust-sun/blob/master/src/lib.rs)|
+|Python port of suncalc.js | `Pyton` | [link](https://pypi.org/project/suncalc/) |
+|R|`R`|[link](https://cran.r-project.org/web/packages/suncalc/index.html) [Github](https://github.com/datastorm-open/suncalc)
+|klausbrunner/solarpositioning|`java`|[Github](https://github.com/klausbrunner/solarpositioning) [java](https://github.com/KlausBrunner/solarpositioning/blob/master/src/main/java/net/e175/klaus/solarpositioning/Grena3.java)
+|Grena/ENEA #3 algorithm| `Go` |[Github](https://github.com/klausbrunner/gosolarpos) [go](https://github.com/klausbrunner/gosolarpos/blob/master/grena3.go)
+|SolarPosition - Arduino Library|`C`|[Github](https://github.com/KenWillmott/SolarPosition) [C](https://github.com/KenWillmott/SolarPosition/blob/master/SolarPosition.cpp)
+|Sunrise equation|`Python` `pseudo`|[Wiki](https://en.wikipedia.org/wiki/Sunrise_equation)
+|PostgreSQL|`sql`|[Github](https://github.com/olithissen/suncalc_postgres)|
 
 Sundance: Both a  mc-fork, and rotated fonts for 24-hours at the perimeter  
 https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
+
 
 ## Notes to self while coding
 
@@ -56,9 +71,8 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - [ ] Find SunCalc in different languages to read how other projects forks suncalc
 - [ ] Test south hemisphere
 - [ ] Test midnight sun and Polar Night
-- [ ] Finishing first simple version of drawSun()
-- [ ] Draw arv and sun-noon
 - [ ] Get the position in a cheap way (without turning the GPS on)
+- [x] Finishing first simple version of drawSun() : Sun-Arc and sun-now
 - [x] How to calculate sun trajectory?
 - [x] Lære dato / tid i monkey-c
 - [x] Create a *debug* watchface where the solar calculations can be developed and tested.
