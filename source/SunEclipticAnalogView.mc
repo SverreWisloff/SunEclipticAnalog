@@ -98,6 +98,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         }
 
         _screenCenterPoint = [dc.getWidth() / 2, dc.getHeight() / 2];
+
     }
 
     //! This function is used to generate the coordinates of the 4 corners of the polygon
@@ -175,16 +176,13 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         //     
     }
 
+
     private function drawSun(dc as Dc) as Void {
         var dataString;
        
         // TODO - Draw sun to background
-        var today = Time.today();
         var now = Time.now();
         var momentNow = new Time.Moment(now.value() );        
-        // for testing now = new Time.Moment(1483225200);
-        var moment = new Time.Moment(now.value() * Time.Gregorian.SECONDS_PER_DAY);
-        var days = ((moment.value() - today.value()) / Time.Gregorian.SECONDS_PER_DAY).toNumber();
 
         var sunTimes = new solarTimes();
         var lat = 59.837330;
@@ -193,7 +191,10 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         var angle_deg = -0.833;
 
         var activityInfo = Activity.getActivityInfo();
-        var location = activityInfo.currentLocation;
+        var location   = activityInfo.currentLocation as Array<Number>;
+
+        var pos = Activity.getActivityInfo().currentLocation;
+        
         if (location!=null){
             lat = location[0];
             lng = location[1];
@@ -228,7 +229,7 @@ function onPosition(info) {
 
 */
 
-        sunTimes = SunCalcModule.getTimes(momentNow.value(), lat, lng, altitude, angle_deg);
+        sunTimes = SunCalcModule.getTimes(momentNow.value(), lat, lng, altitude, SunCalcModule.SUNRISE);
 //        System.println( SunCalcModule.PrintTime(sunTimes.solarRise, "Sun Rise: ") );
 //        System.println( SunCalcModule.PrintTime(sunTimes.solarNoon, "Sun Noon: ") );
 //        System.println( SunCalcModule.PrintTime(sunTimes.solarSet, "Sun Set: ") ); 
@@ -251,7 +252,7 @@ function onPosition(info) {
         dc.drawArc(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2-1, Graphics.ARC_COUNTER_CLOCKWISE , degreeStart, degreeEnd);
 
         //Draw sun
-        var coord;
+        var coord = new Array<Double>[2];        
         var nowHour = 5.0;
         var offsetFromPerimeter = 5;
         var sunSize = 10;
@@ -259,7 +260,9 @@ function onPosition(info) {
         coord = Hour2clockCoord(dc , nowHour , offsetFromPerimeter);
         dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_YELLOW);
         if ( (nowHour>solarRiseHour && nowHour<solarSetHour) ){
-            dc.fillCircle(coord[0], coord[1], sunSize);
+            var x = coord[0];
+            var y = coord[1];
+            dc.fillCircle(x, y, sunSize);
         }
         else {
             dc.drawCircle(coord[0], coord[1], sunSize);
@@ -519,7 +522,6 @@ function onPosition(info) {
         var eX, eY;
         var outerRad = width / 2;
         var innerRad = outerRad - 5;
-        var stringMark="00";
         
 		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
 		dc.setPenWidth(2);
@@ -532,8 +534,7 @@ function onPosition(info) {
             sX = outerRad + innerRad * Math.cos(i);
             eX = outerRad + outerRad * Math.cos(i);
             dc.drawLine(sX, sY, eX, eY);
-            stringMark = hour.toLong();
-//            dc.drawText(sX, sY, Graphics.FONT_XTINY, stringMark, Graphics.TEXT_JUSTIFY_CENTER);
+//            dc.drawText(sX, sY, Graphics.FONT_XTINY, hour.toLong(), Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 

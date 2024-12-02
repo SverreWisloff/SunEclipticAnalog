@@ -13,7 +13,7 @@ Assumes a round watchface
 A collection of Garmin applications: https://github.com/bombsimon/awesome-garmin
 
 ## Example code for sun calculations
-It seems that it is "leaflet" Agafonkin who is behind the suncalc code that is used almost everywhere to calculate sunrise, sunset, and the sun's path in the sky. Sourcecode: https://github.com/mourner/suncalc
+It seems that it is "leaflet" Agafonkin who is behind the suncalc code that is used almost everywhere to calculate sunrise, sunset, and the sun's path in the sky. These are some projects I've been looking at:
 
 | Navn  | språk | link   |
 |-------|-------|--------|
@@ -29,9 +29,14 @@ It seems that it is "leaflet" Agafonkin who is behind the suncalc code that is u
 |Sunrise equation|`Python` `pseudo`|[Wiki](https://en.wikipedia.org/wiki/Sunrise_equation)
 |PostgreSQL|`sql`|[Github](https://github.com/olithissen/suncalc_postgres)|
 
+### **Acknowledgments**
+This project uses code from suncalc by Vladimir Agafonkin.
+Repository: https://github.com/mourner/suncalc 
+License: BSD 2-Clause "Simplified" License
+
 Sundance: Both a  mc-fork, and rotated fonts for 24-hours at the perimeter  
 https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
-
+https://github.com/myneur/late/tree/
 
 ## Notes to self while coding
 
@@ -56,6 +61,7 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - VS Code: Ctrl + Shift + P: `Monkey C`
 
 ## Log
+- 20241201: SunCalc - solarEvent as enum
 - 20241127: Hour2clockCoord(), drawSun()
 - 20241124: First verion of SunCalc.mc
 - 20241123: SunCalc.js written by 'Leaflet' Agafonkin
@@ -67,6 +73,7 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 ## TODO
 - [ ] Calculate the size of graphic elements (clock hands) proportional to the clock's size (in pixels)
 - [ ] Draw sun to background
+- [ ] [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
 - [ ] Find SunCalc in different languages to read how other projects forks suncalc
 - [ ] Test south hemisphere
