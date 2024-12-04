@@ -12,7 +12,8 @@ import Toybox.Time;
 import Toybox.Time.Gregorian;
 import Toybox.WatchUi;
 import SunCalcModule;
-using Toybox.Activity;
+using Toybox.Position;
+using Toybox.Application as App;
 
 //! This implements an analog watch face
 //! Original design by Austen Harbour
@@ -30,6 +31,39 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var MINUTE_HAND_LENGTH = 90; 
     private var HOUR_HAND_LENGTH = 60; 
 
+    private var _location = null;
+    private var _lat = 0.0;//59.837330; // TODO : Handle init/param
+    private var _lng = 0.0;//10.460190;
+    private var _altitude = 0.0;
+
+	(:release)
+    public function getpos(){
+        var activityInfo = Activity.getActivityInfo();
+        var location = activityInfo.currentLocation;
+        if (location!=null){
+            _location = location.toDegrees();
+            _lat = _location[0];
+            _lng = _location[1];
+        } else {
+            _lat = 0.0;
+            _lng = 0.0;
+        }
+    }
+
+	(:debug)
+    public function getpos(){
+        var activityInfo = Activity.getActivityInfo();
+        var location = activityInfo.currentLocation;
+        if (location!=null){
+            _location = location.toDegrees();
+            _lat = _location[0];
+            _lng = _location[1];
+        } else {
+            _lat = 59.837330;
+            _lng = 10.460190;
+        }
+    }
+
 
     //! Initialize variables for this view
     public function initialize() {
@@ -39,6 +73,8 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         _partialUpdatesAllowed = (WatchUi.WatchFace has :onPartialUpdate);
 
         System.println("::initialize");
+
+        getpos();
 
     }
 
@@ -183,39 +219,10 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         // TODO - Draw sun to background
         var now = Time.now();
         var momentNow = new Time.Moment(now.value() );        
-
         var sunTimes = new solarTimes();
-        var lat = 59.837330;
-        var lng = 10.460190;
-        var altitude = 0.0;
-        var angle_deg = -0.833;
-
-        var activityInfo = Activity.getActivityInfo();
-        var location   = activityInfo.currentLocation as Array<Number>;
-
-        var pos = Activity.getActivityInfo().currentLocation;
-        
-        if (location!=null){
-            lat = location[0];
-            lng = location[1];
-            altitude = activityInfo.altitude;
-        }
-
 
 // TODO
 /*
-using Toybox.Position;
-using Toybox.System;
-Position.enableLocationEvents(Position.LOCATION_ONE_SHOT, method(:onPosition));
-
-function onPosition(info) {
-    var myLocation = info.position.toRadians();
-    System.println(myLocation[0]); // latitude (e.g. 0.678197)
-    System.println(myLocation[1]); // longitude (e.g -1.654588)
-}
-
-=========== OR =================
-
         location = activityInfo.currentLocation;
         if (location) {
             location = activityInfo.currentLocation.toRadians();
@@ -229,7 +236,7 @@ function onPosition(info) {
 
 */
 
-        sunTimes = SunCalcModule.getTimes(momentNow.value(), lat, lng, altitude, SunCalcModule.SUNRISE);
+        sunTimes = SunCalcModule.getTimes(momentNow.value(), _lat, _lng, _altitude, SunCalcModule.SUNRISE);
 //        System.println( SunCalcModule.PrintTime(sunTimes.solarRise, "Sun Rise: ") );
 //        System.println( SunCalcModule.PrintTime(sunTimes.solarNoon, "Sun Noon: ") );
 //        System.println( SunCalcModule.PrintTime(sunTimes.solarSet, "Sun Set: ") ); 
@@ -254,8 +261,8 @@ function onPosition(info) {
         //Draw sun
         var coord = new Array<Double>[2];        
         var nowHour = 5.0;
-        var offsetFromPerimeter = 5;
-        var sunSize = 10;
+        var offsetFromPerimeter = 3;
+        var sunSize = 5;
         nowHour = SunCalcModule.LocaleTimeAsDesimalHour(momentNow.value()); 
         coord = Hour2clockCoord(dc , nowHour , offsetFromPerimeter);
         dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_YELLOW);
@@ -321,7 +328,7 @@ function onPosition(info) {
 */
         // Draw the tick marks around the edges of the screen
         drawHashMarks(targetDc, 12, 20, 3, Graphics.COLOR_WHITE);  //12 Houre marks
-        drawHashMarks(targetDc, 60, 8, 1, Graphics.COLOR_LT_GRAY); //60 Minute marks
+        //drawHashMarks(targetDc, 60, 8, 1, Graphics.COLOR_LT_GRAY); //60 Minute marks
         //drawHashMarks(targetDc, 24, 3, 3, Graphics.COLOR_BLUE);  //24 Houre (sun) marks
 
         // Draw the do-not-disturb icon if we support it and the setting is enabled
@@ -518,24 +525,7 @@ function onPosition(info) {
             // TODO - whats this?
         }
         
-        var sX, sY;
-        var eX, eY;
-        var outerRad = width / 2;
-        var innerRad = outerRad - 5;
-        
-		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
-		dc.setPenWidth(2);
-        // draw 24/360 tick marks.
-        var hour=0;
-        for (var i = -Math.PI/2.0; i < 3 * Math.PI/2.0 ; i += (Math.PI / 12)) {
-            hour++;
-            sY = outerRad + innerRad * Math.sin(i);
-            eY = outerRad + outerRad * Math.sin(i);
-            sX = outerRad + innerRad * Math.cos(i);
-            eX = outerRad + outerRad * Math.cos(i);
-            dc.drawLine(sX, sY, eX, eY);
-//            dc.drawText(sX, sY, Graphics.FONT_XTINY, hour.toLong(), Graphics.TEXT_JUSTIFY_CENTER);
-        }
+
     }
 
     //! This method is called when the device re-enters sleep mode.

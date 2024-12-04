@@ -36,7 +36,7 @@ License: BSD 2-Clause "Simplified" License
 
 Sundance: Both a  mc-fork, and rotated fonts for 24-hours at the perimeter  
 https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
-https://github.com/myneur/late/tree/
+https://github.com/myneur/late/
 
 ## Notes to self while coding
 
@@ -71,14 +71,15 @@ https://github.com/myneur/late/tree/
 - 20241113: Establised. Copied from  `Sample`. API 1.2. Watches with circle-face.
 
 ## TODO
+- [ ] Compute sun sosition for a whole day
+- [ ] Test south hemisphere
+- [ ] Test midnight sun and Polar Night
 - [ ] Calculate the size of graphic elements (clock hands) proportional to the clock's size (in pixels)
 - [ ] Draw sun to background
 - [ ] [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
-- [ ] Find SunCalc in different languages to read how other projects forks suncalc
-- [ ] Test south hemisphere
-- [ ] Test midnight sun and Polar Night
-- [ ] Get the position in a cheap way (without turning the GPS on)
+- [x] Get the position 
+- [x] Find SunCalc in different languages to read how other projects forks suncalc
 - [x] Finishing first simple version of drawSun() : Sun-Arc and sun-now
 - [x] How to calculate sun trajectory?
 - [x] Lære dato / tid i monkey-c
