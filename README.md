@@ -54,6 +54,9 @@ https://github.com/myneur/late/
     [Bra eksempelkode](https://developer.garmin.com/connect-iq/api-docs/Toybox/Time/LocalMoment.html)
     - `Gregorian`: *Moment* based on the Gregorian calendar
     - `info()` or `utcInfo()`: contains all of the necessary information to represent a Gregorian date.
+- [Storage](https://developer.garmin.com/connect-iq/core-topics/properties-and-app-settings/)
+    - only make calls that hit the file system as infrequently as possible as those calls are expensive
+    - Simulatoren lagrer data her: %Temp%\com.garmin.connectiq\GARMIN\APPS\DATA
 
 ### VS Code
 - VS Code: Stop running: `shift + F5`
@@ -61,6 +64,8 @@ https://github.com/myneur/late/
 - VS Code: Ctrl + Shift + P: `Monkey C`
 
 ## Log
+- 20241205: working on getpos(). The Connect-API is buggy...
+- 20241204: Get the position getpos()
 - 20241201: SunCalc - solarEvent as enum
 - 20241127: Hour2clockCoord(), drawSun()
 - 20241124: First verion of SunCalc.mc
@@ -71,6 +76,7 @@ https://github.com/myneur/late/
 - 20241113: Establised. Copied from  `Sample`. API 1.2. Watches with circle-face.
 
 ## TODO
+- [ ] Get nice font, perhaps from https://github.com/myneur/late/
 - [ ] Compute sun sosition for a whole day
 - [ ] Test south hemisphere
 - [ ] Test midnight sun and Polar Night

@@ -3,7 +3,8 @@
 // Subject to Garmin SDK License Agreement and Wearables
 // Application Developer Agreement.
 // Sun
-
+using Toybox as Toy;
+using Toybox.Application as App;
 import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.Math;
@@ -12,8 +13,7 @@ import Toybox.Time;
 import Toybox.Time.Gregorian;
 import Toybox.WatchUi;
 import SunCalcModule;
-using Toybox.Position;
-using Toybox.Application as App;
+
 
 //! This implements an analog watch face
 //! Original design by Austen Harbour
@@ -32,24 +32,45 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var HOUR_HAND_LENGTH = 60; 
 
     private var _location = null;
-    private var _lat = 0.0;//59.837330; // TODO : Handle init/param
-    private var _lng = 0.0;//10.460190;
+    private var _lat = 0.0;
+    private var _lng = 0.0;
     private var _altitude = 0.0;
+    private var _lastGoodPosition;
 
-	(:release)
+//	(:release)
     public function getpos(){
+        var now = Time.now();
+        var today = Gregorian.info(now, Time.FORMAT_SHORT);
+
         var activityInfo = Activity.getActivityInfo();
         var location = activityInfo.currentLocation;
         if (location!=null){
             _location = location.toDegrees();
-            _lat = _location[0];
-            _lng = _location[1];
-        } else {
-            _lat = 0.0;
-            _lng = 0.0;
-        }
-    }
+            _lastGoodPosition = today;
+            //System.println("::getpos() Activity " + location.toGeoString(GEO_DEG));
+            //App.Storage.setValue("location", _location);
+        } else if(Toy has :Weather){
+            var weather = Toy.Weather.getCurrentConditions();
+            if(weather != null){
+                if(weather.observationLocationName!=null){
+                    _location = weather.observationLocationPosition.toDegrees();	
+                    _lastGoodPosition = today;
+                    //System.println("::getpos() Toy.Weather " + weather.observationLocationPosition.toGeoString(GEO_DEG));
+                    //App.Storage.setValue("location", _location);
+                }
+            }
+	    } else {
+            //Didnt get a good location
 
+            //JUST DEBUGGING: TODO DELETE
+            var locString = "59.837149, 10.460282";
+            _location = Position.parse(locString, Position.GEO_DEG);
+            _lastGoodPosition = today;
+            return false;
+        }
+        return true;
+    }
+/*
 	(:debug)
     public function getpos(){
         var activityInfo = Activity.getActivityInfo();
@@ -63,7 +84,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             _lng = 10.460190;
         }
     }
-
+*/
 
     //! Initialize variables for this view
     public function initialize() {
@@ -212,8 +233,31 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         //     
     }
 
-
+    // Draw XXX to the main screen.
+    private function drawLocation(dc as Dc) as Void {
+        var strLocDate, strLocTime;
+        if (_location){
+            strLocDate=_lastGoodPosition.day + "/" + _lastGoodPosition.month;
+            strLocTime= _lastGoodPosition.hour.format("%02u") + ":" + _lastGoodPosition.min.format("%02u");
+        } else {
+            strLocDate="X";
+            strLocTime="";
+        }
+        dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(15*dc.getWidth() / 20,  dc.getHeight() / 2, Graphics.FONT_XTINY, strLocTime, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(5*dc.getWidth() / 20,  dc.getHeight() / 2, Graphics.FONT_XTINY, strLocDate, Graphics.TEXT_JUSTIFY_CENTER);
+    }
     private function drawSun(dc as Dc) as Void {
+
+        if (_location==null){
+            if (!getpos()){
+                return;
+            }
+        } else {
+            var location = _location.toDegrees();
+            _lat = location[0];
+            _lng = location[1];
+        }
         var dataString;
        
         // TODO - Draw sun to background
@@ -221,20 +265,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         var momentNow = new Time.Moment(now.value() );        
         var sunTimes = new solarTimes();
 
-// TODO
-/*
-        location = activityInfo.currentLocation;
-        if (location) {
-            location = activityInfo.currentLocation.toRadians();
-            app.Storage.setValue("location", location);
-        } else {
-            location = app.Storage.getValue("location");
-        }
-        if (location!=null){
-            suncalc.xxx;
-        }
 
-*/
 
         sunTimes = SunCalcModule.getTimes(momentNow.value(), _lat, _lng, _altitude, SunCalcModule.SUNRISE);
 //        System.println( SunCalcModule.PrintTime(sunTimes.solarRise, "Sun Rise: ") );
@@ -392,6 +423,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         drawBackground(dc);
 
         //Draw sun-info
+        drawLocation(dc);
         drawSun(dc);        
 
         // Draw the battery percentage directly to the main screen.

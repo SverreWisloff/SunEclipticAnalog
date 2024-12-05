@@ -82,13 +82,34 @@ module SunCalcModule
     }
 
 
-    // calculates sun position for a given date and latitude/longitude
+    // calculates sun position for a given time and latitude/longitude
     function getPosition(date, lat, lng) {
         var sunCoordLocal = new SunCoord_LocalPosition();
         var sunCoordSphere = new SunCoord_CelestialSphere();
         var lw  = rad * -lng;
         var phi = rad * lat;
         var d   = toDays(date);
+
+        sunCoordSphere = sunCoords(d);
+        var H  = siderealTime(d, lw) - sunCoordSphere.rightAscension;
+
+        sunCoordLocal.azimuth = azimuth(H, phi, sunCoordSphere.declination);
+        sunCoordLocal.altitude = altitude(H, phi, sunCoordSphere.declination);
+
+        return sunCoordLocal;
+    }
+
+    // calculates sun position for a given date and latitude/longitude
+    function getSunPositionForDay(date, lat, lng) {
+        var sunCoordLocal = new SunCoord_LocalPosition();
+        var sunCoordSphere = new SunCoord_CelestialSphere();
+        var lw  = rad * -lng;
+        var phi = rad * lat;
+        var d   = toDays(date);
+
+        // TODO: 
+        // for (i=0;i++;i<24)
+        //       d = dato + i-timer 
 
         sunCoordSphere = sunCoords(d);
         var H  = siderealTime(d, lw) - sunCoordSphere.rightAscension;
@@ -150,6 +171,10 @@ module SunCalcModule
         var lw  = rad * -lng;
         var phi = rad *  lat;
 
+        if (height==null){
+            height = 0.0;
+        }
+
         var dh = observerAngle(height);
 
         var d = toDays(date);
@@ -207,7 +232,7 @@ module SunCalcModule
                 infoDate.min.format("%02u")
             ]
         );
-        // e.g. "18:43:57"
+        // e.g. "18:43"
         return dateString;
     }
 
