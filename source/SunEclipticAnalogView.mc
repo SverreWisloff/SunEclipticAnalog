@@ -18,7 +18,8 @@ import SunCalcModule;
 //! This implements an analog watch face
 //! Original design by Austen Harbour
 class SunEclipticAnalogView extends WatchUi.WatchFace {
-    private var _font as FontResource?;
+    private var _fontSmall as FontResource?;
+    private var _fontSmallStrong as FontResource?;
     private var _isAwake as Boolean?;
     private var _screenShape as ScreenShape;
     private var _dndIcon as BitmapResource?;
@@ -107,7 +108,8 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         MINUTE_HAND_LENGTH = dc.getHeight() / 2.9;
 
         // Load the custom font we use for drawing the 3, 6, 9, and 12 on the watchface.
-        _font = WatchUi.loadResource($.Rez.Fonts.id_font_black_diamond) as FontResource;
+        _fontSmallStrong = WatchUi.loadResource($.Rez.Fonts.id_font_SmallStrong) as FontResource;
+        _fontSmall = WatchUi.loadResource($.Rez.Fonts.id_font_Small) as FontResource;
 
         // If this device supports the Do Not Disturb feature,
         // load the associated Icon into memory.
@@ -237,15 +239,15 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private function drawLocation(dc as Dc) as Void {
         var strLocDate, strLocTime;
         if (_location){
-            strLocDate=_lastGoodPosition.day + "/" + _lastGoodPosition.month;
+            strLocDate=_lastGoodPosition.day + "." + _lastGoodPosition.month;
             strLocTime= _lastGoodPosition.hour.format("%02u") + ":" + _lastGoodPosition.min.format("%02u");
         } else {
             strLocDate="X";
             strLocTime="";
         }
         dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(15*dc.getWidth() / 20,  dc.getHeight() / 2, Graphics.FONT_XTINY, strLocTime, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(5*dc.getWidth() / 20,  dc.getHeight() / 2, Graphics.FONT_XTINY, strLocDate, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(15*dc.getWidth() / 20,  dc.getHeight() / 2, _fontSmall, strLocTime, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(5*dc.getWidth() / 20,  dc.getHeight() / 2, _fontSmall, strLocDate, Graphics.TEXT_JUSTIFY_CENTER);
     }
     private function drawSun(dc as Dc) as Void {
 
@@ -395,7 +397,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         targetDc.drawCircle(width / 2, height / 2, 7);
 
         // Draw the 3, 6, 9, and 12 hour labels.
-        var font = _font;
+        var font = _fontSmallStrong;
         if (font != null) {
             targetDc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
             targetDc.drawText(width / 2, 2, font, "12", Graphics.TEXT_JUSTIFY_CENTER);
@@ -469,7 +471,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     //! @param y The y location of the text
     private function drawString(dc as Dc, x as Number, y as Number, str as String) as Void {
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x, y, Graphics.FONT_SYSTEM_XTINY, str, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(x, y, _fontSmall, str, Graphics.TEXT_JUSTIFY_CENTER);
     }
     
     //! Handle the partial update event
@@ -537,7 +539,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     //! second before outputting the new one.
     //! @param dc Device context
     private function drawBackground(dc as Dc) as Void {
-        var width = dc.getWidth();
+        //var width = dc.getWidth();
         var height = dc.getHeight();
 
         System.println("::drawBackground");

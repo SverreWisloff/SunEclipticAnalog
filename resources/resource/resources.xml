@@ -1,5 +1,9 @@
 <resources>
     <fonts>
         <font id="id_font_black_diamond" filename="fonts/blackdiamond.fnt" filter="0123456789" />
-    </fonts>
+        <font id="id_font_Small" filename="fonts/futura22mdscandi.fnt"  antialias="true" />
+        <font id="id_font_SmallStrong" filename="fonts/futura28mdscandi.fnt"  antialias="false" />
+        <font id="id_font_Condensed" filename="fonts/futura-condensed24i18nmajor.fnt"  antialias="true" />
+        <font id="id_font_Icon" filename="fonts/icons.fnt" antialias="true" />
+        </fonts>
 </resources>

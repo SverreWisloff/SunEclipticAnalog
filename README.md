@@ -64,6 +64,7 @@ https://github.com/myneur/late/
 - VS Code: Ctrl + Shift + P: `Monkey C`
 
 ## Log
+- 20241206: New small fonts
 - 20241205: working on getpos(). The Connect-API is buggy...
 - 20241204: Get the position getpos()
 - 20241201: SunCalc - solarEvent as enum
