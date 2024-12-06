@@ -93,4 +93,4 @@ https://github.com/myneur/late/
 - [x] Create a *debug* watchface where the solar calculations can be developed and tested.
 
 ## Screenshot
-![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241127.png?raw=true)
+![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241206.png?raw=true)
