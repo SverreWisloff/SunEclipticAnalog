@@ -5,6 +5,20 @@ import Toybox.Lang;
 import Toybox.Time;
 import Toybox.Time.Gregorian;
 
+class swPosition
+{
+    public var lat;
+    public var lon;
+    public var altitude;
+    public var knownPosition;
+    
+    public function initialize() {
+        lat  = 0.0;
+        lon = 0.0;
+        altitude = 0.0;
+        knownPosition = false;
+    }
+}
 
 module SunCalcModule
 {
@@ -166,7 +180,6 @@ module SunCalcModule
 
     // calculates sun times for a given date, latitude/longitude, and, optionally,
     // the observer height (in meters) relative to the horizon
-    // angle_deg=-0.833 // sunrise/sunset TODO: MAKE THIS A PARAMETER
     function getTimes(date, lat, lng, height, solarEvent){
         var lw  = rad * -lng;
         var phi = rad *  lat;

@@ -32,60 +32,12 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var MINUTE_HAND_LENGTH = 90; 
     private var HOUR_HAND_LENGTH = 60; 
 
+    private var _ui;
+
     private var _location = null;
-    private var _lat = 0.0;
-    private var _lng = 0.0;
-    private var _altitude = 0.0;
     private var _lastGoodPosition;
+    private var _position;
 
-//	(:release)
-    public function getpos(){
-        var now = Time.now();
-        var today = Gregorian.info(now, Time.FORMAT_SHORT);
-
-        var activityInfo = Activity.getActivityInfo();
-        var location = activityInfo.currentLocation;
-        if (location!=null){
-            _location = location.toDegrees();
-            _lastGoodPosition = today;
-            //System.println("::getpos() Activity " + location.toGeoString(GEO_DEG));
-            //App.Storage.setValue("location", _location);
-        } else if(Toy has :Weather){
-            var weather = Toy.Weather.getCurrentConditions();
-            if(weather != null){
-                if(weather.observationLocationName!=null){
-                    _location = weather.observationLocationPosition.toDegrees();	
-                    _lastGoodPosition = today;
-                    //System.println("::getpos() Toy.Weather " + weather.observationLocationPosition.toGeoString(GEO_DEG));
-                    //App.Storage.setValue("location", _location);
-                }
-            }
-	    } else {
-            //Didnt get a good location
-
-            //JUST DEBUGGING: TODO DELETE
-            var locString = "59.837149, 10.460282";
-            _location = Position.parse(locString, Position.GEO_DEG);
-            _lastGoodPosition = today;
-            return false;
-        }
-        return true;
-    }
-/*
-	(:debug)
-    public function getpos(){
-        var activityInfo = Activity.getActivityInfo();
-        var location = activityInfo.currentLocation;
-        if (location!=null){
-            _location = location.toDegrees();
-            _lat = _location[0];
-            _lng = _location[1];
-        } else {
-            _lat = 59.837330;
-            _lng = 10.460190;
-        }
-    }
-*/
 
     //! Initialize variables for this view
     public function initialize() {
@@ -94,10 +46,56 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         _fullScreenRefresh = true;
         _partialUpdatesAllowed = (WatchUi.WatchFace has :onPartialUpdate);
 
+        _ui = new UiAnalog();
+        _position = new swPosition();
+
         System.println("::initialize");
 
         getpos();
 
+    }
+
+    public function getpos(){
+        var now = Time.now();
+        var today = Gregorian.info(now, Time.FORMAT_SHORT);
+
+        var activityInfo = Activity.getActivityInfo();
+        var location = activityInfo.currentLocation;
+        if (location!=null){
+            _lastGoodPosition = today;
+            _position.knownPosition = true;
+            _position.lat = location[0];
+            _position.lon = location[1];
+            //TODO _position.altitude = ; 
+        } else if(Toy has :Weather){
+            var weather = Toy.Weather.getCurrentConditions();
+            if(weather != null){
+                if(weather.observationLocationName!=null){
+                    var location2 = weather.observationLocationPosition.toDegrees();	
+                    _position.knownPosition = true;
+                    _position.lat = location2[0];
+                    _position.lon = location2[1];
+            //TODO _position.altitude = ; 
+                    _lastGoodPosition = today;
+                }
+            }
+	    } 
+
+        if (!_position.knownPosition){
+            //Didnt get a good location
+/*
+            //JUST DEBUGGING: TODO DELETE
+            var location3 = Position.parse("59.837149, 10.460282", Position.GEO_DEG).toDegrees();
+            _position.knownPosition = true;
+            _position.lat = location3[0];
+            _position.lon = location3[1];
+            _lastGoodPosition = today;
+            return true;
+*/
+            return false;
+        }
+
+        return true;
     }
 
     //! Configure the layout of the watchface for this device
@@ -160,85 +158,11 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
     }
 
-    //! This function is used to generate the coordinates of the 4 corners of the polygon
-    //! used to draw a watch hand. The coordinates are generated with specified length,
-    //! tail length, and width and rotated around the center point at the provided angle.
-    //! 0 degrees is at the 12 o'clock position, and increases in the clockwise direction.
-    //! @param centerPoint The center of the clock
-    //! @param angle Angle of the hand in radians
-    //! @param handLength The length of the hand from the center to point
-    //! @param tailLength The length of the tail of the hand
-    //! @param width The width of the watch hand
-    //! @return The coordinates of the watch hand
-    private function generateHandCoordinates(centerPoint as Array<Number>, angle as Float, handLength as Number, tailLength as Number, width as Number) as Array<[Numeric, Numeric]> {
-        // Map out the coordinates of the watch hand
-        var coords = [[-(width / 2), tailLength],
-                      [-(width / 2), -handLength],
-                      [width / 2, -handLength],
-                      [width / 2, tailLength]];
-        var result = new Array<[Numeric, Numeric]>[4];
-        var cos = Math.cos(angle);
-        var sin = Math.sin(angle);
-
-        // Transform the coordinates
-        for (var i = 0; i < 4; i++) {
-            var x = (coords[i][0] * cos) - (coords[i][1] * sin) + 0.5;
-            var y = (coords[i][0] * sin) + (coords[i][1] * cos) + 0.5;
-
-            result[i] = [centerPoint[0] + x, centerPoint[1] + y];
-        }
-
-        return result;
-    }
-
-    //! Draws the clock tick marks around the outside edges of the screen.
-    //! @param dc Device context
-    private function drawHashMarks(dc as Dc, numberOfHashes as Lang.Numeric, hashLength as Lang.Numeric, penWidth as Lang.Numeric, hashColor as Graphics.ColorType) as Void {
-
-        dc.setPenWidth(penWidth);
-        dc.setColor(hashColor, hashColor);
-
-        // Draw hashmarks differently depending on screen geometry.
-        if (System.SCREEN_SHAPE_ROUND == _screenShape) {
-            var outerRad = dc.getWidth() / 2;
-            var innerRad = outerRad - hashLength;
-            // Loop through each 1 minute block and draw tick marks.
-            for (var i = 0; i <= 2 * Math.PI; i += (2.0 * Math.PI / numberOfHashes)) {
-                // Partially unrolled loop to draw two tickmarks in 15 minute block.
-                var sY = outerRad + innerRad * Math.sin(i);
-                var eY = outerRad + outerRad * Math.sin(i);
-                var sX = outerRad + innerRad * Math.cos(i);
-                var eX = outerRad + outerRad * Math.cos(i);
-                dc.drawLine(sX, sY, eX, eY);
-            }
-        }
-    }
-
-    //Calcululate from 24hour to clock-coord on perimeter
-    private function Hour2clockCoord(dc as Dc, desimal24hour as Lang.Double, offsetFromPerimeter as Lang.Numeric){
-        var angleRad = (desimal24hour / 12.0 * Math.PI) - 3.0*Math.PI/2.0 ;
-        var x = dc.getHeight()/2 + (dc.getHeight()/2 - offsetFromPerimeter)*Math.cos(angleRad);
-        var y = dc.getWidth()/2  + (dc.getWidth()/2  - offsetFromPerimeter)*Math.sin(angleRad);
-        
-        var coord = new Array<Double>[2];        
-        
-        coord[0]=x;
-        coord[1]=y;
-
-        return coord;
-        //   o-----------------> 
-        //   |\  angle       x
-        //   | \
-        //   |  \
-        //   |   \
-        //   V y
-        //     
-    }
 
     // Draw XXX to the main screen.
     private function drawLocation(dc as Dc) as Void {
         var strLocDate, strLocTime;
-        if (_location){
+        if (_position.knownPosition){
             strLocDate=_lastGoodPosition.day + "." + _lastGoodPosition.month;
             strLocTime= _lastGoodPosition.hour.format("%02u") + ":" + _lastGoodPosition.min.format("%02u");
         } else {
@@ -249,17 +173,15 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         dc.drawText(15*dc.getWidth() / 20,  dc.getHeight() / 2, _fontSmall, strLocTime, Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(5*dc.getWidth() / 20,  dc.getHeight() / 2, _fontSmall, strLocDate, Graphics.TEXT_JUSTIFY_CENTER);
     }
+
     private function drawSun(dc as Dc) as Void {
 
-        if (_location==null){
+        if (!_position.knownPosition){
             if (!getpos()){
                 return;
             }
-        } else {
-            var location = _location.toDegrees();
-            _lat = location[0];
-            _lng = location[1];
-        }
+        } 
+
         var dataString;
        
         // TODO - Draw sun to background
@@ -267,19 +189,14 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         var momentNow = new Time.Moment(now.value() );        
         var sunTimes = new solarTimes();
 
-
-
-        sunTimes = SunCalcModule.getTimes(momentNow.value(), _lat, _lng, _altitude, SunCalcModule.SUNRISE);
-//        System.println( SunCalcModule.PrintTime(sunTimes.solarRise, "Sun Rise: ") );
-//        System.println( SunCalcModule.PrintTime(sunTimes.solarNoon, "Sun Noon: ") );
-//        System.println( SunCalcModule.PrintTime(sunTimes.solarSet, "Sun Set: ") ); 
+        sunTimes = SunCalcModule.getTimes(momentNow.value(), _position.lat, _position.lon, _position.altitude, SunCalcModule.SUNRISE);
 
         dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarRise);
-        drawString(dc, dc.getWidth() / 2, 5*dc.getHeight() / 10, dataString);
+        _ui.drawString(dc, dc.getWidth() / 2, 5*dc.getHeight() / 10, dataString, _fontSmall);
         dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarNoon);
-        drawString(dc, dc.getWidth() / 2, 6*dc.getHeight() / 10, dataString);
+        _ui.drawString(dc, dc.getWidth() / 2, 6*dc.getHeight() / 10, dataString, _fontSmall);
         dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarSet);
-        drawString(dc, dc.getWidth() / 2, 7*dc.getHeight() / 10, dataString);
+        _ui.drawString(dc, dc.getWidth() / 2, 7*dc.getHeight() / 10, dataString, _fontSmall);
 
         var solarRiseHour = SunCalcModule.LocaleTimeAsDesimalHour(sunTimes.solarRise); 
         var solarSetHour  = SunCalcModule.LocaleTimeAsDesimalHour(sunTimes.solarSet); 
@@ -291,13 +208,13 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         var degreeEnd = solarSetHour /24.0*360.0 -90; 
         dc.drawArc(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2-1, Graphics.ARC_COUNTER_CLOCKWISE , degreeStart, degreeEnd);
 
-        //Draw sun
+       //Draw sun
         var coord = new Array<Double>[2];        
         var nowHour = 5.0;
         var offsetFromPerimeter = 3;
         var sunSize = 5;
         nowHour = SunCalcModule.LocaleTimeAsDesimalHour(momentNow.value()); 
-        coord = Hour2clockCoord(dc , nowHour , offsetFromPerimeter);
+        coord = _ui.calcHour2clockCoord(dc , nowHour , offsetFromPerimeter);
         dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_YELLOW);
         if ( (nowHour>solarRiseHour && nowHour<solarSetHour) ){
             var x = coord[0];
@@ -307,27 +224,12 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         else {
             dc.drawCircle(coord[0], coord[1], sunSize);
         }
+
+        //var nowHour = SunCalcModule.LocaleTimeAsDesimalHour(momentNow.value()); 
+        //_ui.drawSunArcOnPerimeter(dc , Graphics.COLOR_YELLOW, sunTimes, nowHour);
     }
 
-    public function drawPolygon(dc as Dc, points as Lang.Array<Graphics.Point2D>) as Void {
-        if (points.size() > 2) {
-            // Draw outline
-            for (var i = 0; i < points.size(); i++) {
-                var endX, endY;
-                var startX = points[i][0];
-                var startY = points[i][1];
-                if (i < points.size()-1 ){
-                    endX = points[i+1][0];
-                    endY = points[i+1][1];
-                }
-                else{
-                    endX = points[0][0];
-                    endY = points[0][1];
-                }
-                dc.drawLine(startX, startY, endX, endY);
-            }
-        }
-    }
+
 
     //! Handle the update event
     //! @param dc Device context
@@ -360,9 +262,9 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         targetDc.fillPolygon([[0, 0],[targetDc.getWidth(), 0],[targetDc.getWidth(), targetDc.getHeight()],[0, 0]]);
 */
         // Draw the tick marks around the edges of the screen
-        drawHashMarks(targetDc, 12, 20, 3, Graphics.COLOR_WHITE);  //12 Houre marks
-        //drawHashMarks(targetDc, 60, 8, 1, Graphics.COLOR_LT_GRAY); //60 Minute marks
-        //drawHashMarks(targetDc, 24, 3, 3, Graphics.COLOR_BLUE);  //24 Houre (sun) marks
+        _ui.drawIndex(targetDc, 12, 20, 3, Graphics.COLOR_WHITE);  //12 Houre marks
+        //drawIndex(targetDc, 60, 8, 1, Graphics.COLOR_LT_GRAY); //60 Minute marks
+        //drawIndex(targetDc, 24, 3, 3, Graphics.COLOR_BLUE);  //24 Houre (sun) marks
 
         // Draw the do-not-disturb icon if we support it and the setting is enabled
         if (System.getDeviceSettings().doNotDisturb && (null != _dndIcon)) {
@@ -377,24 +279,21 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             var hourHandAngle = (((clockTime.hour % 12) * 60) + clockTime.min);
             hourHandAngle = hourHandAngle / (12 * 60.0);
             hourHandAngle = hourHandAngle * Math.PI * 2;
-            targetDc.fillPolygon(generateHandCoordinates(_screenCenterPoint, hourHandAngle, HOUR_HAND_LENGTH/2.5, 0, dc.getWidth() / 30));
-            drawPolygon(targetDc, generateHandCoordinates(_screenCenterPoint, hourHandAngle, HOUR_HAND_LENGTH, 0, dc.getWidth() / 30));
+            targetDc.fillPolygon(_ui.generateHandCoordinates(_screenCenterPoint, hourHandAngle, HOUR_HAND_LENGTH/2.5, 0, dc.getWidth() / 30));
+            _ui.drawPolygon(targetDc, _ui.generateHandCoordinates(_screenCenterPoint, hourHandAngle, HOUR_HAND_LENGTH, 0, dc.getWidth() / 30));
             System.println("draw hour hand");
         }
 
         if (_screenCenterPoint != null) {
             // Draw the minute hand.
             var minuteHandAngle = (clockTime.min / 60.0) * Math.PI * 2;
-            targetDc.fillPolygon(generateHandCoordinates(_screenCenterPoint, minuteHandAngle, MINUTE_HAND_LENGTH/2.5, 0, dc.getWidth() / 40));
-            drawPolygon(targetDc, generateHandCoordinates(_screenCenterPoint, minuteHandAngle, MINUTE_HAND_LENGTH, 0, dc.getWidth() / 40));
+            targetDc.fillPolygon(_ui.generateHandCoordinates(_screenCenterPoint, minuteHandAngle, MINUTE_HAND_LENGTH/2.5, 0, dc.getWidth() / 40));
+            _ui.drawPolygon(targetDc, _ui.generateHandCoordinates(_screenCenterPoint, minuteHandAngle, MINUTE_HAND_LENGTH, 0, dc.getWidth() / 40));
             System.println("draw minute hand");
         }
 
         // Draw the arbor in the center of the screen.
-        targetDc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_BLACK);
-        targetDc.fillCircle(width / 2, height / 2, 7);
-        targetDc.setColor(Graphics.COLOR_BLACK,Graphics.COLOR_BLACK);
-        targetDc.drawCircle(width / 2, height / 2, 7);
+        _ui.drawArbor(targetDc);
 
         // Draw the 3, 6, 9, and 12 hour labels.
         var font = _fontSmallStrong;
@@ -418,7 +317,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             dateDc.drawBitmap(0, -(height / 4), offscreenBuffer);
 
             // Draw the date string into the buffer.
-            drawDateString(dateDc, width / 2, 0);
+            _ui.drawDateString(dateDc, width / 2, 0, _fontSmall);
         }
 
         // Output the offscreen buffers to the main display if required.
@@ -444,7 +343,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             var secondHand = (clockTime.sec / 60.0) * Math.PI * 2;
 
             if (_screenCenterPoint != null) {
-                dc.fillPolygon(generateHandCoordinates(_screenCenterPoint, secondHand, SECOND_HAND_LENGTH, 20, dc.getWidth() / 120));
+                dc.fillPolygon(_ui.generateHandCoordinates(_screenCenterPoint, secondHand, SECOND_HAND_LENGTH, 20, dc.getWidth() / 120));
                 System.println("draw second hand");
             }
         }
@@ -452,28 +351,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         _fullScreenRefresh = false;
     }
 
-    //! Draw the date string into the provided buffer at the specified location
-    //! @param dc Device context
-    //! @param x The x location of the text
-    //! @param y The y location of the text
-    private function drawDateString(dc as Dc, x as Number, y as Number) as Void {
-        var info = Gregorian.info(Time.now(), Time.FORMAT_LONG);
-        var dateStr = Lang.format("$1$ $2$ $3$", [info.day_of_week, info.month, info.day]);
 
-        drawString(dc, x , y , dateStr);
-        //dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        //dc.drawText(x, y, Graphics.FONT_MEDIUM, dateStr, Graphics.TEXT_JUSTIFY_CENTER);
-    }
-
-    //! Draw the date string into the provided buffer at the specified location
-    //! @param dc Device context
-    //! @param x The x location of the text
-    //! @param y The y location of the text
-    private function drawString(dc as Dc, x as Number, y as Number, str as String) as Void {
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x, y, _fontSmall, str, Graphics.TEXT_JUSTIFY_CENTER);
-    }
-    
     //! Handle the partial update event
     //! @param dc Device context
     public function onPartialUpdate(dc as Dc) as Void {
@@ -490,7 +368,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
         if (_screenCenterPoint != null) {
             var secondHand = (clockTime.sec / 60.0) * Math.PI * 2;
-            var secondHandPoints = generateHandCoordinates(_screenCenterPoint, secondHand, SECOND_HAND_LENGTH, 20, dc.getWidth() / 120);
+            var secondHandPoints = _ui.generateHandCoordinates(_screenCenterPoint, secondHand, SECOND_HAND_LENGTH, 20, dc.getWidth() / 120);
             // Update the clipping rectangle to the new location of the second hand.
             var curClip = getBoundingBox(secondHandPoints);
             var bBoxWidth = curClip[1][0] - curClip[0][0] + 1;
