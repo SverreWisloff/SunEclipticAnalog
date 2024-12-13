@@ -63,21 +63,6 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - VS Code: Build + run: `F5`
 - VS Code: Ctrl + Shift + P: `Monkey C`
 
-## Log
-- 20241209: Develop with only Fenix 7 pro, excl other watches.
-- 20241207: Established class UiAnalog. a class with functionality for drawing an analog clock face, such as clock hands
-- 20241206: New small fonts
-- 20241205: working on getpos(). The Connect-API is buggy...
-- 20241204: Get the position getpos()
-- 20241201: SunCalc - solarEvent as enum
-- 20241127: Hour2clockCoord(), drawSun()
-- 20241124: First verion of SunCalc.mc
-- 20241123: SunCalc.js written by 'Leaflet' Agafonkin
-- 20241122: drawHashMarks
-- 20241118: How to draw text rotated? [Scalable font](https://forums.garmin.com/developer/connect-iq/f/discussion/336765/bitmap-transformation) Samplecode: TrueTypeFonts. `drawAngledText` and `getVectorFont`. Deside to not rotate text because of lack of backward compatibility
-- 20241116: Github. Getting font from https://www.dafont.com/
-- 20241113: Establised. Copied from  `Sample`. API 1.2. Watches with circle-face.
-
 ## TODO
 - [ ] Compute sun sosition for a whole day
 - [ ] Test south hemisphere
