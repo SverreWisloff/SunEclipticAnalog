@@ -18,8 +18,9 @@ It seems that it is "leaflet" Agafonkin who is behind the suncalc code that is u
 | Navn  | språk | link   |
 |-------|-------|--------|
 | SunCalc - @mourner | `js` | [Github](https://github.com/mourner/suncalc) |
-| Sundance - cizi | `monkeyC` | [Github](https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc) |
 | SunCalc - haraldh | `monkeyC` | [Github](https://github.com/haraldh/SunCalc) [mc](https://github.com/haraldh/SunCalc/blob/master/source/SunCalc.mc)|
+| Sundance - cizi (rotated fonts)| `monkeyC` | [Github](https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc) |
+|Late (nice fonts)|`monkeyC`|[Github](https://github.com/myneur/late/) [mc](https://github.com/myneur/late/blob/master/source/sunrisetCompute.mc)|
 |runst-sun | `rust` |[Github](https://github.imc.re/flosse/rust-sun) [rust](https://github.imc.re/flosse/rust-sun/blob/master/src/lib.rs)|
 |Python port of suncalc.js | `Pyton` | [link](https://pypi.org/project/suncalc/) |
 |R|`R`|[link](https://cran.r-project.org/web/packages/suncalc/index.html) [Github](https://github.com/datastorm-open/suncalc)
@@ -36,7 +37,6 @@ License: BSD 2-Clause "Simplified" License
 
 Sundance: Both a  mc-fork, and rotated fonts for 24-hours at the perimeter  
 https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
-https://github.com/myneur/late/
 
 ## Notes to self while coding
 
@@ -64,6 +64,8 @@ https://github.com/myneur/late/
 - VS Code: Ctrl + Shift + P: `Monkey C`
 
 ## Log
+- 20241209: Develop with only Fenix 7 pro, excl other watches.
+- 20241207: Established class UiAnalog. a class with functionality for drawing an analog clock face, such as clock hands
 - 20241206: New small fonts
 - 20241205: working on getpos(). The Connect-API is buggy...
 - 20241204: Get the position getpos()
