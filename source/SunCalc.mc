@@ -217,7 +217,13 @@ module SunCalcModule
 
 //////////////////////////////////////////// END OF Agafonkins code ////////////////// 
 
-    function round(a) {
+    // calculates sun positions for evry hour a given date and latitude/longitude
+    function getPositionForWholeDay(date, lat, lng, height)
+    {
+        //TODO
+    }
+
+    private function round(a) {
         if (a > 0) {
             return (a + 0.5).toNumber().toFloat();
         } else {

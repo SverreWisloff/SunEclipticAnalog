@@ -79,7 +79,6 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - 20241113: Establised. Copied from  `Sample`. API 1.2. Watches with circle-face.
 
 ## TODO
-- [ ] Get nice font, perhaps from https://github.com/myneur/late/
 - [ ] Compute sun sosition for a whole day
 - [ ] Test south hemisphere
 - [ ] Test midnight sun and Polar Night
@@ -87,6 +86,7 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - [ ] Draw sun to background
 - [ ] [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
+- [x] Get nice font, perhaps from https://github.com/myneur/late/
 - [x] Get the position 
 - [x] Find SunCalc in different languages to read how other projects forks suncalc
 - [x] Finishing first simple version of drawSun() : Sun-Arc and sun-now

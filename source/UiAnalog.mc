@@ -25,14 +25,14 @@ class UiAnalog {
         var solarSetHour  = SunCalcModule.LocaleTimeAsDesimalHour(sunTimes.solarSet); 
         var degreeStart = solarRiseHour /24.0*360.0 -90;
         var degreeEnd = solarSetHour /24.0*360.0 -90; 
-        dc.drawArc(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2-1, Graphics.ARC_COUNTER_CLOCKWISE , degreeStart, degreeEnd);
+        dc.drawArc(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2, Graphics.ARC_COUNTER_CLOCKWISE , degreeStart, degreeEnd);
 
         //Draw sun
         var coord = new Array<Double>[2];        
         var offsetFromPerimeter = 4;
-        var sunSize = 4;
+        var sunSize = 5;
 
-        coord = calcHour2clockCoord(dc , nowHour , offsetFromPerimeter);
+        coord = calcHour2clockCoord(dc , nowHour , offsetFromPerimeter) as Array<Double>;
 
         if ( (nowHour>solarRiseHour && nowHour<solarSetHour) ){
             var x = coord[0];
@@ -52,6 +52,7 @@ class UiAnalog {
         dc.setColor(Graphics.COLOR_BLACK,Graphics.COLOR_BLACK);
         dc.drawCircle(dc.getWidth() / 2, dc.getHeight() / 2, 7);
     }
+
 
     //Calcululate from 24hour to clock-coord on perimeter
     function calcHour2clockCoord(dc as Dc, desimal24hour as Lang.Double, offsetFromPerimeter as Lang.Numeric){
@@ -127,6 +128,19 @@ class UiAnalog {
         
     }
 
+    // Draw the 3, 6, 9, and 12 hour labels.
+    public function drawIndexLabels(dc as Dc, font){
+        
+        if (font != null) {
+            dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
+            dc.drawText(dc.getWidth() / 2, 2, font, "12", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(dc.getWidth() - 2, (dc.getHeight() / 2) - 15, font, "3", Graphics.TEXT_JUSTIFY_RIGHT);
+            dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
+            dc.drawText(dc.getWidth() / 2, dc.getHeight() - 30, font, "6", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(2, (dc.getHeight() / 2) - 15, font, "9", Graphics.TEXT_JUSTIFY_LEFT);
+        }
+    }
+
     public function drawPolygon(dc as Dc, points as Lang.Array<Graphics.Point2D>) as Void {
         if (points.size() > 2) {
             // Draw outline
@@ -152,7 +166,6 @@ class UiAnalog {
     //! @param x The x location of the text
     //! @param y The y location of the text
     function drawString(dc as Dc, x as Number, y as Number, str as String, font as Graphics.FontType) as Void {
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(x, y, font, str, Graphics.TEXT_JUSTIFY_CENTER);
     }
 

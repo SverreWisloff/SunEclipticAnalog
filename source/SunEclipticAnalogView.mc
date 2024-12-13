@@ -21,7 +21,6 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var _fontSmall as FontResource?;
     private var _fontSmallStrong as FontResource?;
     private var _isAwake as Boolean?;
-    private var _screenShape as ScreenShape;
     private var _dndIcon as BitmapResource?;
     private var _offscreenBuffer as BufferedBitmap?;
     private var _dateBuffer as BufferedBitmap?;
@@ -34,15 +33,14 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
     private var _ui;
 
-    private var _location = null;
     private var _lastGoodPosition;
     private var _position;
+    private var _posSource;
 
 
     //! Initialize variables for this view
     public function initialize() {
         WatchFace.initialize();
-        _screenShape = System.getDeviceSettings().screenShape;
         _fullScreenRefresh = true;
         _partialUpdatesAllowed = (WatchUi.WatchFace has :onPartialUpdate);
 
@@ -51,52 +49,56 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
         System.println("::initialize");
 
-        getpos();
+        getPos();
 
     }
 
-    public function getpos(){
-        var now = Time.now();
-        var today = Gregorian.info(now, Time.FORMAT_SHORT);
-
-        var activityInfo = Activity.getActivityInfo();
-        var location = activityInfo.currentLocation;
-        if (location!=null){
+    public function getGpsPos(){
+		var locationInfo = Position.getInfo();
+		if (locationInfo == null || locationInfo.position == null) {
+			return null;
+		}
+		var location = locationInfo.position.toDegrees();
+		if ((Math.round(location[0]) == 0 && Math.round(location[1]) == 0) ||
+			Math.round(location[0]) == 180 && Math.round(location[1]) == 180) {
+			return null;
+		}
+        _posSource = "G";
+		return location;
+    }
+    private function getWeatherPos()
+	{
+		var conditions = Weather.getCurrentConditions();
+		if (conditions == null || conditions.observationLocationPosition == null) {
+			return null;
+		}
+		var location = conditions.observationLocationPosition.toDegrees();
+		if ((Math.round(location[0]) == 0 && Math.round(location[1]) == 0) ||
+			Math.round(location[0]) == 180 && Math.round(location[1]) == 180) {
+			return null;
+		}
+        _posSource = "W";
+		return location;
+	}
+    private function getPos()
+	{
+   		var location = getGpsPos();
+		if (location == null) {
+			location = getWeatherPos();
+		}
+        if (location != null) {
+            var now = Time.now();
+            var today = Gregorian.info(now, Time.FORMAT_SHORT);            
             _lastGoodPosition = today;
+
             _position.knownPosition = true;
             _position.lat = location[0];
-            _position.lon = location[1];
-            //TODO _position.altitude = ; 
-        } else if(Toy has :Weather){
-            var weather = Toy.Weather.getCurrentConditions();
-            if(weather != null){
-                if(weather.observationLocationName!=null){
-                    var location2 = weather.observationLocationPosition.toDegrees();	
-                    _position.knownPosition = true;
-                    _position.lat = location2[0];
-                    _position.lon = location2[1];
-            //TODO _position.altitude = ; 
-                    _lastGoodPosition = today;
-                }
-            }
-	    } 
-
-        if (!_position.knownPosition){
-            //Didnt get a good location
-/*
-            //JUST DEBUGGING: TODO DELETE
-            var location3 = Position.parse("59.837149, 10.460282", Position.GEO_DEG).toDegrees();
-            _position.knownPosition = true;
-            _position.lat = location3[0];
-            _position.lon = location3[1];
-            _lastGoodPosition = today;
-            return true;
-*/
-            return false;
-        }
-
-        return true;
+            _position.lon = location[1];            
+			//Setting.SetLastKnownLocation(location);
+            //Storage.setValue("lastKnownLocation", location);
+		}
     }
+
 
     //! Configure the layout of the watchface for this device
     //! @param dc Device context
@@ -163,7 +165,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private function drawLocation(dc as Dc) as Void {
         var strLocDate, strLocTime;
         if (_position.knownPosition){
-            strLocDate=_lastGoodPosition.day + "." + _lastGoodPosition.month;
+            strLocDate=_lastGoodPosition.day + "." + _lastGoodPosition.month + _posSource;
             strLocTime= _lastGoodPosition.hour.format("%02u") + ":" + _lastGoodPosition.min.format("%02u");
         } else {
             strLocDate="X";
@@ -177,11 +179,19 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private function drawSun(dc as Dc) as Void {
 
         if (!_position.knownPosition){
-            if (!getpos()){
+            //postition missing - try to get a position
+            if (getPos()==null){
                 return;
             }
+        }
+        /*
+        var time_since_last_pos = _lastGoodPosition - today; 
+        if(time_since_last_pos>5){
+            //old postition missing - try to get a new one
+            getpos();
         } 
-
+        */
+        
         var dataString;
        
         // TODO - Draw sun to background
@@ -190,7 +200,9 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         var sunTimes = new solarTimes();
 
         sunTimes = SunCalcModule.getTimes(momentNow.value(), _position.lat, _position.lon, _position.altitude, SunCalcModule.SUNRISE);
-
+        
+        dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
+        
         dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarRise);
         _ui.drawString(dc, dc.getWidth() / 2, 5*dc.getHeight() / 10, dataString, _fontSmall);
         dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarNoon);
@@ -198,35 +210,9 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarSet);
         _ui.drawString(dc, dc.getWidth() / 2, 7*dc.getHeight() / 10, dataString, _fontSmall);
 
-        var solarRiseHour = SunCalcModule.LocaleTimeAsDesimalHour(sunTimes.solarRise); 
-        var solarSetHour  = SunCalcModule.LocaleTimeAsDesimalHour(sunTimes.solarSet); 
+        var nowHour = SunCalcModule.LocaleTimeAsDesimalHour(momentNow.value()); 
+        _ui.drawSunArcOnPerimeter(dc, Graphics.COLOR_YELLOW, sunTimes , nowHour);
 
-        // Draw daytaime-arc
-        dc.setPenWidth(3);
-        dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_YELLOW);
-        var degreeStart = solarRiseHour /24.0*360.0 -90;
-        var degreeEnd = solarSetHour /24.0*360.0 -90; 
-        dc.drawArc(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2-1, Graphics.ARC_COUNTER_CLOCKWISE , degreeStart, degreeEnd);
-
-       //Draw sun
-        var coord = new Array<Double>[2];        
-        var nowHour = 5.0;
-        var offsetFromPerimeter = 3;
-        var sunSize = 5;
-        nowHour = SunCalcModule.LocaleTimeAsDesimalHour(momentNow.value()); 
-        coord = _ui.calcHour2clockCoord(dc , nowHour , offsetFromPerimeter);
-        dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_YELLOW);
-        if ( (nowHour>solarRiseHour && nowHour<solarSetHour) ){
-            var x = coord[0];
-            var y = coord[1];
-            dc.fillCircle(x, y, sunSize);
-        }
-        else {
-            dc.drawCircle(coord[0], coord[1], sunSize);
-        }
-
-        //var nowHour = SunCalcModule.LocaleTimeAsDesimalHour(momentNow.value()); 
-        //_ui.drawSunArcOnPerimeter(dc , Graphics.COLOR_YELLOW, sunTimes, nowHour);
     }
 
 
@@ -263,7 +249,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 */
         // Draw the tick marks around the edges of the screen
         _ui.drawIndex(targetDc, 12, 20, 3, Graphics.COLOR_WHITE);  //12 Houre marks
-        //drawIndex(targetDc, 60, 8, 1, Graphics.COLOR_LT_GRAY); //60 Minute marks
+        _ui.drawIndex(targetDc, 60, 8, 1, Graphics.COLOR_LT_GRAY); //60 Minute marks
         //drawIndex(targetDc, 24, 3, 3, Graphics.COLOR_BLUE);  //24 Houre (sun) marks
 
         // Draw the do-not-disturb icon if we support it and the setting is enabled
@@ -273,6 +259,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
         // Use white to draw the hour and minute hands
         targetDc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        targetDc.setPenWidth(2);
 
         if (_screenCenterPoint != null) {
             // Draw the hour hand. Convert it to minutes and compute the angle.
@@ -296,15 +283,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         _ui.drawArbor(targetDc);
 
         // Draw the 3, 6, 9, and 12 hour labels.
-        var font = _fontSmallStrong;
-        if (font != null) {
-            targetDc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
-            targetDc.drawText(width / 2, 2, font, "12", Graphics.TEXT_JUSTIFY_CENTER);
-            targetDc.drawText(width - 2, (height / 2) - 15, font, "3", Graphics.TEXT_JUSTIFY_RIGHT);
-            targetDc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
-            targetDc.drawText(width / 2, height - 30, font, "6", Graphics.TEXT_JUSTIFY_CENTER);
-            targetDc.drawText(2, (height / 2) - 15, font, "9", Graphics.TEXT_JUSTIFY_LEFT);
-        }
+        _ui.drawIndexLabels(targetDc , _fontSmallStrong);
 
         // If we have an offscreen buffer that we are using for the date string,
         // Draw the date into it. If we do not, the date will get drawn every update
@@ -317,6 +296,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             dateDc.drawBitmap(0, -(height / 4), offscreenBuffer);
 
             // Draw the date string into the buffer.
+            dateDc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
             _ui.drawDateString(dateDc, width / 2, 0, _fontSmall);
         }
 
