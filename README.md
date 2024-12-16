@@ -64,13 +64,13 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - VS Code: Ctrl + Shift + P: `Monkey C`
 
 ## TODO
-- [ ] Compute sun sosition for a whole day
 - [ ] Test south hemisphere
 - [ ] Test midnight sun and Polar Night
 - [ ] Calculate the size of graphic elements (clock hands) proportional to the clock's size (in pixels)
 - [ ] Draw sun to background
 - [ ] [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
+- [x] Compute sun position for a whole day
 - [x] Get nice font, perhaps from https://github.com/myneur/late/
 - [x] Get the position 
 - [x] Find SunCalc in different languages to read how other projects forks suncalc
@@ -80,4 +80,4 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - [x] Create a *debug* watchface where the solar calculations can be developed and tested.
 
 ## Screenshot
-![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241206.png?raw=true)
+![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241216.png?raw=true)
