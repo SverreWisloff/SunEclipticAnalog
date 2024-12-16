@@ -12,6 +12,7 @@ import Toybox.System;
 import Toybox.Time;
 import Toybox.Time.Gregorian;
 import Toybox.WatchUi;
+import Toybox.Position;
 import SunCalcModule;
 
 class swPosition
@@ -22,10 +23,15 @@ class swPosition
     public var knownPosition;
     
     public function initialize() {
-        lat  = 0.0;
+        lat = 0.0;
         lon = 0.0;
         altitude = 0.0;
         knownPosition = false;
+    }
+    public function setLocation(loc as Location) {
+        lat = loc[0];
+        lon = loc[1];
+        knownPosition = true;
     }
 }
 
@@ -44,12 +50,13 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var SECOND_HAND_LENGTH = 110;//TODO: CALCULATE POSSIBLE HAND-LENGTH
     private var MINUTE_HAND_LENGTH = 90; 
     private var HOUR_HAND_LENGTH = 60; 
+    private var DRAW_SUN_ARC_ON_PERIMETER = false;
 
     private var _ui;
 
     private var _lastGoodPosition;
     private var _position;
-    private var _posSource;
+    
 
 
     //! Initialize variables for this view
@@ -67,7 +74,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
     }
 
-    public function getGpsPos(){
+    public function getGpsPos() {
 		var locationInfo = Position.getInfo();
 		if (locationInfo == null || locationInfo.position == null) {
 			return null;
@@ -77,11 +84,10 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 			Math.round(location[0]) == 180 && Math.round(location[1]) == 180) {
 			return null;
 		}
-        _posSource = "G";
 		return location;
     }
 
-    private function getWeatherPos(){
+    private function getWeatherPos() {
 		var conditions = Weather.getCurrentConditions();
 		if (conditions == null || conditions.observationLocationPosition == null) {
 			return null;
@@ -91,11 +97,10 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 			Math.round(location[0]) == 180 && Math.round(location[1]) == 180) {
 			return null;
 		}
-        _posSource = "W";
 		return location;
 	}
     
-    private function getPos(){
+    private function getPos() as Void {
    		var location = getGpsPos() as Array<Double>;
 		if (location == null) {
 			location = getWeatherPos();
@@ -105,9 +110,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             var today = Gregorian.info(now, Time.FORMAT_SHORT);            
             _lastGoodPosition = today;
 
-            _position.knownPosition = true;
-            _position.lat = location[0];
-            _position.lon = location[1];           
+            _position.setLocation(location);
 		}
     }
 
@@ -177,7 +180,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private function drawLocation(dc as Dc) as Void {
         var strLocDate, strLocTime;
         if (_position.knownPosition){
-            strLocDate=_lastGoodPosition.day + "." + _lastGoodPosition.month + _posSource;
+            strLocDate=_lastGoodPosition.day + "." + _lastGoodPosition.month;
             strLocTime= _lastGoodPosition.hour.format("%02u") + ":" + _lastGoodPosition.min.format("%02u");
         } else {
             strLocDate="X";
@@ -206,7 +209,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         
         var dataString;
        
-        // TODO - Draw sun to background
+        //Draw sun to background
         var now = Time.now();
         var momentNow = new Time.Moment(now.value() );        
         var sunTimes = new solarTimes();
@@ -223,10 +226,12 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         _ui.drawString(dc, dc.getWidth() / 2, 7*dc.getHeight() / 10, dataString, _fontSmall);
 
         var nowHour = SunCalcModule.LocaleTimeAsDesimalHour(momentNow.value()); 
-        _ui.drawSunArcOnPerimeter(dc, Graphics.COLOR_YELLOW, sunTimes , nowHour);
+        if (DRAW_SUN_ARC_ON_PERIMETER){
+            _ui.drawSunArcOnPerimeter(dc, Graphics.COLOR_YELLOW, sunTimes , nowHour);
+        }
 
-        var sunPositions = new Array<SunCoord_LocalPosition>[23];
-
+        //Draw sun ephemeris
+        var sunPositions = new Array<SunCoord_LocalPosition>[24];
         sunPositions = SunCalcModule.getSunPositionForDay(momentNow.value(), _position.lat, _position.lon);
         dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_YELLOW);
         dc.setPenWidth(1);
@@ -235,7 +240,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         //Draw sun on Sky-view
         var sunSize = 5; 
         var sunCoordLocal = SunCalcModule.getPosition(momentNow.value(), _position.lat, _position.lon); //SunCalcModule.SunCoord_LocalPosition
-        var point = _ui.convertPolarToScreenCoord(dc , sunCoordLocal);//as Graphics.Point2D
+        var point = _ui.convertPolarToScreenCoord(dc , sunCoordLocal) as Graphics.Point2D;
         if ( (momentNow.value()>sunTimes.solarRise && momentNow.value()<sunTimes.solarSet) ){
             var x = point[0];
             var y = point[1];
@@ -336,7 +341,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         drawBackground(dc);
 
         //Draw sun-info
-        drawLocation(dc);
+        //drawLocation(dc);
         drawSun(dc);        
 
         // Draw the battery percentage directly to the main screen.

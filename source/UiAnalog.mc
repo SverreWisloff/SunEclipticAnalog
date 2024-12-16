@@ -5,10 +5,6 @@ import Toybox.Time;
 using Toybox.Math;
 import SunCalcModule;
 
-const DRAW_SUN_ARC_ON_PERIMETER = false;
-const DRAW_SUN_ON_PERIMETER = false;
-
-
 
 
 //Index (Hour markers): Symbols, numbers, or dots/lines that indicate the hours around the clock face. These can be Arabic numerals (1, 2, 3...) or Roman numerals (I, II, III...) or simply markers.
@@ -22,7 +18,7 @@ const DRAW_SUN_ON_PERIMETER = false;
 //a class with functionality for drawing an analog clock face, such as clock hands
 class UiAnalog {
 
-    function drawSunArcOnPerimeter(dc as Dc, sunColor as Graphics.ColorType, sunTimes as solarTimes, nowHour){
+    function drawSunArcOnPerimeter(dc as Dc, sunColor as Graphics.ColorType, sunTimes as solarTimes, nowHour) as Void {
         // Draw daytaime-arc
         dc.setPenWidth(1);
         dc.setColor(sunColor, sunColor);
@@ -31,40 +27,34 @@ class UiAnalog {
         var degreeStart = solarRiseHour /24.0*360.0 -90;
         var degreeEnd = solarSetHour /24.0*360.0 -90; 
 
-        if (DRAW_SUN_ARC_ON_PERIMETER){
-            dc.drawArc(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2, Graphics.ARC_COUNTER_CLOCKWISE , degreeStart, degreeEnd);
-        }
+        dc.drawArc(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2, Graphics.ARC_COUNTER_CLOCKWISE , degreeStart, degreeEnd);
 
         //Draw sun on perimeter
-        if (DRAW_SUN_ON_PERIMETER){
-            var coord = new Array<Double>[2];        
-            var offsetFromPerimeter = 5;
-            var sunSize = 5;
+        var coord = new Array<Double>[2];        
+        var offsetFromPerimeter = 5;
+        var sunSize = 5;
 
-            coord = calcHour2clockCoord(dc , nowHour , offsetFromPerimeter) as Array<Double>;
-            if ( (nowHour>solarRiseHour && nowHour<solarSetHour) ){
-                var x = coord[0];
-                var y = coord[1];
-                dc.fillCircle(x, y, sunSize);
-            }
-            else {
-                dc.drawCircle(coord[0], coord[1], sunSize);
-            }
+        coord = calcHour2clockCoord(dc , nowHour , offsetFromPerimeter) ;
+        if ( (nowHour>solarRiseHour && nowHour<solarSetHour) ){
+            dc.fillCircle(coord[0], coord[1], sunSize);
+        }
+        else {
+            dc.drawCircle(coord[0], coord[1], sunSize);
         }
 
     }
 
     function drawArbor(dc as Dc){
         // Draw the arbor in the center of the screen.
+        dc.setPenWidth(4);
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_BLACK);
         dc.fillCircle(dc.getWidth() / 2, dc.getHeight() / 2, 7);
         dc.setColor(Graphics.COLOR_BLACK,Graphics.COLOR_BLACK);
         dc.drawCircle(dc.getWidth() / 2, dc.getHeight() / 2, 7);
     }
 
-
     //Calcululate from 24hour to clock-coord on perimeter
-    function calcHour2clockCoord(dc as Dc, desimal24hour as Lang.Double, offsetFromPerimeter as Lang.Numeric){
+    function calcHour2clockCoord(dc as Dc, desimal24hour as Lang.Double, offsetFromPerimeter as Lang.Numeric) as Array<Double> {
         var angleRad = (desimal24hour / 12.0 * Math.PI) - 3.0*Math.PI/2.0 ;
         var x = dc.getHeight()/2 + (dc.getHeight()/2 - offsetFromPerimeter)*Math.cos(angleRad);
         var y = dc.getWidth()/2  + (dc.getWidth()/2  - offsetFromPerimeter)*Math.sin(angleRad);
@@ -139,14 +129,14 @@ class UiAnalog {
 
     // Draw the 3, 6, 9, and 12 hour labels.
     public function drawIndexLabels(dc as Dc, font){
-        
+    var margin = 10;
         if (font != null) {
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
-            dc.drawText(dc.getWidth() / 2, 2, font, "12", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.drawText(dc.getWidth() - 2, (dc.getHeight() / 2) - 15, font, "3", Graphics.TEXT_JUSTIFY_RIGHT);
+            dc.drawText(dc.getWidth() / 2, margin, font, "12", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(dc.getWidth() - margin, (dc.getHeight() / 2) - 15, font, "3", Graphics.TEXT_JUSTIFY_RIGHT);
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
-            dc.drawText(dc.getWidth() / 2, dc.getHeight() - 30, font, "6", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.drawText(2, (dc.getHeight() / 2) - 15, font, "9", Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(dc.getWidth() / 2, dc.getHeight() - 30 - margin, font, "6", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(margin, (dc.getHeight() / 2) - 15, font, "9", Graphics.TEXT_JUSTIFY_LEFT);
         }
     }
 

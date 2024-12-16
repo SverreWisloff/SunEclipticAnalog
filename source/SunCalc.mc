@@ -9,7 +9,7 @@ import Toybox.Time.Gregorian;
 
 module SunCalcModule
 {
-    const rad  = Math.PI / 180.0; 
+    const RAD  = Math.PI / 180.0; 
 
     // sun calculations are based on http://aa.quae.nl/en/reken/zonpositie.html formulas
 
@@ -24,7 +24,7 @@ module SunCalcModule
     function toDays(date)   {   return toJulian(date) - J2000.toDouble(); }    // converts a date into the number of days since the J2000 epoch
 
     // general calculations for position
-    var e = rad * 23.4397; // obliquity of the Earth
+    var e = RAD * 23.4397; // obliquity of the Earth
 
     //ecliptic coordinates:    l = ecliptic longitude   ,      b = ecliptic latitude
     //equatorial coordinates: ra = right ascension      ,    dec = declination
@@ -34,7 +34,7 @@ module SunCalcModule
     function azimuth(H, phi, dec){ return Math.atan2(Math.sin(H), Math.cos(H) * Math.sin(phi) - Math.tan(dec) * Math.cos(phi));    }
     function altitude(H, phi, dec){ return Math.asin(Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(H)); }
 
-    function siderealTime(d, lw) { return rad * (280.16 + 360.9856235 * d) - lw; } // calculates the sidereal time for a given date and location. lw: longitude of the observer's location (in radians)
+    function siderealTime(d, lw) { return RAD * (280.16 + 360.9856235 * d) - lw; } // calculates the sidereal time for a given date and location. lw: longitude of the observer's location (in RADians)
 
     function astroRefraction(h) {
         if (h < 0) // the following formula works for positive altitudes only.
@@ -47,13 +47,21 @@ module SunCalcModule
     }
 
     // general sun calculations
-    function solarMeanAnomaly(d) {return rad * (357.5291 + 0.98560028 * d);}
+    function solarMeanAnomaly(d) {return RAD * (357.5291 + 0.98560028 * d);}
 
     function eclipticLongitude(M) {
-        var C = rad * (1.9148 * Math.sin(M) + 0.02 * Math.sin(2.0 * M) + 0.0003 * Math.sin(3.0 * M)); // equation of center
-        var P = rad * 102.9372; // perihelion of the Earth
+        var C = RAD * (1.9148 * Math.sin(M) + 0.02 * Math.sin(2.0 * M) + 0.0003 * Math.sin(3.0 * M)); // equation of center
+        var P = RAD * 102.9372; // perihelion of the Earth
 
         return M + C + P + Math.PI;
+    }
+
+    // Class that holds times for sunset, sun-noon, and sunrise
+    class solarTimes
+    {
+            var solarSet = 0.0;
+            var solarRise = 0.0;
+            var solarNoon = 0.0;
     }
 
     class LatLon
@@ -93,15 +101,15 @@ module SunCalcModule
     function getPosition(date, lat, lng) {
         var sunCoordLocal = new SunCoord_LocalPosition();
         var sunCoordSphere = new SunCoord_CelestialSphere();
-        var lw  = rad * -lng;
-        var phi = rad * lat;
+        var lw  = RAD * -lng;
+        var phi = RAD * lat;
         var d   = toDays(date);
 
         sunCoordSphere = sunCoords(d);
         var H  = siderealTime(d, lw) - sunCoordSphere.rightAscension;
 
-        sunCoordLocal.azimuth = azimuth(H, phi, sunCoordSphere.declination)/rad;
-        sunCoordLocal.altitude = altitude(H, phi, sunCoordSphere.declination)/rad;
+        sunCoordLocal.azimuth = azimuth(H, phi, sunCoordSphere.declination)/RAD;
+        sunCoordLocal.altitude = altitude(H, phi, sunCoordSphere.declination)/RAD;
 
         return sunCoordLocal;
     }
@@ -143,19 +151,12 @@ module SunCalcModule
         return solarTransitJ(a, M, L);
     }
 
-    // Class that holds times for sunset, sun-noon, and sunrise
-    class solarTimes
-    {
-            var solarSet = 0.0;
-            var solarRise = 0.0;
-            var solarNoon = 0.0;
-    }
 
     // calculates sun times for a given date, latitude/longitude, and, optionally,
     // the observer height (in meters) relative to the horizon
     function getTimes(date, lat, lng, height, solarEvent){
-        var lw  = rad * -lng;
-        var phi = rad *  lat;
+        var lw  = RAD * -lng;
+        var phi = RAD *  lat;
 
         if (height==null){
             height = 0.0;
@@ -175,7 +176,7 @@ module SunCalcModule
 
         var angle_deg = solarEvent.toDouble();
 
-        var h0 = (angle_deg + dh) * rad;
+        var h0 = (angle_deg + dh) * RAD;
         var Jset = getSetJ(h0, lw, phi, dec, n, M, L);
         var Jrise = Jnoon - (Jset - Jnoon);
 
@@ -193,7 +194,6 @@ module SunCalcModule
     // calculates sun position through the day for a given date and latitude/longitude
     function getSunPositionForDay(date, lat, lng) as Array<SunCoord_LocalPosition> {
         var sunCoordLocal = new SunCoord_LocalPosition();
-        //var result = new Array<[Double, Double]>[24];
         var result = new Array<SunCoord_LocalPosition>[24];
 
         var Moment = new Time.Moment(date);
@@ -219,7 +219,6 @@ module SunCalcModule
             resultAA.azimuth = az; 
             resultAA.altitude = alt;
             result[i] = resultAA;
-            //result[i] = [az , alt];
 
             //DEBUG
             System.println("i=" + i + " time=" + PrintLocaleTime(time_i.value()) + " az=" + az.format("%.4f")+ " alt=" + alt.format("%.4f"));
@@ -286,82 +285,4 @@ module SunCalcModule
     }
 
 
-
-/*
-    class SunCalc 
-    {
-        var _date = 0; // the date for which the calculations are to be made
-        var _SunPos_azimuth  = 0;
-        var _SunPos_altitude = 0;
-        var _TimeSet  = 0;
-        var _TimeRise = 0;
-        var _TimeNoon = 0;
-
-        function initialize() {
-            
-        }
-
-        function SetDate(date as Time){
-            _date = date;
-        }
-
-        // calculates sun position for a given date and latitude/longitude
-        function getPosition(date, lat, lng)
-        {
-            var lw  = rad * -lng;
-            var phi = rad * lat;
-            var d   = toDays(date);
-
-            // Calculate sunCoords
-            var M = solarMeanAnomaly(d);
-            var L = eclipticLongitude(M);
-
-            var dec = declination(L, 0);
-            var ra = rightAscension(L, 0);
-
-            var H  = siderealTime(d, lw) - ra;
-
-            _SunPos_azimuth = azimuth(H, phi, dec);
-            _SunPos_altitude = altitude(H, phi, dec);
-
-            return;
-        }
-
-        // calculates sun times for a given date, latitude/longitude, and, optionally,
-        // the observer height (in meters) relative to the horizon
-        // TODO - Make angle_deg as a enum (SUNRISE = -0.833)
-        function getTimes(date, lat, lng, height, angle_deg){
-            var lw  = rad * -lng;
-            var phi = rad *  lat;
-
-            var dh = observerAngle(height);
-
-            var d = toDays(date);
-            var n = julianCycle(d, lw);         // Julian date
-            var ds = approxTransit(0.0, lw, n);
-
-            var m = solarMeanAnomaly(ds);       // Mean solar time
-            var l = eclipticLongitude(m);       // Ecliptic longitude
-            var dec = declination(l, 0.0);      // Declination of the Sun
-
-            var Jnoon = solarTransitJ(ds, m, l);
-
-            var h0 = (angle_deg + dh) * rad;                // 
-            var Jset = getSetJ(h0, lw, phi, dec, n, m, l);  // Sunset
-            var Jrise = Jnoon - (Jset - Jnoon);             // Sunrise
-
-            _TimeSet = fromJulian(Jset);
-            _TimeRise = fromJulian(Jrise);
-            _TimeNoon = fromJulian(Jnoon);
-
-            return _TimeNoon;
-        }
-
-        // calculates sun positions for evry hour a given date and latitude/longitude
-        function getPositionForWholeDay(date, lat, lng)
-        {
-            //TODO
-        }
-    }
-*/  
 }

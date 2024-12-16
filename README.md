@@ -57,6 +57,10 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - [Storage](https://developer.garmin.com/connect-iq/core-topics/properties-and-app-settings/)
     - only make calls that hit the file system as infrequently as possible as those calls are expensive
     - Simulatoren lagrer data her: %Temp%\com.garmin.connectiq\GARMIN\APPS\DATA
+- Build for device:
+    - Ctrl + Shift + P -> Monkey C: Build for Device
+    - bin (Choose a directory for the output and click Select Folder)
+    - Copy the generated `PRG` files to your device’s `GARMIN/APPS` directory
 
 ### VS Code
 - VS Code: Stop running: `shift + F5`
