@@ -14,6 +14,20 @@ import Toybox.Time.Gregorian;
 import Toybox.WatchUi;
 import SunCalcModule;
 
+class swPosition
+{
+    public var lat;
+    public var lon;
+    public var altitude;
+    public var knownPosition;
+    
+    public function initialize() {
+        lat  = 0.0;
+        lon = 0.0;
+        altitude = 0.0;
+        knownPosition = false;
+    }
+}
 
 //! This implements an analog watch face
 //! Original design by Austen Harbour
@@ -66,8 +80,8 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         _posSource = "G";
 		return location;
     }
-    private function getWeatherPos()
-	{
+
+    private function getWeatherPos(){
 		var conditions = Weather.getCurrentConditions();
 		if (conditions == null || conditions.observationLocationPosition == null) {
 			return null;
@@ -80,9 +94,9 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         _posSource = "W";
 		return location;
 	}
-    private function getPos()
-	{
-   		var location = getGpsPos();
+    
+    private function getPos(){
+   		var location = getGpsPos() as Array<Double>;
 		if (location == null) {
 			location = getWeatherPos();
 		}
@@ -93,9 +107,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
             _position.knownPosition = true;
             _position.lat = location[0];
-            _position.lon = location[1];            
-			//Setting.SetLastKnownLocation(location);
-            //Storage.setValue("lastKnownLocation", location);
+            _position.lon = location[1];           
 		}
     }
 
@@ -213,6 +225,26 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         var nowHour = SunCalcModule.LocaleTimeAsDesimalHour(momentNow.value()); 
         _ui.drawSunArcOnPerimeter(dc, Graphics.COLOR_YELLOW, sunTimes , nowHour);
 
+        var sunPositions = new Array<SunCoord_LocalPosition>[23];
+
+        sunPositions = SunCalcModule.getSunPositionForDay(momentNow.value(), _position.lat, _position.lon);
+        dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_YELLOW);
+        dc.setPenWidth(1);
+        _ui.drawPolygonSkyView(dc, sunPositions);
+
+        //Draw sun on Sky-view
+        var sunSize = 5; 
+        var sunCoordLocal = SunCalcModule.getPosition(momentNow.value(), _position.lat, _position.lon); //SunCalcModule.SunCoord_LocalPosition
+        var point = _ui.convertPolarToScreenCoord(dc , sunCoordLocal);//as Graphics.Point2D
+        if ( (momentNow.value()>sunTimes.solarRise && momentNow.value()<sunTimes.solarSet) ){
+            var x = point[0];
+            var y = point[1];
+            dc.fillCircle(x, y, sunSize);
+        }
+        else {
+            dc.drawCircle(point[0], point[1], sunSize);
+        } 
+        
     }
 
 

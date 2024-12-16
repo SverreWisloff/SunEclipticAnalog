@@ -5,20 +5,7 @@ import Toybox.Lang;
 import Toybox.Time;
 import Toybox.Time.Gregorian;
 
-class swPosition
-{
-    public var lat;
-    public var lon;
-    public var altitude;
-    public var knownPosition;
-    
-    public function initialize() {
-        lat  = 0.0;
-        lon = 0.0;
-        altitude = 0.0;
-        knownPosition = false;
-    }
-}
+
 
 module SunCalcModule
 {
@@ -69,6 +56,12 @@ module SunCalcModule
         return M + C + P + Math.PI;
     }
 
+    class LatLon
+    {
+        public var lat = 0.0;
+        public var lon = 0.0;
+    }
+    
     // the Sun’s local position in the sky at a specific time and location (useful for observers on Earth)
     class SunCoord_LocalPosition
     {
@@ -107,32 +100,12 @@ module SunCalcModule
         sunCoordSphere = sunCoords(d);
         var H  = siderealTime(d, lw) - sunCoordSphere.rightAscension;
 
-        sunCoordLocal.azimuth = azimuth(H, phi, sunCoordSphere.declination);
-        sunCoordLocal.altitude = altitude(H, phi, sunCoordSphere.declination);
+        sunCoordLocal.azimuth = azimuth(H, phi, sunCoordSphere.declination)/rad;
+        sunCoordLocal.altitude = altitude(H, phi, sunCoordSphere.declination)/rad;
 
         return sunCoordLocal;
     }
 
-    // calculates sun position for a given date and latitude/longitude
-    function getSunPositionForDay(date, lat, lng) {
-        var sunCoordLocal = new SunCoord_LocalPosition();
-        var sunCoordSphere = new SunCoord_CelestialSphere();
-        var lw  = rad * -lng;
-        var phi = rad * lat;
-        var d   = toDays(date);
-
-        // TODO: 
-        // for (i=0;i++;i<24)
-        //       d = dato + i-timer 
-
-        sunCoordSphere = sunCoords(d);
-        var H  = siderealTime(d, lw) - sunCoordSphere.rightAscension;
-
-        sunCoordLocal.azimuth = azimuth(H, phi, sunCoordSphere.declination);
-        sunCoordLocal.altitude = altitude(H, phi, sunCoordSphere.declination);
-
-        return sunCoordLocal;
-    }
 
     enum solarEvent_enum { 
         NIGHTEND = -18.0,          //The moment when the sky starts to lighten, marking the end of astronomical night
@@ -217,13 +190,46 @@ module SunCalcModule
 
 //////////////////////////////////////////// END OF Agafonkins code ////////////////// 
 
-    // calculates sun positions for evry hour a given date and latitude/longitude
-    function getPositionForWholeDay(date, lat, lng, height)
-    {
-        //TODO
+    // calculates sun position through the day for a given date and latitude/longitude
+    function getSunPositionForDay(date, lat, lng) as Array<SunCoord_LocalPosition> {
+        var sunCoordLocal = new SunCoord_LocalPosition();
+        //var result = new Array<[Double, Double]>[24];
+        var result = new Array<SunCoord_LocalPosition>[24];
+
+        var Moment = new Time.Moment(date);
+        var infoDate = Gregorian.info(Moment, Time.FORMAT_SHORT);
+
+        // Loop for every hour through the day 
+        for (var i = 0; i <= 23; i += 1) {
+
+            var options = {
+                :year   => infoDate.year,
+                :month  => infoDate.month,
+                :day    => infoDate.day,
+                :hour   => i,
+                :minute => 0
+            };
+
+            var time_i = Gregorian.moment(options);
+            sunCoordLocal = getPosition(time_i.value(), lat, lng);
+            var az = sunCoordLocal.azimuth ;
+            var alt = sunCoordLocal.altitude ;
+            
+            var resultAA = new SunCoord_LocalPosition();
+            resultAA.azimuth = az; 
+            resultAA.altitude = alt;
+            result[i] = resultAA;
+            //result[i] = [az , alt];
+
+            //DEBUG
+            System.println("i=" + i + " time=" + PrintLocaleTime(time_i.value()) + " az=" + az.format("%.4f")+ " alt=" + alt.format("%.4f"));
+        }        
+
+        return result;
     }
 
-    private function round(a) {
+
+    function round(a) {
         if (a > 0) {
             return (a + 0.5).toNumber().toFloat();
         } else {

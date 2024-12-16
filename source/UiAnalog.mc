@@ -5,7 +5,11 @@ import Toybox.Time;
 using Toybox.Math;
 import SunCalcModule;
 
-//a class with functionality for drawing an analog clock face, such as clock hands
+const DRAW_SUN_ARC_ON_PERIMETER = false;
+const DRAW_SUN_ON_PERIMETER = false;
+
+
+
 
 //Index (Hour markers): Symbols, numbers, or dots/lines that indicate the hours around the clock face. These can be Arabic numerals (1, 2, 3...) or Roman numerals (I, II, III...) or simply markers.
 //Hour hand: The shorter hand that points to the current hour.
@@ -15,32 +19,37 @@ import SunCalcModule;
 //Date window: A small window on the dial displaying the date. Not all watches have this feature.
 //Subdials: Smaller dials within the main dial, often found on chronograph watches or multifunction watches. These may display additional functions like a stopwatch, seconds, or a second time zone.
 
+//a class with functionality for drawing an analog clock face, such as clock hands
 class UiAnalog {
 
     function drawSunArcOnPerimeter(dc as Dc, sunColor as Graphics.ColorType, sunTimes as solarTimes, nowHour){
         // Draw daytaime-arc
-        dc.setPenWidth(3);
+        dc.setPenWidth(1);
         dc.setColor(sunColor, sunColor);
         var solarRiseHour = SunCalcModule.LocaleTimeAsDesimalHour(sunTimes.solarRise); 
         var solarSetHour  = SunCalcModule.LocaleTimeAsDesimalHour(sunTimes.solarSet); 
         var degreeStart = solarRiseHour /24.0*360.0 -90;
         var degreeEnd = solarSetHour /24.0*360.0 -90; 
-        dc.drawArc(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2, Graphics.ARC_COUNTER_CLOCKWISE , degreeStart, degreeEnd);
 
-        //Draw sun
-        var coord = new Array<Double>[2];        
-        var offsetFromPerimeter = 4;
-        var sunSize = 5;
-
-        coord = calcHour2clockCoord(dc , nowHour , offsetFromPerimeter) as Array<Double>;
-
-        if ( (nowHour>solarRiseHour && nowHour<solarSetHour) ){
-            var x = coord[0];
-            var y = coord[1];
-            dc.fillCircle(x, y, sunSize);
+        if (DRAW_SUN_ARC_ON_PERIMETER){
+            dc.drawArc(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2, Graphics.ARC_COUNTER_CLOCKWISE , degreeStart, degreeEnd);
         }
-        else {
-            dc.drawCircle(coord[0], coord[1], sunSize);
+
+        //Draw sun on perimeter
+        if (DRAW_SUN_ON_PERIMETER){
+            var coord = new Array<Double>[2];        
+            var offsetFromPerimeter = 5;
+            var sunSize = 5;
+
+            coord = calcHour2clockCoord(dc , nowHour , offsetFromPerimeter) as Array<Double>;
+            if ( (nowHour>solarRiseHour && nowHour<solarSetHour) ){
+                var x = coord[0];
+                var y = coord[1];
+                dc.fillCircle(x, y, sunSize);
+            }
+            else {
+                dc.drawCircle(coord[0], coord[1], sunSize);
+            }
         }
 
     }
@@ -159,6 +168,71 @@ class UiAnalog {
                 dc.drawLine(startX, startY, endX, endY);
             }
         }   
+    }
+
+        //   o-----------------> x
+        //   |        |   P
+        //   |        |az/
+        //   |        | /alt
+        //   |        |/
+        //   |        O   
+        //   |
+        //   |
+        //   V
+        //            O: [w/2 , h/2]
+        //            P: [w/2 + alt*sin(az), h/2 - alt*cos(az)]
+    public function convertPolarToScreenCoord(dc as Dc, posPolar as SunCalcModule.SunCoord_LocalPosition) as Graphics.Point2D{
+        var width = dc.getWidth();
+        var height = dc.getHeight();
+        
+        var az = posPolar.azimuth;
+        var alt = posPolar.altitude;
+        var theta = (az) * Math.PI / 180.0; //RAD
+        var r = (90.0-alt)/90.0 * width/2.0;
+        var x = width/2 + r*Math.sin(theta);
+        var y = height/2 - r*Math.cos(theta);
+        var point = [x, y] as Graphics.Point2D;
+        return point;
+    }
+
+    public function drawPolygonSkyView(dc as Dc, pointsPolar as Array<SunCalcModule.SunCoord_LocalPosition>) as Void {
+        if (pointsPolar.size() > 2) {
+            // Draw outline
+            var pointsXY = new Lang.Array<Graphics.Point2D>[pointsPolar.size()];
+            var posPolar = new SunCalcModule.SunCoord_LocalPosition();
+            var startX=0;
+            var startY=0;
+            var endX=0;
+            var endY=0;
+            for (var i = 0; i < pointsPolar.size(); i++) {
+                posPolar = pointsPolar[i];
+                pointsXY = convertPolarToScreenCoord(dc , posPolar);
+                startX = pointsXY[0];
+                startY = pointsXY[1];
+
+                //DEBUG
+                System.println("i=" + i + " az=" + posPolar.azimuth.format("%.4f") + " alt=" + posPolar.altitude.format("%.4f"));
+                
+                if (i < pointsPolar.size()-1 ){
+                    posPolar = pointsPolar[i+1];
+                    pointsXY = convertPolarToScreenCoord(dc , posPolar);
+                    endX = pointsXY[0];
+                    endY = pointsXY[1];
+                }
+                else{
+                    posPolar = pointsPolar[0];
+                    pointsXY = convertPolarToScreenCoord(dc , posPolar);
+                    endX = pointsXY[0];
+                    endY = pointsXY[1];
+                }                
+                
+                dc.drawLine(startX, startY, endX, endY);
+            
+                startX=endX;
+                startY=endY;
+            }
+        }
+        return;   
     }
 
     //! Draw the date string into the provided buffer at the specified location
