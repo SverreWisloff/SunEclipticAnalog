@@ -70,22 +70,17 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - VS Code: Ctrl + Shift + P: `Monkey C`
 
 ## TODO
-- [ ] Draw to background does not work
-- [ ] Sjekk ut fontene her: https://github.com/sunpazed/garmin-flags/tree/master/resources/fonts
-- [ ] Look at this [code](https://github.com/dennybiasiolli/garmin-connect-iq/tree/main/Analog24hour/source) [IQ](https://apps.garmin.com/nb-NO/apps/292387a3-611e-49bd-add4-dee28edc1d57)
+- [ ] Check out Github Copilot
+- [ ] Add and test more watches 
+- [ ] Add settings
+- [ ] drawBattery. Look at this [code](https://github.com/dennybiasiolli/garmin-connect-iq/tree/main/Analog24hour/source) [IQ](https://apps.garmin.com/nb-NO/apps/292387a3-611e-49bd-add4-dee28edc1d57)
 - [ ] Test south hemisphere
 - [ ] Test midnight sun and Polar Night
+- [ ] Sjekk ut fontene her: https://github.com/sunpazed/garmin-flags/tree/master/resources/fonts
 - [ ] Calculate the size of graphic elements (clock hands) proportional to the clock's size (in pixels)
 - [ ] [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
-- [x] Compute sun position for a whole day
-- [x] Get nice font, perhaps from https://github.com/myneur/late/
-- [x] Get the position 
-- [x] Find SunCalc in different languages to read how other projects forks suncalc
-- [x] Finishing first simple version of drawSun() : Sun-Arc and sun-now
-- [x] How to calculate sun trajectory?
-- [x] Lære dato / tid i monkey-c
-- [x] Create a *debug* watchface where the solar calculations can be developed and tested.
+
 
 ## Screenshot
 ![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241220.png?raw=true)
