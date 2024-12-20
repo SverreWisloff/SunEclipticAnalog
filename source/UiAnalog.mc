@@ -129,14 +129,14 @@ class UiAnalog {
 
     // Draw the 3, 6, 9, and 12 hour labels.
     public function drawIndexLabels(dc as Dc, font){
-    var margin = 10;
+    var margin = 20;
         if (font != null) {
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
             dc.drawText(dc.getWidth() / 2, margin, font, "12", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.drawText(dc.getWidth() - margin, (dc.getHeight() / 2) - 15, font, "3", Graphics.TEXT_JUSTIFY_RIGHT);
+            dc.drawText(dc.getWidth() - margin, (dc.getHeight() / 2) - 12, font, "3", Graphics.TEXT_JUSTIFY_RIGHT);
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
             dc.drawText(dc.getWidth() / 2, dc.getHeight() - 30 - margin, font, "6", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.drawText(margin, (dc.getHeight() / 2) - 15, font, "9", Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(margin, (dc.getHeight() / 2) - 12, font, "9", Graphics.TEXT_JUSTIFY_LEFT);
         }
     }
 

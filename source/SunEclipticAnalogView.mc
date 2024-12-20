@@ -51,6 +51,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var MINUTE_HAND_LENGTH = 90; 
     private var HOUR_HAND_LENGTH = 60; 
     private var DRAW_SUN_ARC_ON_PERIMETER = false;
+    private var DRAW_SUN_TIMES = false;
 
     private var _ui;
 
@@ -140,6 +141,8 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
                 :palette=> [
                     Graphics.COLOR_DK_GRAY,
                     Graphics.COLOR_LT_GRAY,
+                    Graphics.COLOR_YELLOW,
+                    Graphics.COLOR_BLUE,
                     Graphics.COLOR_BLACK,
                     Graphics.COLOR_WHITE
                 ]
@@ -199,15 +202,6 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
                 return;
             }
         }
-        /*
-        var time_since_last_pos = _lastGoodPosition - today; 
-        if(time_since_last_pos>5){
-            //old postition missing - try to get a new one
-            getpos();
-        } 
-        */
-        
-        var dataString;
        
         //Draw sun to background
         var now = Time.now();
@@ -216,15 +210,17 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
         sunTimes = SunCalcModule.getTimes(momentNow.value(), _position.lat, _position.lon, _position.altitude, SunCalcModule.SUNRISE);
         
-        dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-        
-        dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarRise);
-        _ui.drawString(dc, dc.getWidth() / 2, 5*dc.getHeight() / 10, dataString, _fontSmall);
-        dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarNoon);
-        _ui.drawString(dc, dc.getWidth() / 2, 6*dc.getHeight() / 10, dataString, _fontSmall);
-        dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarSet);
-        _ui.drawString(dc, dc.getWidth() / 2, 7*dc.getHeight() / 10, dataString, _fontSmall);
-
+        if (DRAW_SUN_TIMES){
+            var dataString;
+            dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
+            
+            dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarRise);
+            _ui.drawString(dc, dc.getWidth() / 2, 5*dc.getHeight() / 10, dataString, _fontSmall);
+            dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarNoon);
+            _ui.drawString(dc, dc.getWidth() / 2, 6*dc.getHeight() / 10, dataString, _fontSmall);
+            dataString = SunCalcModule.PrintLocaleTime(sunTimes.solarSet);
+            _ui.drawString(dc, dc.getWidth() / 2, 7*dc.getHeight() / 10, dataString, _fontSmall);
+        }
         var nowHour = SunCalcModule.LocaleTimeAsDesimalHour(momentNow.value()); 
         if (DRAW_SUN_ARC_ON_PERIMETER){
             _ui.drawSunArcOnPerimeter(dc, Graphics.COLOR_YELLOW, sunTimes , nowHour);
@@ -284,9 +280,14 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         targetDc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_DK_GRAY);
         targetDc.fillPolygon([[0, 0],[targetDc.getWidth(), 0],[targetDc.getWidth(), targetDc.getHeight()],[0, 0]]);
 */
+        //Draw sun-info
+        //drawLocation(targetDc);
+        drawSun(targetDc);          
+
         // Draw the tick marks around the edges of the screen
-        _ui.drawIndex(targetDc, 12, 20, 3, Graphics.COLOR_WHITE);  //12 Houre marks
         _ui.drawIndex(targetDc, 60, 8, 1, Graphics.COLOR_LT_GRAY); //60 Minute marks
+        _ui.drawIndex(targetDc, 12, 20, 5, Graphics.COLOR_BLACK);  //12 Houre marks
+        _ui.drawIndex(targetDc, 12, 20, 3, Graphics.COLOR_WHITE);  //12 Houre marks
         //drawIndex(targetDc, 24, 3, 3, Graphics.COLOR_BLUE);  //24 Houre (sun) marks
 
         // Draw the do-not-disturb icon if we support it and the setting is enabled
@@ -294,6 +295,10 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             targetDc.drawBitmap(width * 0.75, height / 2 - 15, _dndIcon);
         }
 
+
+        // Draw the 3, 6, 9, and 12 hour labels.
+        _ui.drawIndexLabels(targetDc , _fontSmallStrong);
+        
         // Use white to draw the hour and minute hands
         targetDc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
         targetDc.setPenWidth(2);
@@ -303,8 +308,8 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             var hourHandAngle = (((clockTime.hour % 12) * 60) + clockTime.min);
             hourHandAngle = hourHandAngle / (12 * 60.0);
             hourHandAngle = hourHandAngle * Math.PI * 2;
-            targetDc.fillPolygon(_ui.generateHandCoordinates(_screenCenterPoint, hourHandAngle, HOUR_HAND_LENGTH/2.5, 0, dc.getWidth() / 30));
             _ui.drawPolygon(targetDc, _ui.generateHandCoordinates(_screenCenterPoint, hourHandAngle, HOUR_HAND_LENGTH, 0, dc.getWidth() / 30));
+            targetDc.fillPolygon(_ui.generateHandCoordinates(_screenCenterPoint, hourHandAngle, HOUR_HAND_LENGTH/2.5, 0, dc.getWidth() / 30));
             System.println("draw hour hand");
         }
 
@@ -319,9 +324,6 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         // Draw the arbor in the center of the screen.
         _ui.drawArbor(targetDc);
 
-        // Draw the 3, 6, 9, and 12 hour labels.
-        _ui.drawIndexLabels(targetDc , _fontSmallStrong);
-
         // If we have an offscreen buffer that we are using for the date string,
         // Draw the date into it. If we do not, the date will get drawn every update
         // after blanking the second hand.
@@ -333,17 +335,13 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             dateDc.drawBitmap(0, -(height / 4), offscreenBuffer);
 
             // Draw the date string into the buffer.
-            dateDc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
+            dateDc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
             _ui.drawDateString(dateDc, width / 2, 0, _fontSmall);
         }
 
         // Output the offscreen buffers to the main display if required.
         drawBackground(dc);
-
-        //Draw sun-info
-        //drawLocation(dc);
-        drawSun(dc);        
-
+     
         // Draw the battery percentage directly to the main screen.
         var dataString = (System.getSystemStats().battery + 0.5).toNumber().toString() + "%";
         dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
