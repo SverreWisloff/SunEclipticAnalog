@@ -50,7 +50,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var SECOND_HAND_LENGTH = 110;//TODO: CALCULATE POSSIBLE HAND-LENGTH
     private var MINUTE_HAND_LENGTH = 90; 
     private var HOUR_HAND_LENGTH = 60; 
-    private var DRAW_SUN_ARC_ON_PERIMETER = true;
+    private var DRAW_SUN_ARC_ON_PERIMETER = false;
     private var DRAW_SUN_TIMES = false;
 
     private var _ui;
@@ -65,6 +65,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         WatchFace.initialize();
         _fullScreenRefresh = true;
         _partialUpdatesAllowed = (WatchUi.WatchFace has :onPartialUpdate);
+        _lastGoodPosition = null;
 
         _ui = new UiAnalog();
         _position = new swPosition();
@@ -236,15 +237,17 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         //Draw sun on Sky-view
         var sunSize = 5; 
         var sunCoordLocal = SunCalcModule.getPosition(momentNow.value(), _position.lat, _position.lon); //SunCalcModule.SunCoord_LocalPosition
-        var point = _ui.convertPolarToScreenCoord(dc , sunCoordLocal) as Graphics.Point2D;
-        if ( (momentNow.value()>sunTimes.solarRise && momentNow.value()<sunTimes.solarSet) ){
-            var x = point[0];
-            var y = point[1];
-            dc.fillCircle(x, y, sunSize);
+        if (sunCoordLocal!=null){
+            var point = _ui.convertPolarToScreenCoord(dc , sunCoordLocal) as Graphics.Point2D;
+            if ( (momentNow.value()>sunTimes.solarRise && momentNow.value()<sunTimes.solarSet) ){
+                var x = point[0];
+                var y = point[1];
+                dc.fillCircle(x, y, sunSize);
+            }
+            else {
+                dc.drawCircle(point[0], point[1], sunSize);
+            } 
         }
-        else {
-            dc.drawCircle(point[0], point[1], sunSize);
-        } 
         
     }
 
