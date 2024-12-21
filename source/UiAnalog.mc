@@ -114,7 +114,7 @@ class UiAnalog {
         var outerRad = dc.getWidth() / 2;
         var innerRad = outerRad - hashLength;
         // Loop through each 1 minute block and draw tick marks.
-        for (var i = 0; i <= 2 * Math.PI; i += (2.0 * Math.PI / numberOfHashes)) {
+        for (var i = 0; i < 2 * Math.PI; i += (2.0 * Math.PI / numberOfHashes)) {
             // Partially unrolled loop to draw two tickmarks in 15 minute block.
             var sY = outerRad + innerRad * Math.sin(i);
             var eY = outerRad + outerRad * Math.sin(i);
