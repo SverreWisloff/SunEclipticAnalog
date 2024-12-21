@@ -154,7 +154,7 @@ module SunCalcModule
 
     // calculates sun times for a given date, latitude/longitude, and, optionally,
     // the observer height (in meters) relative to the horizon
-    function getTimes(date, lat, lng, height, solarEvent){
+    function getTimes(date as Number, lat as Number, lng as Number, height as Number?, solarEvent as solarEvent_enum) as solarTimes {
         var lw  = RAD * -lng;
         var phi = RAD *  lat;
 
@@ -174,7 +174,7 @@ module SunCalcModule
 
         var Jnoon = solarTransitJ(ds, M, L);
 
-        var angle_deg = solarEvent.toDouble();
+        var angle_deg = (solarEvent as Number).toDouble();
 
         var h0 = (angle_deg + dh) * RAD;
         var Jset = getSetJ(h0, lw, phi, dec, n, M, L);
@@ -192,7 +192,7 @@ module SunCalcModule
 //////////////////////////////////////////// END OF Agafonkins code ////////////////// 
 
     // calculates sun position through the day for a given date and latitude/longitude
-    function getSunPositionForDay(date, lat, lng) as Array<SunCoord_LocalPosition> {
+    function getSunPositionForDay(date as Number, lat as Double, lng as Double) as Array<SunCoord_LocalPosition> {
         var sunCoordLocal = new SunCoord_LocalPosition();
         var result = new Array<SunCoord_LocalPosition>[24];
 
@@ -221,7 +221,7 @@ module SunCalcModule
             result[i] = resultAA;
 
             //DEBUG
-            System.println("i=" + i + " time=" + PrintLocaleTime(time_i.value()) + " az=" + az.format("%.4f")+ " alt=" + alt.format("%.4f"));
+            System.println("zi=" + i + " time=" + PrintLocaleTime(time_i.value()) + " az=" + az.format("%.4f")+ " alt=" + alt.format("%.4f"));
         }        
 
         return result;
