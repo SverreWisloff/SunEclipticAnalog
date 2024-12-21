@@ -50,7 +50,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var SECOND_HAND_LENGTH = 110;//TODO: CALCULATE POSSIBLE HAND-LENGTH
     private var MINUTE_HAND_LENGTH = 90; 
     private var HOUR_HAND_LENGTH = 60; 
-    private var DRAW_SUN_ARC_ON_PERIMETER = false;
+    private var DRAW_SUN_ARC_ON_PERIMETER = true;
     private var DRAW_SUN_TIMES = false;
 
     private var _ui;

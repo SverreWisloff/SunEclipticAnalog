@@ -186,7 +186,6 @@ class UiAnalog {
     public function drawPolygonSkyView(dc as Dc, pointsPolar as Array<SunCalcModule.SunCoord_LocalPosition>) as Void {
         if (pointsPolar.size() > 2) {
             // Draw outline
-            var pointsXY = new Lang.Array<Graphics.Point2D>[pointsPolar.size()];
             var posPolar = new SunCalcModule.SunCoord_LocalPosition();
             var startX=0;
             var startY=0;
@@ -194,24 +193,24 @@ class UiAnalog {
             var endY=0;
             for (var i = 0; i < pointsPolar.size(); i++) {
                 posPolar = pointsPolar[i];
-                pointsXY = convertPolarToScreenCoord(dc , posPolar);
-                startX = pointsXY[0];
-                startY = pointsXY[1];
+                var pointXY = convertPolarToScreenCoord(dc , posPolar);
+                startX = pointXY[0];
+                startY = pointXY[1];
 
                 //DEBUG
                 System.println("i=" + i + " az=" + posPolar.azimuth.format("%.4f") + " alt=" + posPolar.altitude.format("%.4f"));
                 
                 if (i < pointsPolar.size()-1 ){
                     posPolar = pointsPolar[i+1];
-                    pointsXY = convertPolarToScreenCoord(dc , posPolar);
-                    endX = pointsXY[0];
-                    endY = pointsXY[1];
+                    pointXY = convertPolarToScreenCoord(dc , posPolar);
+                    endX = pointXY[0];
+                    endY = pointXY[1];
                 }
                 else{
                     posPolar = pointsPolar[0];
-                    pointsXY = convertPolarToScreenCoord(dc , posPolar);
-                    endX = pointsXY[0];
-                    endY = pointsXY[1];
+                    pointXY = convertPolarToScreenCoord(dc , posPolar);
+                    endX = pointXY[0];
+                    endY = pointXY[1];
                 }                
                 
                 dc.drawLine(startX, startY, endX, endY);
