@@ -30,11 +30,10 @@ class UiAnalog {
         dc.drawArc(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2, Graphics.ARC_COUNTER_CLOCKWISE , degreeStart, degreeEnd);
 
         //Draw sun on perimeter
-        var coord = new Array<Double>[2];        
         var offsetFromPerimeter = 5;
         var sunSize = 5;
 
-        coord = calcHour2clockCoord(dc , nowHour , offsetFromPerimeter) ;
+        var coord = calcHour2clockCoord(dc , nowHour , offsetFromPerimeter) ;
         if ( (nowHour>solarRiseHour && nowHour<solarSetHour) ){
             dc.fillCircle(coord[0], coord[1], sunSize);
         }
@@ -53,16 +52,14 @@ class UiAnalog {
         dc.drawCircle(dc.getWidth() / 2, dc.getHeight() / 2, 7);
     }
 
+
     //Calcululate from 24hour to clock-coord on perimeter
-    function calcHour2clockCoord(dc as Dc, desimal24hour as Lang.Double, offsetFromPerimeter as Lang.Numeric) as Array<Double> {
+    function calcHour2clockCoord(dc as Dc, desimal24hour as Lang.Double, offsetFromPerimeter as Lang.Numeric) as Point2D {
         var angleRad = (desimal24hour / 12.0 * Math.PI) - 3.0*Math.PI/2.0 ;
         var x = dc.getHeight()/2 + (dc.getHeight()/2 - offsetFromPerimeter)*Math.cos(angleRad);
         var y = dc.getWidth()/2  + (dc.getWidth()/2  - offsetFromPerimeter)*Math.sin(angleRad);
         
-        var coord = new Array<Double>[2];        
-        
-        coord[0]=x;
-        coord[1]=y;
+        var coord = [x, y] as Graphics.Point2D;
 
         return coord;
         //   o-----------------> 
@@ -73,6 +70,7 @@ class UiAnalog {
         //   V y
         //     
     }
+
 
 
     //! This function is used to generate the coordinates of the 4 corners of the polygon
