@@ -52,6 +52,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var HOUR_HAND_LENGTH = 60; 
     private var DRAW_SUN_ARC_ON_PERIMETER = false;
     private var DRAW_SUN_TIMES = false;
+    private var DRAW_INDEX_LABELS = false;
 
     private var _ui;
 
@@ -300,7 +301,9 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
 
         // Draw the 3, 6, 9, and 12 hour labels.
-        _ui.drawIndexLabels(targetDc , _fontSmallStrong);
+        if (DRAW_INDEX_LABELS){
+            _ui.drawIndexLabels(targetDc , _fontSmallStrong);
+        }
         
         // Use white to draw the hour and minute hands
         targetDc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
