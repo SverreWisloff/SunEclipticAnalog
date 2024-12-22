@@ -111,19 +111,60 @@ class UiAnalog {
         dc.setPenWidth(penWidth);
         dc.setColor(hashColor, hashColor);
 
-        var outerRad = dc.getWidth() / 2;
+        var faceRadius = dc.getWidth() / 2;
+        var outerRad = faceRadius - 1;
         var innerRad = outerRad - hashLength;
         // Loop through each 1 minute block and draw tick marks.
         for (var i = 0; i < 2 * Math.PI; i += (2.0 * Math.PI / numberOfHashes)) {
             // Partially unrolled loop to draw two tickmarks in 15 minute block.
-            var sY = outerRad + innerRad * Math.sin(i);
-            var eY = outerRad + outerRad * Math.sin(i);
-            var sX = outerRad + innerRad * Math.cos(i);
-            var eX = outerRad + outerRad * Math.cos(i);
+            var sY = faceRadius + innerRad * Math.sin(i);
+            var eY = faceRadius + outerRad * Math.sin(i);
+            var sX = faceRadius + innerRad * Math.cos(i);
+            var eX = faceRadius + outerRad * Math.cos(i);
             dc.drawLine(sX, sY, eX, eY);
         }
         
     }
+
+    // draw Index ala Quatix 5
+    //USE:
+    //    _ui.drawIndex(  targetDc, 12, 30, 11, Graphics.COLOR_BLACK);  //12 Houre marks
+    //    _ui.drawIndexQ5(targetDc, 12, 30, 7, Graphics.COLOR_WHITE);  //12 Houre marks
+    function drawIndexQ5(dc as Dc, numberOfHashes as Lang.Numeric, hashLength as Lang.Numeric, hashWidth as Lang.Numeric, hashColor as Graphics.ColorType) as Void {
+
+        dc.setPenWidth(2);
+        dc.setColor(hashColor, hashColor);
+
+        var faceRadius = dc.getWidth() / 2;
+        var outerRad = faceRadius - 1;
+        var innerRad = outerRad - hashLength;
+        // Loop through each 1 minute block and draw tick marks.
+        for (var i = 0; i < 2 * Math.PI; i += (2.0 * Math.PI / numberOfHashes)) {
+            var sY = faceRadius + innerRad * Math.sin(i);
+            var eY = faceRadius + outerRad * Math.sin(i);
+            var sX = faceRadius + innerRad * Math.cos(i);
+            var eX = faceRadius + outerRad * Math.cos(i);
+
+            var deltaSin = (hashWidth/2.0) * Math.sin(i);
+            var deltaCos = (hashWidth/2.0) * Math.cos(i);
+
+            var aX = sX - deltaSin;
+            var aY = sY + deltaCos;
+            var bX = eX - deltaSin;
+            var bY = eY + deltaCos;
+            var cX = eX + deltaSin;
+            var cY = eY - deltaCos;
+            var dX = sX + deltaSin;
+            var dY = sY - deltaCos;
+
+            dc.drawLine(aX, aY, bX, bY);
+            dc.drawLine(bX, bY, cX, cY);
+            dc.drawLine(cX, cY, dX, dY);
+            dc.drawLine(dX, dY, aX, aY);
+        }
+        
+    }
+    
 
     // Draw the 3, 6, 9, and 12 hour labels.
     public function drawIndexLabels(dc as Dc, font as Graphics.FontType) as Void {

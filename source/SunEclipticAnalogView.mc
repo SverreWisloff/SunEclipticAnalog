@@ -53,6 +53,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var DRAW_SUN_ARC_ON_PERIMETER = false;
     private var DRAW_SUN_TIMES = false;
     private var DRAW_INDEX_LABELS = false;
+    private var DRAW_A_GREY_BACKGROUND_TRIANGLE = false;
 
     private var _ui;
 
@@ -236,14 +237,13 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         _ui.drawPolygonSkyView(dc, sunPositions);
 
         //Draw sun on Sky-view
-        var sunSize = 5; 
+        var sunSize = 7; 
         var sunCoordLocal = SunCalcModule.getPosition(momentNow.value(), _position.lat, _position.lon); //SunCalcModule.SunCoord_LocalPosition
         if (sunCoordLocal!=null){
             var point = _ui.convertPolarToScreenCoord(dc , sunCoordLocal) as Graphics.Point2D;
             if ( (momentNow.value()>sunTimes.solarRise && momentNow.value()<sunTimes.solarSet) ){
-                var x = point[0];
-                var y = point[1];
-                dc.fillCircle(x, y, sunSize);
+                dc.drawCircle(point[0], point[1], sunSize);
+                dc.fillCircle(point[0], point[1], sunSize-2);
             }
             else {
                 dc.drawCircle(point[0], point[1], sunSize);
@@ -279,19 +279,21 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         // Fill the entire background with Black.
         targetDc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_WHITE);
         targetDc.fillRectangle(0, 0, dc.getWidth(), dc.getHeight());
-/*
-        // Draw a grey triangle over the upper right half of the screen.
-        targetDc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_DK_GRAY);
-        targetDc.fillPolygon([[0, 0],[targetDc.getWidth(), 0],[targetDc.getWidth(), targetDc.getHeight()],[0, 0]]);
-*/
+
+        if (DRAW_A_GREY_BACKGROUND_TRIANGLE){
+            // Draw a grey background triangle over the upper right half of the screen.
+            targetDc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_DK_GRAY);
+            targetDc.fillPolygon([[0, 0],[targetDc.getWidth(), 0],[targetDc.getWidth(), targetDc.getHeight()],[0, 0]]);
+        }
+
         //Draw sun-info
         //drawLocation(targetDc);
         drawSun(targetDc);          
 
         // Draw the tick marks around the edges of the screen
-        _ui.drawIndex(targetDc, 60, 8, 1, Graphics.COLOR_LT_GRAY); //60 Minute marks
-        _ui.drawIndex(targetDc, 12, 20, 5, Graphics.COLOR_BLACK);  //12 Houre marks
-        _ui.drawIndex(targetDc, 12, 20, 3, Graphics.COLOR_WHITE);  //12 Houre marks
+        //_ui.drawIndex(targetDc, 60, 8, 1, Graphics.COLOR_LT_GRAY); //60 Minute marks
+        _ui.drawIndex(  targetDc, 12, 30, 11, Graphics.COLOR_BLACK);  //12 Houre marks
+        _ui.drawIndexQ5(targetDc, 12, 30, 7, Graphics.COLOR_WHITE);  //12 Houre marks
         //drawIndex(targetDc, 24, 3, 3, Graphics.COLOR_BLUE);  //24 Houre (sun) marks
 
         // Draw the do-not-disturb icon if we support it and the setting is enabled
