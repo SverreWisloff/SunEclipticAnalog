@@ -210,7 +210,7 @@ class UiAnalog {
         //   V
         //            O: [w/2 , h/2]
         //            P: [w/2 + alt*sin(az), h/2 - alt*cos(az)]
-    public function convertPolarToScreenCoord(dc as Dc, posPolar as SunCalcModule.SunCoord_LocalPosition) as Graphics.Point2D{
+    public function convertPolarToScreenCoord(dc as Dc, posPolar as SunCalcModule.SunCoord_LocalPosition, forceOnScreen as Lang.Boolean) as Graphics.Point2D{
         var width = dc.getWidth();
         var height = dc.getHeight();
         
@@ -218,8 +218,14 @@ class UiAnalog {
         var alt = posPolar.altitude;
         var theta = (az) * Math.PI / 180.0; //RAD
         var r = (90.0-alt)/90.0 * width/2.0;
-        var x = width/2 + r*Math.sin(theta);
+        var x = width/2  + r*Math.sin(theta);
         var y = height/2 - r*Math.cos(theta);
+        if (x<0 ||x>width || y<0 || y>height){
+            if (forceOnScreen){
+                x = width/2  + (width/2)*Math.sin(theta);
+                y = height/2 - (width/2)*Math.cos(theta);
+            }
+        }
         var point = [x, y] as Graphics.Point2D;
         return point;
     }
@@ -234,7 +240,7 @@ class UiAnalog {
             var endY=0;
             for (var i = 0; i < pointsPolar.size(); i++) {
                 posPolar = pointsPolar[i];
-                var pointXY = convertPolarToScreenCoord(dc , posPolar);
+                var pointXY = convertPolarToScreenCoord(dc , posPolar, false);
                 startX = pointXY[0];
                 startY = pointXY[1];
 
@@ -243,13 +249,13 @@ class UiAnalog {
                 
                 if (i < pointsPolar.size()-1 ){
                     posPolar = pointsPolar[i+1];
-                    pointXY = convertPolarToScreenCoord(dc , posPolar);
+                    pointXY = convertPolarToScreenCoord(dc , posPolar, false);
                     endX = pointXY[0];
                     endY = pointXY[1];
                 }
                 else{
                     posPolar = pointsPolar[0];
-                    pointXY = convertPolarToScreenCoord(dc , posPolar);
+                    pointXY = convertPolarToScreenCoord(dc , posPolar, false);
                     endX = pointXY[0];
                     endY = pointXY[1];
                 }                

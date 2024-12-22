@@ -240,13 +240,15 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         var sunSize = 7; 
         var sunCoordLocal = SunCalcModule.getPosition(momentNow.value(), _position.lat, _position.lon); //SunCalcModule.SunCoord_LocalPosition
         if (sunCoordLocal!=null){
-            var point = _ui.convertPolarToScreenCoord(dc , sunCoordLocal) as Graphics.Point2D;
+            var point = _ui.convertPolarToScreenCoord(dc , sunCoordLocal, true) as Graphics.Point2D;
+            var sunX=point[0];
+            var sunY=point[1];
             if ( (momentNow.value()>sunTimes.solarRise && momentNow.value()<sunTimes.solarSet) ){
-                dc.drawCircle(point[0], point[1], sunSize);
-                dc.fillCircle(point[0], point[1], sunSize-2);
+                dc.drawCircle(sunX, sunY, sunSize);
+                dc.fillCircle(sunX, sunY, sunSize-2);
             }
             else {
-                dc.drawCircle(point[0], point[1], sunSize);
+                dc.drawCircle(sunX, sunY, sunSize);
             } 
         }
         
