@@ -45,11 +45,10 @@ class UiAnalog {
 
     public function drawArbor(dc as Dc){
         // Draw the arbor in the center of the screen.
-        dc.setPenWidth(4);
-        dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_BLACK);
+        dc.setColor(Graphics.COLOR_WHITE,Graphics.COLOR_WHITE);
         dc.fillCircle(dc.getWidth() / 2, dc.getHeight() / 2, 7);
-        dc.setColor(Graphics.COLOR_BLACK,Graphics.COLOR_BLACK);
-        dc.drawCircle(dc.getWidth() / 2, dc.getHeight() / 2, 7);
+        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
+        dc.fillCircle(dc.getWidth() / 2, dc.getHeight() / 2, 3);
     }
 
 
@@ -73,22 +72,12 @@ class UiAnalog {
 
 
 
-    //! This function is used to generate the coordinates of the 4 corners of the polygon
-    //! used to draw a watch hand. The coordinates are generated with specified length,
-    //! tail length, and width and rotated around the center point at the provided angle.
-    //! 0 degrees is at the 12 o'clock position, and increases in the clockwise direction.
-    //! @param centerPoint The center of the clock
-    //! @param angle Angle of the hand in radians
-    //! @param handLength The length of the hand from the center to point
-    //! @param tailLength The length of the tail of the hand
-    //! @param width The width of the watch hand
-    //! @return The coordinates of the watch hand
-    public function calcHandCoordinates(centerPoint as Array<Number>, angle as Float, handLength as Number, tailLength as Number, width as Number) as Array<[Numeric, Numeric]> {
+    public function calcHandCoordinates(centerPoint as Array<Number>, angle as Float, handLength as Number, tailLength as Number, widthSenter as Number, widthArrow as Number) as Array<[Numeric, Numeric]> {
         // Map out the coordinates of the watch hand
-        var coords = [[-(width / 2), tailLength],
-                      [-(width / 2), -handLength],
-                      [width / 2, -handLength],
-                      [width / 2, tailLength]];
+        var coords = [[-(widthSenter / 2), tailLength],
+                      [-(widthArrow / 2), -handLength],
+                      [widthArrow / 2, -handLength],
+                      [widthSenter / 2, tailLength]];
         var result = new Array<[Numeric, Numeric]>[4];
         var cos = Math.cos(angle);
         var sin = Math.sin(angle);

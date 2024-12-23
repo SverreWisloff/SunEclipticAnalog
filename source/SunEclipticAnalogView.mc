@@ -47,14 +47,14 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var _screenCenterPoint as Array<Number>?;
     private var _fullScreenRefresh as Boolean;
     private var _partialUpdatesAllowed as Boolean;
-    private var SECOND_HAND_LENGTH = 110;//TODO: CALCULATE POSSIBLE HAND-LENGTH
-    private var MINUTE_HAND_LENGTH = 90; 
-    private var HOUR_HAND_LENGTH = 60; 
+    private var _secondHandLength = 110;//TODO: CALCULATE POSSIBLE HAND-LENGTH
+    private var _minuteHandLength = 90; 
+    private var _hourHandLength = 60; 
     private var DRAW_SUN_ARC_ON_PERIMETER = false;
     private var DRAW_SUN_TIMES = false;
     private var DRAW_INDEX_LABELS = false;
     private var DRAW_A_GREY_BACKGROUND_TRIANGLE = false;
-    private var DRAW_BATTERY = true; 
+    private var DRAW_BATTERY = false; 
 
 
     private var _ui;
@@ -125,8 +125,9 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     //! @param dc Device context
     public function onLayout(dc as Dc) as Void {
 
-        SECOND_HAND_LENGTH = dc.getHeight() / 1.2;
-        MINUTE_HAND_LENGTH = dc.getHeight() / 2.9;
+        _secondHandLength = dc.getHeight() / 2.1;
+        _minuteHandLength = dc.getHeight() / 2.3;
+        _hourHandLength   = dc.getHeight() / 3.1;
 
         // Load the custom font we use for drawing the 3, 6, 9, and 12 on the watchface.
         _font24 = WatchUi.loadResource($.Rez.Fonts.id_font_24_Condensed) as FontResource;
@@ -235,11 +236,11 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         var sunPositions = new Array<SunCoord_LocalPosition>[24];
         sunPositions = SunCalcModule.getSunPositionForDay(momentNow.value(), _position.lat, _position.lon);
         dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_YELLOW);
-        dc.setPenWidth(1);
+        dc.setPenWidth(2);
         _ui.drawPolygonSkyView(dc, sunPositions);
 
         //Draw sun on Sky-view
-        var sunSize = 7; 
+        var sunSize = 9; 
         var sunCoordLocal = SunCalcModule.getPosition(momentNow.value(), _position.lat, _position.lon); //SunCalcModule.SunCoord_LocalPosition
         if (sunCoordLocal!=null){
             var point = _ui.calcPolarToScreenCoord(dc , sunCoordLocal, true) as Graphics.Point2D;
@@ -313,28 +314,38 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         
         // Use white to draw the hour and minute hands
         targetDc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        targetDc.setPenWidth(2);
+        targetDc.setPenWidth(3);
 
         if (_screenCenterPoint != null) {
             // Draw the hour hand. Convert it to minutes and compute the angle.
             var hourHandAngle = (((clockTime.hour % 12) * 60) + clockTime.min);
             hourHandAngle = hourHandAngle / (12 * 60.0);
             hourHandAngle = hourHandAngle * Math.PI * 2;
-            _ui.drawPolygon(targetDc, _ui.calcHandCoordinates(_screenCenterPoint, hourHandAngle, HOUR_HAND_LENGTH, 0, dc.getWidth() / 30));
-            targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, hourHandAngle, HOUR_HAND_LENGTH/2.5, 0, dc.getWidth() / 30));
+            _ui.drawPolygon(targetDc, _ui.calcHandCoordinates(_screenCenterPoint, hourHandAngle, _hourHandLength, 0, dc.getWidth() / 18, dc.getWidth() / 33));
+            targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, hourHandAngle, 13, 0, dc.getWidth() / 18, dc.getWidth() / 18));
+            targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, hourHandAngle, _hourHandLength, -_hourHandLength+20, dc.getWidth() / 40, dc.getWidth() / 33));
             //System.println("draw hour hand");
         }
 
         if (_screenCenterPoint != null) {
             // Draw the minute hand.
             var minuteHandAngle = (clockTime.min / 60.0) * Math.PI * 2;
-            targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, minuteHandAngle, MINUTE_HAND_LENGTH/2.5, 0, dc.getWidth() / 40));
-            _ui.drawPolygon(targetDc, _ui.calcHandCoordinates(_screenCenterPoint, minuteHandAngle, MINUTE_HAND_LENGTH, 0, dc.getWidth() / 40));
+            var minuteHandPoints = _ui.calcHandCoordinates(_screenCenterPoint, minuteHandAngle, _minuteHandLength, 0, dc.getWidth() / 18, dc.getWidth() / 33);
+            targetDc.setColor(Graphics.COLOR_BLACK,Graphics.COLOR_BLACK);
+            targetDc.fillPolygon(minuteHandPoints);
+            targetDc.setColor(Graphics.COLOR_WHITE,Graphics.COLOR_WHITE);
+            _ui.drawPolygon(targetDc, minuteHandPoints);
+            targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, minuteHandAngle, 13, 0, dc.getWidth() / 18, dc.getWidth() / 18));
+            targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, minuteHandAngle, _minuteHandLength, -_minuteHandLength+20, dc.getWidth() / 33, dc.getWidth() / 33));
+            targetDc.fillCircle(targetDc.getWidth() / 2, targetDc.getHeight() / 2, dc.getWidth() / 33);
+            targetDc.setColor(Graphics.COLOR_BLACK,Graphics.COLOR_BLACK);
+            targetDc.setPenWidth(1);
+            targetDc.drawCircle(targetDc.getWidth() / 2, targetDc.getHeight() / 2, dc.getWidth() / 25);
             //System.println("draw minute hand");
         }
 
         // Draw the arbor in the center of the screen.
-        _ui.drawArbor(targetDc);
+        //_ui.drawArbor(targetDc);
 
         // Draw the battery level
         if (DRAW_BATTERY){     
@@ -372,7 +383,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             var secondHand = (clockTime.sec / 60.0) * Math.PI * 2;
 
             if (_screenCenterPoint != null) {
-                dc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, secondHand, SECOND_HAND_LENGTH, 20, dc.getWidth() / 120));
+                dc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, secondHand, _secondHandLength, 20, dc.getWidth() / 45, dc.getWidth() / 45));
                 //System.println("draw second hand");
             }
         }
@@ -397,7 +408,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
         if (_screenCenterPoint != null) {
             var secondHand = (clockTime.sec / 60.0) * Math.PI * 2;
-            var secondHandPoints = _ui.calcHandCoordinates(_screenCenterPoint, secondHand, SECOND_HAND_LENGTH, 20, dc.getWidth() / 120);
+            var secondHandPoints = _ui.calcHandCoordinates(_screenCenterPoint, secondHand, _secondHandLength, 20, dc.getWidth() / 45, dc.getWidth() / 45);
             // Update the clipping rectangle to the new location of the second hand.
             var curClip = getBoundingBox(secondHandPoints);
             var bBoxWidth = curClip[1][0] - curClip[0][0] + 1;
@@ -405,8 +416,16 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             dc.setClip(curClip[0][0], curClip[0][1], bBoxWidth, bBoxHeight);
 
             // Draw the second hand to the screen.
-            dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
+            dc.setPenWidth(2);
+            dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
             dc.fillPolygon(secondHandPoints);
+            dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_BLUE);
+            _ui.drawPolygon(dc, secondHandPoints);
+            //Draw the center of the second hand
+            dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
+            dc.setPenWidth(1);
+            dc.fillCircle(dc.getWidth() / 2, dc.getHeight() / 2, 4);
+
             //System.println("draw second hand");      
         }
     }
