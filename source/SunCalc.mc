@@ -221,7 +221,7 @@ module SunCalcModule
             result[i] = resultAA;
 
             //DEBUG
-            System.println("zi=" + i + " time=" + PrintLocaleTime(time_i.value()) + " az=" + az.format("%.4f")+ " alt=" + alt.format("%.4f"));
+            //System.println("zi=" + i + " time=" + PrintLocaleTime(time_i.value()) + " az=" + az.format("%.4f")+ " alt=" + alt.format("%.4f"));
         }        
 
         return result;

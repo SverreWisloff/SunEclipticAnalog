@@ -18,7 +18,7 @@ import SunCalcModule;
 //a class with functionality for drawing an analog clock face, such as clock hands
 class UiAnalog {
 
-    function drawSunArcOnPerimeter(dc as Dc, sunColor as Graphics.ColorType, sunTimes as solarTimes, nowHour) as Void {
+    public function drawSunArcOnPerimeter(dc as Dc, sunColor as Graphics.ColorType, sunTimes as solarTimes, nowHour) as Void {
         // Draw daytaime-arc
         dc.setPenWidth(1);
         dc.setColor(sunColor, sunColor);
@@ -43,7 +43,7 @@ class UiAnalog {
 
     }
 
-    function drawArbor(dc as Dc){
+    public function drawArbor(dc as Dc){
         // Draw the arbor in the center of the screen.
         dc.setPenWidth(4);
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_BLACK);
@@ -54,7 +54,7 @@ class UiAnalog {
 
 
     //Calcululate from 24hour to clock-coord on perimeter
-    function calcHour2clockCoord(dc as Dc, desimal24hour as Lang.Double, offsetFromPerimeter as Lang.Numeric) as Point2D {
+    public function calcHour2clockCoord(dc as Dc, desimal24hour as Lang.Double, offsetFromPerimeter as Lang.Numeric) as Point2D {
         var angleRad = (desimal24hour / 12.0 * Math.PI) - 3.0*Math.PI/2.0 ;
         var x = dc.getHeight()/2 + (dc.getHeight()/2 - offsetFromPerimeter)*Math.cos(angleRad);
         var y = dc.getWidth()/2  + (dc.getWidth()/2  - offsetFromPerimeter)*Math.sin(angleRad);
@@ -83,7 +83,7 @@ class UiAnalog {
     //! @param tailLength The length of the tail of the hand
     //! @param width The width of the watch hand
     //! @return The coordinates of the watch hand
-    function generateHandCoordinates(centerPoint as Array<Number>, angle as Float, handLength as Number, tailLength as Number, width as Number) as Array<[Numeric, Numeric]> {
+    public function calcHandCoordinates(centerPoint as Array<Number>, angle as Float, handLength as Number, tailLength as Number, width as Number) as Array<[Numeric, Numeric]> {
         // Map out the coordinates of the watch hand
         var coords = [[-(width / 2), tailLength],
                       [-(width / 2), -handLength],
@@ -106,7 +106,7 @@ class UiAnalog {
 
     //! Draws the clock tick marks around the outside edges of the screen.
     //! @param dc Device context
-    function drawIndex(dc as Dc, numberOfHashes as Lang.Numeric, hashLength as Lang.Numeric, penWidth as Lang.Numeric, hashColor as Graphics.ColorType) as Void {
+    public function drawIndex(dc as Dc, numberOfHashes as Lang.Numeric, hashLength as Lang.Numeric, penWidth as Lang.Numeric, hashColor as Graphics.ColorType) as Void {
 
         dc.setPenWidth(penWidth);
         dc.setColor(hashColor, hashColor);
@@ -130,7 +130,7 @@ class UiAnalog {
     //USE:
     //    _ui.drawIndex(  targetDc, 12, 30, 11, Graphics.COLOR_BLACK);  //12 Houre marks
     //    _ui.drawIndexQ5(targetDc, 12, 30, 7, Graphics.COLOR_WHITE);  //12 Houre marks
-    function drawIndexQ5(dc as Dc, numberOfHashes as Lang.Numeric, hashLength as Lang.Numeric, hashWidth as Lang.Numeric, hashColor as Graphics.ColorType) as Void {
+    public function drawIndexQ5(dc as Dc, numberOfHashes as Lang.Numeric, hashLength as Lang.Numeric, hashWidth as Lang.Numeric, hashColor as Graphics.ColorType) as Void {
 
         dc.setPenWidth(2);
         dc.setColor(hashColor, hashColor);
@@ -210,7 +210,7 @@ class UiAnalog {
         //   V
         //            O: [w/2 , h/2]
         //            P: [w/2 + alt*sin(az), h/2 - alt*cos(az)]
-    public function convertPolarToScreenCoord(dc as Dc, posPolar as SunCalcModule.SunCoord_LocalPosition, forceOnScreen as Lang.Boolean) as Graphics.Point2D{
+    public function calcPolarToScreenCoord(dc as Dc, posPolar as SunCalcModule.SunCoord_LocalPosition, forceOnScreen as Lang.Boolean) as Graphics.Point2D{
         var width = dc.getWidth();
         var height = dc.getHeight();
         
@@ -240,22 +240,22 @@ class UiAnalog {
             var endY=0;
             for (var i = 0; i < pointsPolar.size(); i++) {
                 posPolar = pointsPolar[i];
-                var pointXY = convertPolarToScreenCoord(dc , posPolar, false);
+                var pointXY = calcPolarToScreenCoord(dc , posPolar, false);
                 startX = pointXY[0];
                 startY = pointXY[1];
 
                 //DEBUG
-                System.println("i=" + i + " az=" + posPolar.azimuth.format("%.4f") + " alt=" + posPolar.altitude.format("%.4f"));
+                //System.println("i=" + i + " az=" + posPolar.azimuth.format("%.4f") + " alt=" + posPolar.altitude.format("%.4f"));
                 
                 if (i < pointsPolar.size()-1 ){
                     posPolar = pointsPolar[i+1];
-                    pointXY = convertPolarToScreenCoord(dc , posPolar, false);
+                    pointXY = calcPolarToScreenCoord(dc , posPolar, false);
                     endX = pointXY[0];
                     endY = pointXY[1];
                 }
                 else{
                     posPolar = pointsPolar[0];
-                    pointXY = convertPolarToScreenCoord(dc , posPolar, false);
+                    pointXY = calcPolarToScreenCoord(dc , posPolar, false);
                     endX = pointXY[0];
                     endY = pointXY[1];
                 }                
@@ -273,7 +273,7 @@ class UiAnalog {
     //! @param dc Device context
     //! @param x The x location of the text
     //! @param y The y location of the text
-    function drawString(dc as Dc, x as Number, y as Number, str as String, font as Graphics.FontType) as Void {
+    public function drawString(dc as Dc, x as Number, y as Number, str as String, font as Graphics.FontType) as Void {
         dc.drawText(x, y, font, str, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -282,9 +282,9 @@ class UiAnalog {
     //! @param dc Device context
     //! @param x The x location of the text
     //! @param y The y location of the text
-    function drawDateString(dc as Dc, x as Number, y as Number, font as Graphics.FontType) as Void {
+    public function drawDateString(dc as Dc, x as Number, y as Number, font as Graphics.FontType) as Void {
         var info = Gregorian.info(Time.now(), Time.FORMAT_LONG);
-        var dateStr = Lang.format("$1$ $2$ $3$", [info.day_of_week, info.month, info.day]);
+        var dateStr = Lang.format("$1$ $2$", [info.day_of_week, info.day]);
 
         drawString(dc, x , y , dateStr, font);
     }

@@ -40,6 +40,7 @@ class SunEclipticAnalogSettingsDelegate extends WatchUi.BehaviorDelegate {
     //! Handle the menu event
     //! @return true if handled, false otherwise
     public function onMenu() as Boolean {
+        System.println("::onMenu()");
         var menu = new $.SunEclipticAnalogSettingsMenu();
         var boolean = Storage.getValue(1) ? true : false;
         menu.addItem(new WatchUi.ToggleMenuItem("Settings1", null, 1, boolean, null));

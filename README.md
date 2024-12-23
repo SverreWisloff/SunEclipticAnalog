@@ -69,10 +69,12 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - VS Code: Build + run: `F5`
 - VS Code: Ctrl + Shift + P: `Monkey C`
 
+# Supported Devices
+- Fenix 7 pro
+
 ## TODO
-- [ ] Check out Github Copilot
-- [ ] Add and test more watches 
 - [ ] Add settings
+- [ ] Add and test more watches 
 - [ ] drawBattery. Look at this [code](https://github.com/dennybiasiolli/garmin-connect-iq/tree/main/Analog24hour/source) [IQ](https://apps.garmin.com/nb-NO/apps/292387a3-611e-49bd-add4-dee28edc1d57)
 - [ ] Test south hemisphere
 - [ ] Test midnight sun and Polar Night
@@ -84,3 +86,12 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 
 ## Screenshot
 ![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241220.png?raw=true)
+
+
+## Realease-log
+**Dev**
+- Draw the sun even though it has set.
+- Draw prettier indexes (ala Quatix 5)
+
+**1.0**
+- First version
