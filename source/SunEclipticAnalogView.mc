@@ -47,9 +47,12 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var _screenCenterPoint as Array<Number>?;
     private var _fullScreenRefresh as Boolean;
     private var _partialUpdatesAllowed as Boolean;
-    private var _secondHandLength = 110;//TODO: CALCULATE POSSIBLE HAND-LENGTH
+    private var _secondHandLength = 110;
     private var _minuteHandLength = 90; 
-    private var _hourHandLength = 60; 
+    private var _hourHandLength = 60;
+    private var _arborWidth = 0;
+    private var _arrowWidth = 0;
+ 
     private var DRAW_SUN_ARC_ON_PERIMETER = false;
     private var DRAW_SUN_TIMES = false;
     private var DRAW_INDEX_LABELS = false;
@@ -125,9 +128,11 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     //! @param dc Device context
     public function onLayout(dc as Dc) as Void {
 
-        _secondHandLength = dc.getHeight() / 2.1;
-        _minuteHandLength = dc.getHeight() / 2.3;
-        _hourHandLength   = dc.getHeight() / 3.1;
+        _secondHandLength = dc.getHeight() / 2.0;
+        _minuteHandLength = dc.getHeight() / 2.1;
+        _hourHandLength   = dc.getHeight() / 3.2;
+        _arborWidth       = dc.getWidth() / 18; 
+        _arrowWidth       = dc.getWidth() / 33;
 
         // Load the custom font we use for drawing the 3, 6, 9, and 12 on the watchface.
         _font24 = WatchUi.loadResource($.Rez.Fonts.id_font_24_Condensed) as FontResource;
@@ -321,26 +326,27 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             var hourHandAngle = (((clockTime.hour % 12) * 60) + clockTime.min);
             hourHandAngle = hourHandAngle / (12 * 60.0);
             hourHandAngle = hourHandAngle * Math.PI * 2;
-            _ui.drawPolygon(targetDc, _ui.calcHandCoordinates(_screenCenterPoint, hourHandAngle, _hourHandLength, 0, dc.getWidth() / 18, dc.getWidth() / 33));
-            targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, hourHandAngle, 13, 0, dc.getWidth() / 18, dc.getWidth() / 18));
-            targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, hourHandAngle, _hourHandLength, -_hourHandLength+20, dc.getWidth() / 40, dc.getWidth() / 33));
+            _ui.drawPolygon(targetDc, _ui.calcHandCoordinates(_screenCenterPoint, hourHandAngle, _hourHandLength, 0, _arborWidth , _arrowWidth));
+            targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, hourHandAngle, 14, 0, _arborWidth, _arborWidth));
+            targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, hourHandAngle, _hourHandLength, -_hourHandLength+20, _arrowWidth, _arrowWidth));
             //System.println("draw hour hand");
         }
 
         if (_screenCenterPoint != null) {
             // Draw the minute hand.
             var minuteHandAngle = (clockTime.min / 60.0) * Math.PI * 2;
-            var minuteHandPoints = _ui.calcHandCoordinates(_screenCenterPoint, minuteHandAngle, _minuteHandLength, 0, dc.getWidth() / 18, dc.getWidth() / 33);
+            var minuteHandPoints = _ui.calcHandCoordinates(_screenCenterPoint, minuteHandAngle, _minuteHandLength, 0, _arborWidth , _arrowWidth);
             targetDc.setColor(Graphics.COLOR_BLACK,Graphics.COLOR_BLACK);
             targetDc.fillPolygon(minuteHandPoints);
             targetDc.setColor(Graphics.COLOR_WHITE,Graphics.COLOR_WHITE);
             _ui.drawPolygon(targetDc, minuteHandPoints);
-            targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, minuteHandAngle, 13, 0, dc.getWidth() / 18, dc.getWidth() / 18));
-            targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, minuteHandAngle, _minuteHandLength, -_minuteHandLength+20, dc.getWidth() / 33, dc.getWidth() / 33));
-            targetDc.fillCircle(targetDc.getWidth() / 2, targetDc.getHeight() / 2, dc.getWidth() / 33);
+            targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, minuteHandAngle, 14, 0, _arborWidth, _arborWidth));
+            targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, minuteHandAngle, _minuteHandLength, -_minuteHandLength+20, _arrowWidth, _arrowWidth));
+            //Draw the center / arbor
+            targetDc.fillCircle(targetDc.getWidth() / 2, targetDc.getHeight() / 2, (_arborWidth/2)+3);
             targetDc.setColor(Graphics.COLOR_BLACK,Graphics.COLOR_BLACK);
             targetDc.setPenWidth(1);
-            targetDc.drawCircle(targetDc.getWidth() / 2, targetDc.getHeight() / 2, dc.getWidth() / 25);
+            targetDc.drawCircle(targetDc.getWidth() / 2, targetDc.getHeight() / 2, (_arborWidth/2)+3); //dc.getWidth() / 26
             //System.println("draw minute hand");
         }
 
