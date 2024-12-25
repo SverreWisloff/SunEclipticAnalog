@@ -40,6 +40,35 @@ License: BSD 2-Clause "Simplified" License
 Sundance: Both a  mc-fork, and rotated fonts for 24-hours at the perimeter  
 https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 
+# Supported Devices
+- Fenix 7 pro
+
+## TODO
+- [ ] Add settings
+- [ ] Add and test more watches 
+- [ ] drawBattery. Look at this [code](https://github.com/dennybiasiolli/garmin-connect-iq/tree/main/Analog24hour/source) [IQ](https://apps.garmin.com/nb-NO/apps/292387a3-611e-49bd-add4-dee28edc1d57)
+- [ ] Test south hemisphere
+- [ ] Test midnight sun and Polar Night
+- [ ] Sjekk ut fontene her: https://github.com/sunpazed/garmin-flags/tree/master/resources/fonts
+- [ ] Calculate the size of graphic elements (clock hands) proportional to the clock's size (in pixels)
+- [ ] [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
+- [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
+
+
+## Screenshot
+![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241220.png?raw=true)
+
+
+## Realease-log
+**Dev**
+
+**1.1**
+- Draw the sun even though it has set.
+- Draw prettier indexes and hands (ala Quatix 5)
+
+**1.0**
+- First version
+
 ## Notes to self while coding
 
 ### Monkey C
@@ -69,29 +98,23 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - VS Code: Build + run: `F5`
 - VS Code: Ctrl + Shift + P: `Monkey C`
 
-# Supported Devices
-- Fenix 7 pro
+## Store
 
-## TODO
-- [ ] Add settings
-- [ ] Add and test more watches 
-- [ ] drawBattery. Look at this [code](https://github.com/dennybiasiolli/garmin-connect-iq/tree/main/Analog24hour/source) [IQ](https://apps.garmin.com/nb-NO/apps/292387a3-611e-49bd-add4-dee28edc1d57)
-- [ ] Test south hemisphere
-- [ ] Test midnight sun and Polar Night
-- [ ] Sjekk ut fontene her: https://github.com/sunpazed/garmin-flags/tree/master/resources/fonts
-- [ ] Calculate the size of graphic elements (clock hands) proportional to the clock's size (in pixels)
-- [ ] [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
-- [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
+**Update store**
+1. Update version number: manifest.xml
+2. Update release-log: check [activity](https://github.com/SverreWisloff/SunEclipticAnalog/activity)
+3. Update screenshot (over Image - 500x500)
+4. Exporting the App (IQ-file)
+5. [Upload new version](https://apps.garmin.com/developer/dashboard) >IQ >Log >screenshot
 
+### Images
+#### Hero Image (Optional)
+Add an image optimized for mobile devices to advertise your app. The image (JPG, GIF or PNG) has to be 1440x720 pixels large and can have a maximum size of 2048 KB.
+#### Cover Image (Web/Mobile)
+This cover image will be displayed on your Connect IQ Store listing on the Web and the Connect IQ App Store mobile app. Image must be a JPG, GIF or PNG less than 150 KB.
+(500 x 500)
+#### Add Icons for App Store on Device (Optional)
+The colors in the device icons should be reduced as labeled and should only be 128 x 128 pixels.
+#### Screen Images
+Screen images will be displayed on your app’s detail page in the Connect IQ Store. Image must be a JPG, GIF or PNG less than 150 KB
 
-## Screenshot
-![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241220.png?raw=true)
-
-
-## Realease-log
-**Dev**
-- Draw the sun even though it has set.
-- Draw prettier indexes (ala Quatix 5)
-
-**1.0**
-- First version

@@ -52,6 +52,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var _hourHandLength = 60;
     private var _arborWidth = 0;
     private var _arrowWidth = 0;
+    private var _secondHandWidth = 0;
  
     private var DRAW_SUN_ARC_ON_PERIMETER = false;
     private var DRAW_SUN_TIMES = false;
@@ -128,11 +129,12 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     //! @param dc Device context
     public function onLayout(dc as Dc) as Void {
 
-        _secondHandLength = dc.getHeight() / 2.0;
-        _minuteHandLength = dc.getHeight() / 2.1;
-        _hourHandLength   = dc.getHeight() / 3.2;
-        _arborWidth       = dc.getWidth() / 18; 
-        _arrowWidth       = dc.getWidth() / 33;
+        _secondHandLength = dc.getWidth() / 2.0;   // 130
+        _minuteHandLength = dc.getWidth() / 2.1;   // 124
+        _hourHandLength   = dc.getWidth() / 3.2;   // 81
+        _arborWidth       = 13;                 //dc.getWidth() / 18;
+        _arrowWidth       = 7;                  //dc.getWidth() / 33;
+        _secondHandWidth  = 5;                  //dc.getWidth() / 40;
 
         // Load the custom font we use for drawing the 3, 6, 9, and 12 on the watchface.
         _font24 = WatchUi.loadResource($.Rez.Fonts.id_font_24_Condensed) as FontResource;
@@ -346,7 +348,8 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             targetDc.fillCircle(targetDc.getWidth() / 2, targetDc.getHeight() / 2, (_arborWidth/2)+3);
             targetDc.setColor(Graphics.COLOR_BLACK,Graphics.COLOR_BLACK);
             targetDc.setPenWidth(1);
-            targetDc.drawCircle(targetDc.getWidth() / 2, targetDc.getHeight() / 2, (_arborWidth/2)+3); //dc.getWidth() / 26
+            targetDc.drawCircle(targetDc.getWidth() / 2, targetDc.getHeight() / 2, (_arborWidth/2)+3); 
+            targetDc.fillCircle(dc.getWidth() / 2, dc.getHeight() / 2, 4);
             //System.println("draw minute hand");
         }
 
@@ -368,7 +371,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             var dateDc = _dateBuffer.getDc();
 
             // Draw the background image buffer into the date buffer to set the background
-            dateDc.drawBitmap(0, -(height / 4), offscreenBuffer);
+            dateDc.drawBitmap(0, -(2.5 * height / 4), offscreenBuffer);
 
             // Draw the date string into the buffer.
             dateDc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
@@ -389,7 +392,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             var secondHand = (clockTime.sec / 60.0) * Math.PI * 2;
 
             if (_screenCenterPoint != null) {
-                dc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, secondHand, _secondHandLength, 20, dc.getWidth() / 45, dc.getWidth() / 45));
+                dc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, secondHand, _secondHandLength, 20, _secondHandWidth, _secondHandWidth));
                 //System.println("draw second hand");
             }
         }
@@ -414,7 +417,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
         if (_screenCenterPoint != null) {
             var secondHand = (clockTime.sec / 60.0) * Math.PI * 2;
-            var secondHandPoints = _ui.calcHandCoordinates(_screenCenterPoint, secondHand, _secondHandLength, 20, dc.getWidth() / 45, dc.getWidth() / 45);
+            var secondHandPoints = _ui.calcHandCoordinates(_screenCenterPoint, secondHand, _secondHandLength, 20, _secondHandWidth, _secondHandWidth);
             // Update the clipping rectangle to the new location of the second hand.
             var curClip = getBoundingBox(secondHandPoints);
             var bBoxWidth = curClip[1][0] - curClip[0][0] + 1;
@@ -429,7 +432,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             _ui.drawPolygon(dc, secondHandPoints);
             //Draw the center of the second hand
             dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
-            dc.setPenWidth(1);
+            //dc.setPenWidth(1);
             dc.fillCircle(dc.getWidth() / 2, dc.getHeight() / 2, 4);
 
             //System.println("draw second hand");      
@@ -485,7 +488,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         // Draw the date
         if (null != _dateBuffer) {
             // If the date is saved in a Buffered Bitmap, just copy it from there.
-            dc.drawBitmap(0, height / 4, _dateBuffer);
+            dc.drawBitmap(0, 2.5 * height / 4, _dateBuffer);
         } else {
             // Otherwise, draw it from scratch.
             // TODO - whats this?
