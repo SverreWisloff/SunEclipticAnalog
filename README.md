@@ -61,6 +61,7 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 
 ## Realease-log
 **Dev**
+- Settings: Show/hide date, and second hand color
 
 **1.1**
 - Draw the sun even though it has set.

@@ -42,20 +42,18 @@ class SunEclipticAnalogSettingsDelegate extends WatchUi.BehaviorDelegate {
     public function onMenu() as Boolean {
         System.println("::onMenu()");
         var menu = new $.SunEclipticAnalogSettingsMenu();
-        var boolean = Storage.getValue(1) ? true : false;
-        menu.addItem(new WatchUi.ToggleMenuItem("Settings1", null, 1, boolean, null));
 
-        boolean = Storage.getValue(2) ? true : false;
-        menu.addItem(new WatchUi.ToggleMenuItem("Settings2", null, 2, boolean, null));
+        //var number = Storage.getValue(1) ? true : false;
+        //menu.addItem(new WatchUi.ToggleMenuItem("ForegroundColor", null, 1, number, null));
 
-        boolean = Storage.getValue(3) ? true : false;
-        menu.addItem(new WatchUi.ToggleMenuItem("Settings3", null, 3, boolean, null));
-
-        boolean = Storage.getValue(4) ? true : false;
-        menu.addItem(new WatchUi.ToggleMenuItem("Settings4", null, 4, boolean, null));
+        var boolean = Storage.getValue(2) ? true : false;
+        boolean = Application.Properties.getValue("DrawDate") ? true : false;
+        menu.addItem(new WatchUi.ToggleMenuItem("DrawDate", null, 2, boolean, null));
 
         WatchUi.pushView(menu, new $.SunEclipticAnalogSettingsMenuDelegate(), WatchUi.SLIDE_IMMEDIATE);
         return true;
     }
+
+
 }
 

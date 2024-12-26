@@ -1,0 +1,6 @@
+<properties>
+
+    <property id="ForegroundColor" type="number">0x00AAFF</property>
+    <property id="DrawDate" type="boolean">true</property>
+
+</properties>

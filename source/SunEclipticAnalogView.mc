@@ -4,7 +4,7 @@
 // Application Developer Agreement.
 // Sun
 using Toybox as Toy;
-using Toybox.Application as App;
+using Toybox.Application;
 import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.Math;
@@ -77,8 +77,6 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
         _ui = new UiAnalog();
         _position = new swPosition();
-
-        System.println("::initialize");
 
         getPos();
 
@@ -272,7 +270,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         var clockTime = System.getClockTime();
         var targetDc = null;
 
-        System.println("::onUpdate");
+//        System.println("::onUpdate");
 
         // We always want to refresh the full screen when we get a regular onUpdate call.
         _fullScreenRefresh = true;
@@ -375,7 +373,9 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
             // Draw the date string into the buffer.
             dateDc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-            _ui.drawDateString(dateDc, width / 2, 0, _font22);
+            if (Application.Properties.getValue("DrawDate")){
+                _ui.drawDateString(dateDc, width / 2, 0, _font22);
+            }
         }
 
         // Output the offscreen buffers to the main display if required.
@@ -388,7 +388,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         } else if (_isAwake) {
             // Otherwise, if we are out of sleep mode, draw the second hand
             // directly in the full update method.
-            dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(Application.Properties.getValue("ForegroundColor") as Number, Graphics.COLOR_TRANSPARENT);
             var secondHand = (clockTime.sec / 60.0) * Math.PI * 2;
 
             if (_screenCenterPoint != null) {
@@ -407,7 +407,8 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         // If we're not doing a full screen refresh we need to re-draw the background
         // before drawing the updated second hand position. Note this will only re-draw
         // the background in the area specified by the previously computed clipping region.
-        System.println("::onPartialUpdate");
+
+//        System.println("::onPartialUpdate");
 
         if (!_fullScreenRefresh) {
             drawBackground(dc);
@@ -428,7 +429,12 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             dc.setPenWidth(2);
             dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
             dc.fillPolygon(secondHandPoints);
-            dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_BLUE);
+            var secondHandColor;
+            secondHandColor = Graphics.COLOR_BLUE;
+            if (Application.Properties.getValue("DrawDate")){
+                secondHandColor = Application.Properties.getValue("ForegroundColor") as Number;
+            }
+            dc.setColor(secondHandColor, secondHandColor);
             _ui.drawPolygon(dc, secondHandPoints);
             //Draw the center of the second hand
             dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);

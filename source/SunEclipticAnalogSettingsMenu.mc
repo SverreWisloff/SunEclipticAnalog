@@ -29,7 +29,12 @@ class SunEclipticAnalogSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
     //! @param menuItem The menu item selected
     public function onSelect(menuItem as MenuItem) as Void {
         if (menuItem instanceof ToggleMenuItem) {
-            Storage.setValue(menuItem.getId() as Number, menuItem.isEnabled());
+            var bSet = menuItem.isEnabled();
+            // Set the property value
+            Application.Properties.setValue("DrawDate", bSet);
+
+            // Request UI update
+            WatchUi.requestUpdate();
         }
     }
 }
