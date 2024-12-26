@@ -10,6 +10,8 @@ Assumes a round watchface
 
 This clock shows a simple analog wathcface that shows the sun's path across the sky.
 
+[Check out this sales pitch that chatGPT helped me with](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/STORE.md)
+
 ## Resources
 
 A collection of Garmin applications: https://github.com/bombsimon/awesome-garmin
@@ -56,7 +58,7 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 
 
 ## Screenshot
-![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241220.png?raw=true)
+![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241225_sim.png?raw=true)
 
 
 ## Realease-log
