@@ -62,6 +62,7 @@ module SunCalcModule
             var solarSet = 0.0;
             var solarRise = 0.0;
             var solarNoon = 0.0;
+            var polarPhenomena = 0; //0=normal, 1=midnight sun, 2=Polar Night
     }
 
     class LatLon
@@ -139,7 +140,23 @@ module SunCalcModule
     function approxTransit(Ht, lw, n) { return J0 + ((Ht.toDouble() + lw.toDouble()) / (2.0 * Math.PI)) + n.toDouble()  - 1.1574e-5 * 68.0; } //SW!!!!!
     function solarTransitJ(ds, M, L)  { return J2000.toDouble() + ds + 0.0053 * Math.sin(M) - 0.0069 * Math.sin(2.0 * L); }
 
-    function hourAngle(h, phi, d) { return Math.acos((Math.sin(h) - Math.sin(phi) * Math.sin(d)) / (Math.cos(phi) * Math.cos(d))); }
+ //   function hourAngle(h, phi, d) { return Math.acos((Math.sin(h) - Math.sin(phi) * Math.sin(d)) / (Math.cos(phi) * Math.cos(d))); }
+    function hourAngle(h, phi, d) {
+        var teller = (Math.sin(h) - Math.sin(phi) * Math.sin(d));
+        var nevner = (Math.cos(phi) * Math.cos(d));
+        var cosLHA = teller / nevner;
+        if (cosLHA<-1.0000001){
+            System.println("midnight sun");
+            // TODO - midnight sun: Sun is always above our altitude limit 
+        }
+        if (cosLHA>1.0000001){
+            System.println("polar niht");
+            // TODO - polar niht: Sun is always below our altitude limit
+        }
+
+        var hourAngle = Math.acos(cosLHA); 
+        return hourAngle; 
+    }
     function observerAngle(height) { return -2.076 * Math.sqrt(height) / 60; }
 
     // returns set time for the given sun altitude

@@ -34,6 +34,8 @@ It seems that it is "leaflet" Agafonkin who is behind the suncalc code that is u
 |Sunrise equation|`Python` `pseudo`|[Wiki](https://en.wikipedia.org/wiki/Sunrise_equation)
 |PostgreSQL|`sql`|[Github](https://github.com/olithissen/suncalc_postgres)|
 
+Another nice website for sunset/sunrise calculations: [stjärnhimlen](https://www.stjarnhimlen.se/comp/riset.html)
+
 ### **Acknowledgments**
 This project uses code from suncalc by Vladimir Agafonkin.
 Repository: https://github.com/mourner/suncalc 
@@ -64,6 +66,7 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 ## Realease-log
 **Dev**
 - Settings: Show/hide date, and second hand color
+- show times for sunset and sunrise 
 
 **1.1**
 - Draw the sun even though it has set.
@@ -105,10 +108,12 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 
 **Update store**
 1. Update version number: manifest.xml
-2. Update release-log: check [activity](https://github.com/SverreWisloff/SunEclipticAnalog/activity)
-3. Update screenshot (over Image - 500x500)
-4. Exporting the App (IQ-file)
-5. [Upload new version](https://apps.garmin.com/developer/dashboard) >IQ >Log >screenshot
+2. Update [STORE.md](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/STORE.md)
+3. Update [README.md](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/README.md)
+4. Update release-log: check [activity](https://github.com/SverreWisloff/SunEclipticAnalog/activity)
+5. Update screenshot (over Image - 500x500)
+6. Exporting the App (IQ-file)
+7. [Upload new version](https://apps.garmin.com/developer/dashboard) >IQ >Log >screenshot
 
 ### Images
 #### Hero Image (Optional)
