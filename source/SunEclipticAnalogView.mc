@@ -216,19 +216,28 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         //Draw sun to background
         var now = Time.now();
         var momentNow = new Time.Moment(now.value() );        
-        var sunTimes = new solarTimes();
+        //xx var sunTimes = new solarTimes();
 
-        sunTimes = SunCalcModule.getTimes(momentNow.value(), _position.lat, _position.lon, _position.altitude, SunCalcModule.SUNRISE);
+        //xx sunTimes = SunCalcModule.getTimes(momentNow.value(), _position.lat, _position.lon, _position.altitude, SunCalcModule.SUNRISE);
+
+        var sc = new sunCalc();
+        sc.setLocation(_position.lat, _position.lon);
+        sc.setDate(momentNow.value());
+        sc.calcSolarEvents();
+        var sunRiseTime = sc.getTimeOfSolarEvent(SunCalcModule.SUNRISE_);
+        var sunSetTime  = sc.getTimeOfSolarEvent(SunCalcModule.SUNSET_);
 
         if (DRAW_SUN_TIMES){
-            if (sunTimes.polarPhenomena==0){
+            if (sc.polarPhenomena==0){
                 // polarPhenomena: 0=normal, 1=midnight sun, 2=Polar Night
         
                 dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
 
                 //Sunrise
-                var solarRiseDesimal = SunCalcModule.LocaleTimeAsDesimalHour(sunTimes.solarRise);
-                var solarRiseString  = SunCalcModule.PrintLocaleTime(sunTimes.solarRise);
+                //xx var solarRiseDesimal = SunCalcModule.LocaleTimeAsDesimalHour(sunTimes.solarRise);
+                var solarRiseDesimal = SunCalcModule.LocaleTimeAsDesimalHour(sunRiseTime);
+                //xx var solarRiseString  = SunCalcModule.PrintLocaleTime(sunTimes.solarRise);
+                var solarRiseString  = SunCalcModule.PrintLocaleTime(sunRiseTime);
                 var offsetFromPerimeter = 10;
                 var coordSunrise = _ui.calcHour2clockCoord(dc, solarRiseDesimal, offsetFromPerimeter) as Point2D;
                 
@@ -246,8 +255,10 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
                 dc.drawText(coordSunrise[0], coordSunrise[1], _font22, solarRiseString, Graphics.TEXT_JUSTIFY_LEFT);
 
                 //Sunset
-                var solarSetDesimal = SunCalcModule.LocaleTimeAsDesimalHour(sunTimes.solarSet);
-                var solarSetString  = SunCalcModule.PrintLocaleTime(sunTimes.solarSet);
+                //xx var solarSetDesimal = SunCalcModule.LocaleTimeAsDesimalHour(sunTimes.solarSet);
+                var solarSetDesimal  = SunCalcModule.LocaleTimeAsDesimalHour(sunSetTime);
+                //xx var solarSetString  = SunCalcModule.PrintLocaleTime(sunTimes.solarSet);
+                var solarSetString  = SunCalcModule.PrintLocaleTime(sunSetTime);
                 var coordSunset = _ui.calcHour2clockCoord(dc, solarSetDesimal, offsetFromPerimeter) as Point2D;
                 
                 if      (solarSetDesimal<=16)                      {
@@ -263,38 +274,41 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
                 //dc.drawText(dc.getWidth()/2, dc.getWidth()/2, _font22, solarRiseString, Graphics.TEXT_JUSTIFY_RIGHT);
                 dc.drawText(coordSunset[0], coordSunset[1], _font22, solarSetString, Graphics.TEXT_JUSTIFY_RIGHT);
             }
-            else if (sunTimes.polarPhenomena==1){
+            else if (sc.polarPhenomena==1){
                 //Midnight sun
                 dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(dc.getWidth()/2, dc.getHeight()/4, _font22, "Midnight sun", Graphics.TEXT_JUSTIFY_CENTER);
             }
-            else if (sunTimes.polarPhenomena==2){
+            else if (sc.polarPhenomena==2){
                 //Polar night
                 dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(dc.getWidth()/2, dc.getHeight()/4, _font22, "Polar night", Graphics.TEXT_JUSTIFY_CENTER);
             }
         }
 
-        var nowHour = SunCalcModule.LocaleTimeAsDesimalHour(momentNow.value()); 
         if (DRAW_SUN_ARC_ON_PERIMETER){
-            _ui.drawSunArcOnPerimeter(dc, Graphics.COLOR_YELLOW, sunTimes , nowHour);
+//            var nowHour = SunCalcModule.LocaleTimeAsDesimalHour(momentNow.value()); 
+//            _ui.drawSunArcOnPerimeter(dc, Graphics.COLOR_YELLOW, sunTimes , nowHour);
         }
 
         //Draw sun ephemeris
         var sunPositions = new Array<SunCoord_LocalPosition>[24];
-        sunPositions = SunCalcModule.getSunPositionForDay(momentNow.value(), _position.lat, _position.lon);
+        //xx sunPositions = SunCalcModule.getSunPositionForDay(momentNow.value(), _position.lat, _position.lon);
+        sunPositions = sc.getSunTrajectoryForDay();
         dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_YELLOW);
         dc.setPenWidth(2);
         _ui.drawPolygonSkyView(dc, sunPositions);
 
         //Draw sun on Sky-view
         var sunSize = 11; 
-        var sunCoordLocal = SunCalcModule.getPosition(momentNow.value(), _position.lat, _position.lon); //SunCalcModule.SunCoord_LocalPosition
+        //xx var sunCoordLocal = SunCalcModule.getPosition(momentNow.value(), _position.lat, _position.lon); //SunCalcModule.SunCoord_LocalPosition
+        var sunCoordLocal = sc.getSunPosition();
         if (sunCoordLocal!=null){
             var point = _ui.calcPolarToScreenCoord(dc , sunCoordLocal, true) as Graphics.Point2D;
             var sunX=point[0];
             var sunY=point[1];
-            if ( (momentNow.value()>sunTimes.solarRise && momentNow.value()<sunTimes.solarSet) ){
+
+            if ( (sc.polarPhenomena==0 && (momentNow.value()>sunRiseTime && momentNow.value()<sunSetTime)) || sc.polarPhenomena==1){
                 dc.drawCircle(sunX, sunY, sunSize);
                 dc.fillCircle(sunX, sunY, sunSize-4);
             }

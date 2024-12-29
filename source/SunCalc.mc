@@ -64,13 +64,7 @@ module SunCalcModule
             var solarNoon = 0.0;
             var polarPhenomena = 0; //0=normal, 1=midnight sun, 2=Polar Night
     }
-
-    class LatLon
-    {
-        public var lat = 0.0;
-        public var lon = 0.0;
-    }
-    
+   
     // the Sun’s local position in the sky at a specific time and location (useful for observers on Earth)
     class SunCoord_LocalPosition
     {
@@ -132,6 +126,22 @@ module SunCalcModule
         NIGHT = 1.0                //Begins after astronomical dusk when the sky is completely dark.
         }
 
+    enum solarEvent_enumXXX { 
+        NIGHTEND_,          
+        NAUTICALDAWN_,      
+        DAWN_,               
+        SUNRISE_,          
+        SUNRISEEND_,         
+        GOLDENHOUREND_,       
+        GOLDENHOUR_,         
+        SUNSETSTART_,         
+        SUNSET_,            
+        DUSK_,                
+        NAUTICALDUSK_,       
+        NIGHT_                
+        }
+
+
     // calculations for sun times
     const J0 = 0.0009;
 
@@ -171,7 +181,7 @@ module SunCalcModule
 
     // calculates sun times for a given date, latitude/longitude, and, optionally,
     // the observer height (in meters) relative to the horizon
-    function getTimes(date as Number, lat as Number, lng as Number, height as Number?, solarEvent as solarEvent_enum) as solarTimes {
+    function getTimes(date as Number, lat as Number, lng as Number, height as Number?, angle_deg) as solarTimes {
         var lw  = RAD * -lng;
         var phi = RAD *  lat;
 
@@ -191,7 +201,8 @@ module SunCalcModule
 
         var Jnoon = solarTransitJ(ds, M, L);
 
-        var angle_deg = (solarEvent as Number).toDouble();
+//DEBUG
+//      System.println("getTimes: " + "M=" + M + "L=" + L + "dec=" + dec + "Jnoon=" + Jnoon);
 
         var h0 = (angle_deg + dh) * RAD;
         var Jset = getSetJ(h0, lw, phi, dec, n, M, L);
@@ -202,6 +213,10 @@ module SunCalcModule
         Times.solarSet = fromJulian(Jset);
         Times.solarRise = fromJulian(Jrise);
         Times.solarNoon = fromJulian(Jnoon);
+
+        //DEBUG
+          System.println("getTimes: " + " angle_deg=" + angle_deg + " Jset=" + Jset + " solarSet=" + Times.solarSet + " time=" + PrintLocaleTime(Jset) );
+//        System.println("Jset=" + Jset + " solarSet=" + Times.solarSet + " time=" + PrintLocaleTime(Times.solarSet) );
 
         return Times;
     }
@@ -301,5 +316,204 @@ module SunCalcModule
         return dateString;
     }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    class sunCalc
+    {
+        private var _lat = 0.0 as Double;
+        private var _lon = 0.0 as Double;
+        private var _height = 0.0 as Double;
+        private var _knownPosition = false as Boolean;
+        private var _knownDate = false as Boolean;
+        private var _date;
+        public var solarEvents;
+        public var polarPhenomena as Number; //0=normal, 1=midnight sun, 2=Polar Night
+
+        public function initialize() {
+            _lat = 0.0;
+            _lon = 0.0;
+            _height = 0.0;
+            _knownPosition = false;
+            _date = 0.0;
+            _knownDate = false;
+            polarPhenomena = 0; 
+
+            // 12 solar events, each with 
+            // [i][0] angle in degrees
+            // [i][1] name of rise-event
+            // [i][2] time of rise-event
+            // [i][3] name of set-event
+            // [i][4] time of set-event
+            solarEvents =  [                
+                [-0.833, "sunrise",       0.0, "sunset",        0.0 ],
+                [  -0.3, "sunriseEnd",    0.0, "sunsetStart",   0.0 ],
+                [    -6, "dawn",          0.0, "dusk",          0.0 ],
+                [   -12, "nauticalDawn",  0.0, "nauticalDusk",  0.0 ],
+                [   -18, "nightEnd",      0.0, "night",         0.0 ],
+                [     6, "goldenHourEnd", 0.0, "goldenHour",    0.0 ]
+            ];
+
+       }
+
+        public function setLocation(latitude as Double, longitude as Double) {
+            _lat = latitude;
+            _lon = longitude;
+            _knownPosition = true;
+        }
+
+        public function setDate(date as Number) {
+            _date = date;
+            _knownDate = true;
+        }
+
+        public function calcSolarEvents(){
+            var lw  = RAD * -_lon;
+            var phi = RAD *  _lat;
+
+            var dh = observerAngle(_height);
+
+            var d = toDays(_date);
+            var n = julianCycle(d, lw);
+            var ds = approxTransit(0.0, lw, n);
+
+            var M = solarMeanAnomaly(ds);
+            var L = eclipticLongitude(M);
+            var dec = declination(L, 0.0);
+
+            var Jnoon = solarTransitJ(ds, M, L);
+
+//            System.println("calcSolarEvents:" + "M=" + M + "L=" + L + "dec=" + dec + "Jnoon=" + Jnoon);
+
+            for (var i=0; i<6; i+=1){
+                var angle_deg = solarEvents[i][0];
+
+                var h0 = (angle_deg + dh) * RAD;
+                var Jset = getSetJXXX(h0, lw, phi, dec, n, M, L);
+                var Jrise = Jnoon - (Jset - Jnoon);
+
+                solarEvents[i][4] = fromJulian(Jset);
+                solarEvents[i][2] = fromJulian(Jrise);
+
+                //DEBUG
+                System.println("calcSolarEvents:" + "i=" + i + " angle_deg=" + solarEvents[i][0] + " SetName=" + solarEvents[i][1] + " Settime=" + solarEvents[i][2] + " SetTime=" + PrintLocaleTime(solarEvents[i][2])+ " RiseName=" + solarEvents[i][3] + " Risetime=" + solarEvents[i][4] + " RiseTime=" + PrintLocaleTime(solarEvents[i][4]) );
+
+            }
+
+            return ;
+        }
+
+        public function getTimeOfSolarEvent(solarEvent as solarEvent_enumXXX) as Number{
+            var time;
+
+            switch (solarEvent) {
+                case SUNRISE_:
+                    time = solarEvents[0][2];
+                    break;
+                case SUNSET_:
+                    time = solarEvents[0][4];
+                    break;
+                case DAWN_:
+                    time = solarEvents[2][2];
+                    break;
+                case DUSK_:
+                    time = solarEvents[2][4];
+                    break;
+                //TODO: add more cases
+                default:
+                    time = 0.0;
+                    break;
+            }
+            return time;
+        }
+
+        // calculates sun position through the day for a given date and latitude/longitude
+        public function getSunTrajectoryForDay() as Array<SunCoord_LocalPosition> or Null{
+            if (_knownPosition && _knownDate) {
+                var sunCoordLocal = new SunCoord_LocalPosition();
+                var result = new Array<SunCoord_LocalPosition>[24];
+
+                var Moment = new Time.Moment(_date);
+                var infoDate = Gregorian.info(Moment, Time.FORMAT_SHORT);
+
+                // Loop for every hour through the day 
+                for (var i = 0; i <= 23; i += 1) {
+
+                    var options = {
+                        :year   => infoDate.year,
+                        :month  => infoDate.month,
+                        :day    => infoDate.day,
+                        :hour   => i,
+                        :minute => 0
+                    };
+
+                    var time_i = Gregorian.moment(options);
+                    sunCoordLocal = getPosition(time_i.value(), _lat, _lon);
+                    var az = sunCoordLocal.azimuth ;
+                    var alt = sunCoordLocal.altitude ;
+                    
+                    var resultAA = new SunCoord_LocalPosition();
+                    resultAA.azimuth = az; 
+                    resultAA.altitude = alt;
+                    result[i] = resultAA;
+
+                    //DEBUG
+                    //System.println("zi=" + i + " time=" + PrintLocaleTime(time_i.value()) + " az=" + az.format("%.4f")+ " alt=" + alt.format("%.4f"));
+                }        
+                return result;
+            }
+            return null;
+        }
+
+        public function getSunPosition() as SunCoord_LocalPosition or Null{
+            if (_knownPosition && _knownDate) {
+                var sunCoordLocal = new SunCoord_LocalPosition();
+                var sunCoordSphere = new SunCoord_CelestialSphere();
+                var lw  = RAD * -_lon;
+                var phi = RAD * _lat;
+                var d   = toDays(_date);
+
+                sunCoordSphere = sunCoords(d);
+                var H  = siderealTime(d, lw) - sunCoordSphere.rightAscension;
+
+                sunCoordLocal.azimuth = azimuth(H, phi, sunCoordSphere.declination)/RAD;
+                sunCoordLocal.altitude = altitude(H, phi, sunCoordSphere.declination)/RAD;
+
+                return sunCoordLocal;
+            }
+            return null;
+        }
+
+        // returns set time for the given sun altitude
+        private function getSetJXXX(h, lw, phi, dec, n, M, L) {
+
+            var w = hourAngleXXX(h, phi, dec);
+            var a = approxTransit(w, lw, n);
+
+            return solarTransitJ(a, M, L);
+        }
+
+        private function hourAngleXXX(h, phi, d) {
+            var cosLHA = ((Math.sin(h) - Math.sin(phi) * Math.sin(d)))/(Math.cos(phi) * Math.cos(d));
+            if (cosLHA<-1.0000001){
+                System.println("midnight sun");
+                // midnight sun: Sun is always above our altitude limit
+                polarPhenomena = 1; //midnight sun
+            }
+            else if (cosLHA>1.0000001){
+                System.println("polar niht");
+                // polar niht: Sun is always below our altitude limit
+                polarPhenomena = 2; //polar niht
+            }
+            else {
+                polarPhenomena = 0; //normal
+            }
+
+            var hourAngle = Math.acos(cosLHA);
+
+            return hourAngle; 
+        }
+    }
 
 }

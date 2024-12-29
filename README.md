@@ -67,6 +67,7 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 **Dev**
 - Settings: Show/hide date, and second hand color
 - show times for sunset and sunrise 
+- supports midnight sun and polar night
 
 **1.1**
 - Draw the sun even though it has set.
@@ -125,4 +126,8 @@ This cover image will be displayed on your Connect IQ Store listing on the Web a
 The colors in the device icons should be reduced as labeled and should only be 128 x 128 pixels.
 #### Screen Images
 Screen images will be displayed on your app’s detail page in the Connect IQ Store. Image must be a JPG, GIF or PNG less than 150 KB
+
+
+
+
 
