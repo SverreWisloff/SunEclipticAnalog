@@ -63,8 +63,10 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 
 ## Realease-log
 **Dev**
+- Updating pos and calculating sun trajectorya and sun-events every 10 minutes
+- Adding support for fenix6spro, fenix6xpro and fenix7
 
-**1.1**
+**1.2**
 - Show times for sunset and sunrise 
 - Supports midnight sun and polar night
 - Settings: Show/hide date, and second hand color
