@@ -220,6 +220,9 @@ class UiAnalog {
     }
 
     public function drawPolygonSkyView(dc as Dc, pointsPolar as Array<SunCalcModule.SunCoord_LocalPosition>) as Void {
+        if (pointsPolar==null || dc==null){
+            return;
+        }
         if (pointsPolar.size() > 2) {
             // Draw outline
             var posPolar = new SunCalcModule.SunCoord_LocalPosition();

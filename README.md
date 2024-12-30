@@ -63,9 +63,12 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 
 ## Realease-log
 **Dev**
+
+**1.1**
+- Show times for sunset and sunrise 
+- Supports midnight sun and polar night
 - Settings: Show/hide date, and second hand color
-- show times for sunset and sunrise 
-- supports midnight sun and polar night
+- Settings: Debug info
 
 **1.1**
 - Draw the sun even though it has set.

@@ -314,6 +314,7 @@ module SunCalcModule
         private var _knownPosition = false as Boolean;
         private var _knownDate = false as Boolean;
         private var _date;
+        private var _solarEventsCalculated = false as Boolean;
         public var polarPhenomena as Number; //0=normal, 1=midnight sun, 2=Polar Night
 
         // 12 solar events, each with 
@@ -323,11 +324,11 @@ module SunCalcModule
         // [i][3] name of set-event
         // [i][4] time of set-event
         const solarEvents =  [                
-            [-0.833d, "sunrise",       0.0d, "sunset",        0.0d ],
+            [-0.833d, "sunrise",       0.0d, "sunset",        0.0d ], //[0] Sun's upper limb touches the horizon; atmospheric refraction accounted for
             [  -0.3d, "sunriseEnd",    0.0d, "sunsetStart",   0.0d ],
-            [  -6.0d, "dawn",          0.0d, "dusk",          0.0d ],
-            [ -12.0d, "nauticalDawn",  0.0d, "nauticalDusk",  0.0d ],
-            [ -18.0d, "nightEnd",      0.0d, "night",         0.0d ],
+            [  -6.0d, "dawn",          0.0d, "dusk",          0.0d ], //[2] Civil twilight (one can no longer read outside without artificial illumination)
+            [ -12.0d, "nauticalDawn",  0.0d, "nauticalDusk",  0.0d ], //[3] Nautical twilight (the horizon is still visible at sea)
+            [ -18.0d, "nightEnd",      0.0d, "night",         0.0d ], //[4] Astronomical twilight (the sky is completely dark)
             [   6.0d, "goldenHourEnd", 0.0d, "goldenHour",    0.0d ]
         ];
 
@@ -339,20 +340,34 @@ module SunCalcModule
             _date = 0.0;
             _knownDate = false;
             polarPhenomena = 0; 
+            _solarEventsCalculated = false;
         }
 
-        public function setLocation(latitude as Double, longitude as Double) {
+        public function setPosition(latitude as Double, longitude as Double) {
             _lat = latitude;
             _lon = longitude;
             _knownPosition = true;
+            _solarEventsCalculated = false;
         }
+
+        public function getKnownPosition() as Boolean {
+            return _knownPosition;
+        }      
 
         public function setDate(date as Number) {
             _date = date;
             _knownDate = true;
+            _solarEventsCalculated = false;
         }
 
-        public function calcSolarEvents(){
+        public function calcSolarEvents() as Boolean {
+            if (!_knownPosition || !_knownDate) {
+                return false;
+            }
+            if (_solarEventsCalculated) {
+                return true;
+            }
+
             var lw  = RAD * -_lon;
             var phi = RAD *  _lat;
 
@@ -384,12 +399,19 @@ module SunCalcModule
                 System.println("calcSolarEvents:" + "i=" + i + " angle_deg=" + solarEvents[i][0] + " SetName=" + solarEvents[i][1] + " Settime=" + solarEvents[i][2] + " SetTime=" + PrintLocaleTime(solarEvents[i][2])+ " RiseName=" + solarEvents[i][3] + " Risetime=" + solarEvents[i][4] + " RiseTime=" + PrintLocaleTime(solarEvents[i][4]) );
 
             }
-
-            return ;
+            _solarEventsCalculated = true;
+            return true;
         }
 
         public function getTimeOfSolarEvent(solarEvent as solarEvent_enum) as Double{
             var time = 0.0 as Double;
+
+            if (!_solarEventsCalculated) {
+                calcSolarEvents();
+            }
+            if (!_solarEventsCalculated) {
+                return time;
+            }
 
             switch (solarEvent) {
                 case SUNRISE:

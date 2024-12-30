@@ -15,25 +15,6 @@ import Toybox.WatchUi;
 import Toybox.Position;
 import SunCalcModule;
 
-class swPosition
-{
-    public var lat;
-    public var lon;
-    public var altitude;
-    public var knownPosition;
-    
-    public function initialize() {
-        lat = 0.0;
-        lon = 0.0;
-        altitude = 0.0;
-        knownPosition = false;
-    }
-    public function setLocation(loc as Location) {
-        lat = loc[0];
-        lon = loc[1];
-        knownPosition = true;
-    }
-}
 
 //! This implements an analog watch face
 //! Original design by Austen Harbour
@@ -61,10 +42,11 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var DRAW_BATTERY = false; 
 
     private var _ui;
+    private var _sc;
+    private var _sunRiseTime;
+    private var _sunSetTime;
 
     private var _lastGoodPosition;
-    private var _position;
-    
 
 
     //! Initialize variables for this view
@@ -72,13 +54,13 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         WatchFace.initialize();
         _fullScreenRefresh = true;
         _partialUpdatesAllowed = (WatchUi.WatchFace has :onPartialUpdate);
-        _lastGoodPosition = null;
 
+        _lastGoodPosition = null;
         _ui = new UiAnalog();
-        _position = new swPosition();
+        _sc = new sunCalc();
 
         getPos();
-
+        
     }
 
     public function getGpsPos() {
@@ -114,9 +96,13 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 		}
         if (location != null) {
             var now = Time.now();
-            var today = Gregorian.info(now, Time.FORMAT_SHORT);            
+            var today = Gregorian.info(now, Time.FORMAT_SHORT);
+            var momentNow = new Time.Moment(now.value() );            
             _lastGoodPosition = today;
-            _position.setLocation(location);
+            var latitude = location[0].toDouble();
+            var longitude = location[1].toDouble();
+            _sc.setPosition(latitude, longitude);
+            _sc.setDate(momentNow.value());
 		}
     }
 
@@ -188,60 +174,51 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     }
 
 
-    // Draw XXX to the main screen.
+    // Draw Debug-info to the main screen.
     private function drawLocation(dc as Dc) as Void {
         var strLocDate, strLocTime;
-        if (_position.knownPosition){
+        if (_sc.getKnownPosition()){
             strLocDate=_lastGoodPosition.day + "." + _lastGoodPosition.month;
             strLocTime= _lastGoodPosition.hour.format("%02u") + ":" + _lastGoodPosition.min.format("%02u") + ":" + _lastGoodPosition.sec.format("%02u");
         } else {
             strLocDate="NA";
             strLocTime="NA";
         }
-        dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_BLACK);
         dc.drawText(15*dc.getWidth() / 20,  dc.getHeight() / 2, _font22, strLocTime, Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(5*dc.getWidth() / 20,  dc.getHeight() / 2, _font22, strLocDate, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     private function drawSun(dc as Dc) as Void {
+        var now = Time.now();
+        var today = Gregorian.info(now, Time.FORMAT_SHORT);
+        var momentNow = new Time.Moment(now.value() );   
 
-        if (!_position.knownPosition){
-            //postition missing - try to get a position
-            if (getPos()==null){
-                return;
-            }
+        //Check if we have a valid position, or time has changed more than 10 minutes
+        var minuteDiff=0;
+        if (_lastGoodPosition!=null){
+            minuteDiff = (today.min - _lastGoodPosition.min).abs();
         }
-        else {
-            //position is known
-            var now = Time.now();
-            var today = Gregorian.info(now, Time.FORMAT_SHORT);            
-            if (today.day!=_lastGoodPosition.day || today.hour!=_lastGoodPosition.hour || today.min!=_lastGoodPosition.min){
-                //new day - try to get a position
-                getPos();
-            }
+        if (!_sc.getKnownPosition() || today.day!=_lastGoodPosition.day || today.hour!=_lastGoodPosition.hour || minuteDiff > 10){
+            getPos();
+        }
+        if (!_sc.getKnownPosition()) {
+            return;
+        }
 
-        }
+        _sunRiseTime = _sc.getTimeOfSolarEvent(_sc.SUNRISE) as Double;
+        _sunSetTime  = _sc.getTimeOfSolarEvent(_sc.SUNSET) as Double;
        
         //Draw sun to background
-        var now = Time.now();
-        var momentNow = new Time.Moment(now.value() );        
-
-        var sc = new sunCalc();
-        sc.setLocation(_position.lat, _position.lon);
-        sc.setDate(momentNow.value());
-        sc.calcSolarEvents();
-        var sunRiseTime = sc.getTimeOfSolarEvent(SunCalcModule.SUNRISE) as Double;
-        var sunSetTime  = sc.getTimeOfSolarEvent(SunCalcModule.SUNSET) as Double;
-
         if (DRAW_SUN_TIMES){
-            if (sc.polarPhenomena==0){
+            if (_sc.polarPhenomena==0){
                 // polarPhenomena: 0=normal, 1=midnight sun, 2=Polar Night
         
                 dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
 
                 //Sunrise
-                var solarRiseDesimal = SunCalcModule.LocaleTimeAsDesimalHour(sunRiseTime);
-                var solarRiseString  = SunCalcModule.PrintLocaleTime(sunRiseTime);
+                var solarRiseDesimal = _sc.LocaleTimeAsDesimalHour(_sunRiseTime);
+                var solarRiseString  = _sc.PrintLocaleTime(_sunRiseTime);
                 var offsetFromPerimeter = 10;
                 var coordSunrise = _ui.calcHour2clockCoord(dc, solarRiseDesimal, offsetFromPerimeter) as Point2D;
                 
@@ -258,8 +235,8 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
                 dc.drawText(coordSunrise[0], coordSunrise[1], _font22, solarRiseString, Graphics.TEXT_JUSTIFY_LEFT);
 
                 //Sunset
-                var solarSetDesimal  = SunCalcModule.LocaleTimeAsDesimalHour(sunSetTime);
-                var solarSetString  = SunCalcModule.PrintLocaleTime(sunSetTime);
+                var solarSetDesimal  = SunCalcModule.LocaleTimeAsDesimalHour(_sunSetTime);
+                var solarSetString  = SunCalcModule.PrintLocaleTime(_sunSetTime);
                 var coordSunset = _ui.calcHour2clockCoord(dc, solarSetDesimal, offsetFromPerimeter) as Point2D;
                 
                 if      (solarSetDesimal<=16)                      {
@@ -274,12 +251,12 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
                     }
                 dc.drawText(coordSunset[0], coordSunset[1], _font22, solarSetString, Graphics.TEXT_JUSTIFY_RIGHT);
             }
-            else if (sc.polarPhenomena==1){
+            else if (_sc.polarPhenomena==1){
                 //Midnight sun
                 dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(dc.getWidth()/2, dc.getHeight()/4, _font22, "Midnight sun", Graphics.TEXT_JUSTIFY_CENTER);
             }
-            else if (sc.polarPhenomena==2){
+            else if (_sc.polarPhenomena==2){
                 //Polar night
                 dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(dc.getWidth()/2, dc.getHeight()/4, _font22, "Polar night", Graphics.TEXT_JUSTIFY_CENTER);
@@ -293,20 +270,20 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
         //Draw sun ephemeris
         var sunPositions = new Array<SunCoord_LocalPosition>[24];
-        sunPositions = sc.getSunTrajectoryForDay();
+        sunPositions = _sc.getSunTrajectoryForDay();
         dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_YELLOW);
         dc.setPenWidth(2);
         _ui.drawPolygonSkyView(dc, sunPositions);
 
         //Draw sun on Sky-view
         var sunSize = 11; 
-        var sunCoordLocal = sc.getSunPosition();
+        var sunCoordLocal = _sc.getSunPosition();
         if (sunCoordLocal!=null){
             var point = _ui.calcPolarToScreenCoord(dc , sunCoordLocal, true) as Graphics.Point2D;
             var sunX=point[0];
             var sunY=point[1];
 
-            if ( (sc.polarPhenomena==0 && (momentNow.value()>sunRiseTime && momentNow.value()<sunSetTime)) || sc.polarPhenomena==1){
+            if ( (_sc.polarPhenomena==0 && (momentNow.value()>_sunRiseTime && momentNow.value()<_sunSetTime)) || _sc.polarPhenomena==1){
                 dc.drawCircle(sunX, sunY, sunSize);
                 dc.fillCircle(sunX, sunY, sunSize-4);
             }
