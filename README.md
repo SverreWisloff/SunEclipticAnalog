@@ -48,11 +48,9 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 - Fenix 7 pro
 
 ## TODO
-- [ ] Add settings
 - [ ] Add and test more watches 
 - [ ] drawBattery. Look at this [code](https://github.com/dennybiasiolli/garmin-connect-iq/tree/main/Analog24hour/source) [IQ](https://apps.garmin.com/nb-NO/apps/292387a3-611e-49bd-add4-dee28edc1d57)
 - [ ] Test south hemisphere
-- [ ] Test midnight sun and Polar Night
 - [ ] Sjekk ut fontene her: https://github.com/sunpazed/garmin-flags/tree/master/resources/fonts
 - [ ] Calculate the size of graphic elements (clock hands) proportional to the clock's size (in pixels)
 - [ ] [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
@@ -60,7 +58,7 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 
 
 ## Screenshot
-![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241225_sim.png?raw=true)
+![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241230_sim.png?raw=true)
 
 
 ## Realease-log
@@ -120,7 +118,7 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 #### Hero Image (Optional)
 Add an image optimized for mobile devices to advertise your app. The image (JPG, GIF or PNG) has to be 1440x720 pixels large and can have a maximum size of 2048 KB.
 #### Cover Image (Web/Mobile)
-This cover image will be displayed on your Connect IQ Store listing on the Web and the Connect IQ App Store mobile app. Image must be a JPG, GIF or PNG less than 150 KB.
+This cover image will be displayed on your Connect IQ Store listing on the Web and the Connect IQ App Store mobile app. Image must be a **JPG**, GIF or PNG less than 150 KB.
 (500 x 500)
 #### Add Icons for App Store on Device (Optional)
 The colors in the device icons should be reduced as labeled and should only be 128 x 128 pixels.

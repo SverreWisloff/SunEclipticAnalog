@@ -111,35 +111,20 @@ module SunCalcModule
 
 
     enum solarEvent_enum { 
-        NIGHTEND = -18.0,          //The moment when the sky starts to lighten, marking the end of astronomical night
-        NAUTICALDAWN = -12.0,      //The beginning of nautical twilight, where the horizon is faintly visible at sea.
-        DAWN = -6.0,               //The start of civil twilight when the sky is bright enough for most outdoor activities without artificial light
-        SUNRISE = -0.833,          //The moment the sun's upper edge becomes visible above the horizon.
-        SUNRISEEND = -0.3,         //The time at which the full disk of the sun is above the horizon
-        GOLDENHOUREND = 6.0,       //The time when the "golden hour" ends in the morning, which is a period of soft, warm light ideal for photography
-
-        GOLDENHOUR = -6.0,         //A period shortly after sunrise or before sunset with soft, diffused light
-        SUNSETSTART = 0.3,         //The time when the sun starts to touch the horizon as it sets.
-        SUNSET = 0.833,            //The moment the sun's upper edge dips below the horizon.
-        DUSK = 6.0,                //The end of civil twilight, when it is too dark to see clearly without artificial light.
-        NAUTICALDUSK = 12.0,       //The end of nautical twilight, where the horizon becomes indistinguishable at sea.
-        NIGHT = 1.0                //Begins after astronomical dusk when the sky is completely dark.
+        NIGHTEND,          //The moment when the sky starts to lighten, marking the end of astronomical night
+        NAUTICALDAWN,      //The beginning of nautical twilight, where the horizon is faintly visible at sea.
+        DAWN,               //The start of civil twilight when the sky is bright enough for most outdoor activities without artificial light
+        SUNRISE,          //The moment the sun's upper edge becomes visible above the horizon.
+        SUNRISEEND ,         //The time at which the full disk of the sun is above the horizon
+        GOLDENHOUREND ,       //The time when the "golden hour" ends in the morning, which is a period of soft, warm light ideal for photography
+        GOLDENHOUR ,         //A period shortly after sunrise or before sunset with soft, diffused light
+        SUNSETSTART ,         //The time when the sun starts to touch the horizon as it sets.
+        SUNSET ,            //The moment the sun's upper edge dips below the horizon.
+        DUSK  ,                //The end of civil twilight, when it is too dark to see clearly without artificial light.
+        NAUTICALDUSK ,       //The end of nautical twilight, where the horizon becomes indistinguishable at sea.
+        NIGHT                  //Begins after astronomical dusk when the sky is completely dark.
         }
 
-    enum solarEvent_enumXXX { 
-        NIGHTEND_,          
-        NAUTICALDAWN_,      
-        DAWN_,               
-        SUNRISE_,          
-        SUNRISEEND_,         
-        GOLDENHOUREND_,       
-        GOLDENHOUR_,         
-        SUNSETSTART_,         
-        SUNSET_,            
-        DUSK_,                
-        NAUTICALDUSK_,       
-        NIGHT_                
-        }
 
 
     // calculations for sun times
@@ -320,6 +305,7 @@ module SunCalcModule
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+
     class sunCalc
     {
         private var _lat = 0.0 as Double;
@@ -328,8 +314,22 @@ module SunCalcModule
         private var _knownPosition = false as Boolean;
         private var _knownDate = false as Boolean;
         private var _date;
-        public var solarEvents;
         public var polarPhenomena as Number; //0=normal, 1=midnight sun, 2=Polar Night
+
+        // 12 solar events, each with 
+        // [i][0] angle in degrees
+        // [i][1] name of rise-event
+        // [i][2] time of rise-event
+        // [i][3] name of set-event
+        // [i][4] time of set-event
+        const solarEvents =  [                
+            [-0.833d, "sunrise",       0.0d, "sunset",        0.0d ],
+            [  -0.3d, "sunriseEnd",    0.0d, "sunsetStart",   0.0d ],
+            [  -6.0d, "dawn",          0.0d, "dusk",          0.0d ],
+            [ -12.0d, "nauticalDawn",  0.0d, "nauticalDusk",  0.0d ],
+            [ -18.0d, "nightEnd",      0.0d, "night",         0.0d ],
+            [   6.0d, "goldenHourEnd", 0.0d, "goldenHour",    0.0d ]
+        ];
 
         public function initialize() {
             _lat = 0.0;
@@ -339,23 +339,7 @@ module SunCalcModule
             _date = 0.0;
             _knownDate = false;
             polarPhenomena = 0; 
-
-            // 12 solar events, each with 
-            // [i][0] angle in degrees
-            // [i][1] name of rise-event
-            // [i][2] time of rise-event
-            // [i][3] name of set-event
-            // [i][4] time of set-event
-            solarEvents =  [                
-                [-0.833, "sunrise",       0.0, "sunset",        0.0 ],
-                [  -0.3, "sunriseEnd",    0.0, "sunsetStart",   0.0 ],
-                [    -6, "dawn",          0.0, "dusk",          0.0 ],
-                [   -12, "nauticalDawn",  0.0, "nauticalDusk",  0.0 ],
-                [   -18, "nightEnd",      0.0, "night",         0.0 ],
-                [     6, "goldenHourEnd", 0.0, "goldenHour",    0.0 ]
-            ];
-
-       }
+        }
 
         public function setLocation(latitude as Double, longitude as Double) {
             _lat = latitude;
@@ -387,10 +371,10 @@ module SunCalcModule
 //            System.println("calcSolarEvents:" + "M=" + M + "L=" + L + "dec=" + dec + "Jnoon=" + Jnoon);
 
             for (var i=0; i<6; i+=1){
-                var angle_deg = solarEvents[i][0];
+                var angle_deg = solarEvents[i][0] as Double;
 
                 var h0 = (angle_deg + dh) * RAD;
-                var Jset = getSetJXXX(h0, lw, phi, dec, n, M, L);
+                var Jset = getSetJ_PP(h0, lw, phi, dec, n, M, L);
                 var Jrise = Jnoon - (Jset - Jnoon);
 
                 solarEvents[i][4] = fromJulian(Jset);
@@ -404,21 +388,21 @@ module SunCalcModule
             return ;
         }
 
-        public function getTimeOfSolarEvent(solarEvent as solarEvent_enumXXX) as Number{
-            var time;
+        public function getTimeOfSolarEvent(solarEvent as solarEvent_enum) as Double{
+            var time = 0.0 as Double;
 
             switch (solarEvent) {
-                case SUNRISE_:
-                    time = solarEvents[0][2];
+                case SUNRISE:
+                    time = solarEvents[0][2] as Double;
                     break;
-                case SUNSET_:
-                    time = solarEvents[0][4];
+                case SUNSET:
+                    time = solarEvents[0][4] as Double;
                     break;
-                case DAWN_:
-                    time = solarEvents[2][2];
+                case DAWN:
+                    time = solarEvents[2][2] as Double;
                     break;
-                case DUSK_:
-                    time = solarEvents[2][4];
+                case DUSK:
+                    time = solarEvents[2][4] as Double;
                     break;
                 //TODO: add more cases
                 default:
@@ -486,15 +470,15 @@ module SunCalcModule
         }
 
         // returns set time for the given sun altitude
-        private function getSetJXXX(h, lw, phi, dec, n, M, L) {
+        private function getSetJ_PP(h, lw, phi, dec, n, M, L) {
 
-            var w = hourAngleXXX(h, phi, dec);
+            var w = hourAngle_PP(h, phi, dec);
             var a = approxTransit(w, lw, n);
 
             return solarTransitJ(a, M, L);
         }
 
-        private function hourAngleXXX(h, phi, d) {
+        private function hourAngle_PP(h, phi, d) {
             var cosLHA = ((Math.sin(h) - Math.sin(phi) * Math.sin(d)))/(Math.cos(phi) * Math.cos(d));
             if (cosLHA<-1.0000001){
                 System.println("midnight sun");

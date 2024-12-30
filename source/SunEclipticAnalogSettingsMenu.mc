@@ -31,7 +31,7 @@ class SunEclipticAnalogSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
         if (menuItem instanceof ToggleMenuItem) {
             var bSet = menuItem.isEnabled();
             // Set the property value
-            Application.Properties.setValue("DrawDate", bSet);
+            Application.Properties.setValue(menuItem.getLabel(), bSet);
 
             // Request UI update
             WatchUi.requestUpdate();
