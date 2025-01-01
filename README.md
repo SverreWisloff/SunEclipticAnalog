@@ -64,7 +64,7 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 **Dev**
 - Showing battery level and charging status
 - Updating pos and calculating sun trajectorya and sun-events every 10 minutes
-- Adding support for fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fenix6spro, fenix6xpro, fenix7, fenix7pro
+- Adding support for enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fenix6spro, fenix6xpro, fenix7, fenix7pro
 
 **1.2**
 - Show times for sunset and sunrise 
