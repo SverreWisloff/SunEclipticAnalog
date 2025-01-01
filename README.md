@@ -49,7 +49,6 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 
 ## TODO
 - [ ] Add and test more watches 
-- [ ] drawBattery. Look at this [code](https://github.com/dennybiasiolli/garmin-connect-iq/tree/main/Analog24hour/source) [IQ](https://apps.garmin.com/nb-NO/apps/292387a3-611e-49bd-add4-dee28edc1d57)
 - [ ] Test south hemisphere
 - [ ] Sjekk ut fontene her: https://github.com/sunpazed/garmin-flags/tree/master/resources/fonts
 - [ ] Calculate the size of graphic elements (clock hands) proportional to the clock's size (in pixels)
@@ -63,8 +62,9 @@ https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
 
 ## Realease-log
 **Dev**
+- Showing battery level and charging status
 - Updating pos and calculating sun trajectorya and sun-events every 10 minutes
-- Adding support for fenix6spro, fenix6xpro and fenix7
+- Adding support for fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fenix6spro, fenix6xpro, fenix7, fenix7pro
 
 **1.2**
 - Show times for sunset and sunrise 

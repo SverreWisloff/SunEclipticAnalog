@@ -39,7 +39,6 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var DRAW_SUN_TIMES = true;
     private var DRAW_INDEX_LABELS = false;
     private var DRAW_A_GREY_BACKGROUND_TRIANGLE = false;
-    private var DRAW_BATTERY = false; 
 
     private var _ui;
     private var _sc;
@@ -136,6 +135,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
                 :palette=> [
                     Graphics.COLOR_DK_GRAY,
                     Graphics.COLOR_LT_GRAY,
+                    Graphics.COLOR_RED,
                     Graphics.COLOR_YELLOW,
                     Graphics.COLOR_BLUE,
                     Graphics.COLOR_BLACK,
@@ -389,10 +389,8 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         //_ui.drawArbor(targetDc);
 
         // Draw the battery level
-        if (DRAW_BATTERY){     
-            var dataString = (System.getSystemStats().battery + 0.5).toNumber().toString() + "%";
-            targetDc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
-            targetDc.drawText(width / 2,  15*height / 20, _font24, dataString, Graphics.TEXT_JUSTIFY_CENTER);
+        if (Application.Properties.getValue("BatteryLevel")){
+            _ui.drawBatterylevel(targetDc, width / 2,  16*height / 20, Graphics.COLOR_WHITE);   
         }
 
         // If we have an offscreen buffer that we are using for the date string,
@@ -403,7 +401,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             var dateDc = _dateBuffer.getDc();
 
             // Draw the background image buffer into the date buffer to set the background
-            dateDc.drawBitmap(0, -(2.5 * height / 4), offscreenBuffer);
+            dateDc.drawBitmap(0, -(2.6 * height / 4), offscreenBuffer);
 
             // Draw the date string into the buffer.
             dateDc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
@@ -466,7 +464,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             var secondHandColor;
             secondHandColor = Graphics.COLOR_BLUE;
             if (Application.Properties.getValue("DrawDate")){
-                secondHandColor = Application.Properties.getValue("ForegroundColor") as Number;
+                secondHandColor = Application.Properties.getValue("ForegroundColor") as Number;//TODO - fix this error
             }
             dc.setColor(secondHandColor, secondHandColor);
             _ui.drawPolygon(dc, secondHandPoints);
@@ -528,7 +526,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         // Draw the date
         if (null != _dateBuffer) {
             // If the date is saved in a Buffered Bitmap, just copy it from there.
-            dc.drawBitmap(0, 2.5 * height / 4, _dateBuffer);
+            dc.drawBitmap(0, 2.6 * height / 4, _dateBuffer);
         } else {
             // Otherwise, draw it from scratch.
             // TODO - whats this?

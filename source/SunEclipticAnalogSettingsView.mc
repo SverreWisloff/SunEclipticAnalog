@@ -46,13 +46,14 @@ class SunEclipticAnalogSettingsDelegate extends WatchUi.BehaviorDelegate {
         //var number = Storage.getValue(1) ? true : false;
         //menu.addItem(new WatchUi.ToggleMenuItem("ForegroundColor", null, 1, number, null));
 
-        var bDrawDate = Storage.getValue(2) ? true : false;
-        bDrawDate = Application.Properties.getValue("DrawDate") ? true : false;
-        menu.addItem(new WatchUi.ToggleMenuItem("DrawDate", null, 2, bDrawDate, null));
+        var bDrawDate = Application.Properties.getValue("DrawDate") ? true : false;
+        menu.addItem(new WatchUi.ToggleMenuItem("DrawDate", null, "DrawDate", bDrawDate, null));
 
-        var bDebugInfo = Storage.getValue(3) ? true : false;
-        bDebugInfo = Application.Properties.getValue("DebugInfo") ? true : false;
-        menu.addItem(new WatchUi.ToggleMenuItem("DebugInfo", null, 3, bDebugInfo, null));
+        var bBatteryLevel = Application.Properties.getValue("BatteryLevel") ? true : false;
+        menu.addItem(new WatchUi.ToggleMenuItem("BatteryLevel", null, "BatteryLevel", bBatteryLevel, null));
+
+        var bDebugInfo = Application.Properties.getValue("DebugInfo") ? true : false;
+        menu.addItem(new WatchUi.ToggleMenuItem("DebugInfo", null, "DebugInfo", bDebugInfo, null));
 
         WatchUi.pushView(menu, new $.SunEclipticAnalogSettingsMenuDelegate(), WatchUi.SLIDE_IMMEDIATE);
         return true;

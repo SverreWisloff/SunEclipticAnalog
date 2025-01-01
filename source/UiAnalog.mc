@@ -281,4 +281,47 @@ class UiAnalog {
         drawString(dc, x , y , dateStr, font);
     }
 
+    public function drawBatterylevel(dc as Dc, batt_x as Number, batt_y as Number, primaryColor) as Void {
+        var batt_width_rect =  26;
+        var batt_height_rect = 14;
+        var batt_height_rect_small = batt_height_rect/2;
+        batt_x = batt_x - batt_width_rect/2;
+        batt_y = batt_y - batt_height_rect/2;
+        var batt_x_small = batt_x + batt_width_rect;
+        var batt_y_small = batt_y + ((batt_height_rect - batt_height_rect_small) / 2);
+        var background_color = Graphics.COLOR_BLACK;        
+        
+        var batteryLevel = System.getSystemStats().battery;
+        var batteryCharging = System.getSystemStats().charging;
+        
+        if(batteryLevel < 25)
+        {
+            primaryColor=Graphics.COLOR_YELLOW;
+        }
+
+        dc.setColor(primaryColor, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(batt_x, batt_y, batt_width_rect, batt_height_rect);
+        dc.setColor(background_color, Graphics.COLOR_TRANSPARENT);
+
+        dc.setColor(primaryColor, Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(batt_x_small+2, batt_y_small, batt_x_small+2, batt_y_small + batt_height_rect_small);
+        dc.setColor(background_color, Graphics.COLOR_TRANSPARENT);
+
+        dc.setColor(primaryColor, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(batt_x+2, batt_y+2, ((batt_width_rect-4) * batteryLevel / 100), batt_height_rect-4);
+
+        if (batteryCharging){
+            var chargingCoords =   [[batt_x+2                    ,  batt_y+2],
+                                    [batt_x+(batt_width_rect/2)  ,  batt_y+batt_height_rect-2],
+                                    [batt_x+(batt_width_rect/2)  ,  batt_y+2],
+                                    [batt_x+batt_width_rect-2    ,  batt_y+batt_height_rect-2]];
+            if(batteryLevel < 80){
+                dc.setColor(Application.Properties.getValue("ForegroundColor") as Number, Graphics.COLOR_BLACK);
+            }
+            else {
+                dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
+            }
+            dc.fillPolygon(chargingCoords);
+        }
+    }
 }

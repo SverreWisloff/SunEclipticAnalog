@@ -13,6 +13,10 @@
         <settingConfig type="boolean" />
     </setting>
 
+    <setting propertyKey="@Properties.BatteryLevel" title="@Strings.BatteryLevel">
+        <settingConfig type="boolean" />
+    </setting>
+
     <setting propertyKey="@Properties.DebugInfo" title="@Strings.DebugInfo">
         <settingConfig type="boolean" />
     </setting>
