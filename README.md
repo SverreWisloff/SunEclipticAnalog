@@ -10,7 +10,7 @@ Assumes a round watchface
 
 This clock shows a simple analog wathcface that shows the sun's path across the sky.
 
-[Check out this sales pitch that chatGPT helped me with](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/STORE.md)
+[Sales pitch that chatGPT helped me with](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/STORE.md)
 
 ## Resources
 
@@ -41,27 +41,28 @@ This project uses code from suncalc by Vladimir Agafonkin.
 Repository: https://github.com/mourner/suncalc 
 License: BSD 2-Clause "Simplified" License
 
-Sundance: Both a  mc-fork, and rotated fonts for 24-hours at the perimeter  
-https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc
+[Sundance](https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc): Both a  mc-fork, and rotated fonts for 24-hours at the perimeter  
+
 
 # Supported Devices
 - Fenix 7 pro
 
 ## TODO
+- [ ] status-iconer som [fonter](https://github.com/sennescheepers/Forerunner745Watchface/). Her et [annet alternativ](https://github.com/blotspot/garmin-watchface-protomolecule) minutes + messages + bluetooth + body-battery + puls + skritt. Og her enda [en kilde](https://github.com/warmsound/crystal-face/)
 - [ ] Add and test more watches 
 - [ ] Test south hemisphere
-- [ ] Sjekk ut fontene her: https://github.com/sunpazed/garmin-flags/tree/master/resources/fonts
+- [ ] Sjekk ut fontene [her](https://github.com/sunpazed/garmin-flags/tree/master/resources/fonts)
 - [ ] Calculate the size of graphic elements (clock hands) proportional to the clock's size (in pixels)
 - [ ] [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
 
-
 ## Screenshot
 ![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241230_sim.png?raw=true)
 
-
 ## Realease-log
 **Dev**
+
+**1.3**
 - Showing battery level and charging status
 - Updating pos and calculating sun trajectorya and sun-events every 10 minutes
 - Adding support for enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fenix6spro, fenix6xpro, fenix7, fenix7pro

@@ -294,7 +294,7 @@ class UiAnalog {
         var batteryLevel = System.getSystemStats().battery;
         var batteryCharging = System.getSystemStats().charging;
         
-        if(batteryLevel < 25)
+        if(batteryLevel <= 30)
         {
             primaryColor=Graphics.COLOR_YELLOW;
         }
