@@ -49,7 +49,7 @@ License: BSD 2-Clause "Simplified" License
 
 ## TODO
 - [ ] status-iconer som [fonter](https://github.com/sennescheepers/Forerunner745Watchface/). Her et [annet alternativ](https://github.com/blotspot/garmin-watchface-protomolecule) minutes + messages + bluetooth + body-battery + puls + skritt. Og her enda [en kilde](https://github.com/warmsound/crystal-face/)
-- [ ] Add and test more watches 
+- [ ] Add and test more watches (Forerunner?)
 - [ ] Test south hemisphere
 - [ ] Sjekk ut fontene [her](https://github.com/sunpazed/garmin-flags/tree/master/resources/fonts)
 - [ ] Calculate the size of graphic elements (clock hands) proportional to the clock's size (in pixels)
@@ -66,6 +66,7 @@ License: BSD 2-Clause "Simplified" License
 - Showing battery level and charging status
 - Updating pos and calculating sun trajectorya and sun-events every 10 minutes
 - Adding support for enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fenix6spro, fenix6xpro, fenix7, fenix7pro
+- SDK 7.4.3
 
 **1.2**
 - Show times for sunset and sunrise 
