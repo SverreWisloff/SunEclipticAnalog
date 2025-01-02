@@ -76,16 +76,19 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     }
 
     private function getWeatherPos() {
-		var conditions = Weather.getCurrentConditions();
-		if (conditions == null || conditions.observationLocationPosition == null) {
-			return null;
-		}
-		var location = conditions.observationLocationPosition.toDegrees();
-		if ((Math.round(location[0]) == 0 && Math.round(location[1]) == 0) ||
-			Math.round(location[0]) == 180 && Math.round(location[1]) == 180) {
-			return null;
-		}
-		return location;
+        if (Toybox has :Weather){
+            var conditions = Weather.getCurrentConditions();
+            if (conditions == null || conditions.observationLocationPosition == null) {
+                return null;
+            }
+            var location = conditions.observationLocationPosition.toDegrees();
+            if ((Math.round(location[0]) == 0 && Math.round(location[1]) == 0) ||
+                Math.round(location[0]) == 180 && Math.round(location[1]) == 180) {
+                return null;
+            }
+            return location;
+        }
+        return null;
 	}
     
     private function getPos() as Void {

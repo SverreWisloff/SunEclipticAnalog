@@ -8,7 +8,7 @@ Taking inspiration from **Garmin's Quatix 5**—renowned for its sleek design ta
 - **Track the Sun’s Position with Precision:**  
   Visualize the sun’s location in the sky, including direction (azimuth) and altitude above the horizon. After sunset, the watch perimeter continues to guide you by displaying the sun’s direction.
 - **Customizable Style:**  
-  Personalize your watch with adjustable second-hand colors and an optional date display.
+  Personalize your watch with adjustable second-hand colors and an optional date and battery-level display.
 - **Seasonal Elegance for Everyday Use:**  
   Capture the longing for sunlight during darker days or appreciate the warmth of golden hours—this watch keeps you connected to the rhythms of nature.
 

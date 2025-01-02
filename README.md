@@ -6,15 +6,17 @@
 
 *The goal of this project is to create an analog watchface that displays the sun's path on the sky*
 
-Assumes a round watchface
+This simple analog round wathcface shows the sun's path across the sky. Its inspired by the seasonal variations.
 
-This clock shows a simple analog wathcface that shows the sun's path across the sky.
+The user can see where the sun is in the sky. Both direction (azimuth) and height above the horizon. After the sun has set, the direction of the sun is displayed along the watch perimeter.
+
+There are settings for the color of the second hand and whether the date and battery-level should be displayed.
 
 [Sales pitch that chatGPT helped me with](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/STORE.md)
 
 ## Resources
 
-A collection of Garmin applications: https://github.com/bombsimon/awesome-garmin
+A huge collection of Garmin applications: https://github.com/bombsimon/awesome-garmin
 
 ## Example code for sun calculations
 It seems that it is "leaflet" Agafonkin who is behind the suncalc code that is used almost everywhere to calculate sunrise, sunset, and the sun's path in the sky. These are some projects I've been looking at:
@@ -43,17 +45,15 @@ License: BSD 2-Clause "Simplified" License
 
 [Sundance](https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc): Both a  mc-fork, and rotated fonts for 24-hours at the perimeter  
 
-
 # Supported Devices
-- Fenix 7 pro
+enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fenix6spro, fenix6xpro, fenix7, fenix7pro
 
 ## TODO
-- [ ] status-iconer som [fonter](https://github.com/sennescheepers/Forerunner745Watchface/). Her et [annet alternativ](https://github.com/blotspot/garmin-watchface-protomolecule) minutes + messages + bluetooth + body-battery + puls + skritt. Og her enda [en kilde](https://github.com/warmsound/crystal-face/)
+- [ ] check memory usage, and cpu-usage
+- [ ] status-iconer som [fonter](https://github.com/sennescheepers/Forerunner745Watchface/). Her et [annet alternativ](https://github.com/blotspot/garmin-watchface-protomolecule) 1) alarm 2) bluetooth 3) messages 4) minutes 5) body-battery 6) puls 7) altitude 8) barometer 9) skritt. Og her enda [en kilde](https://github.com/warmsound/crystal-face/)
 - [ ] Add and test more watches (Forerunner?)
 - [ ] Test south hemisphere
 - [ ] Sjekk ut fontene [her](https://github.com/sunpazed/garmin-flags/tree/master/resources/fonts)
-- [ ] Calculate the size of graphic elements (clock hands) proportional to the clock's size (in pixels)
-- [ ] [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
 
 ## Screenshot
@@ -104,6 +104,7 @@ License: BSD 2-Clause "Simplified" License
     - Ctrl + Shift + P -> Monkey C: Build for Device
     - bin (Choose a directory for the output and click Select Folder)
     - Copy the generated `PRG` files to your device’s `GARMIN/APPS` directory
+ - WatchFace [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
 
 ### VS Code
 - VS Code: Stop running: `shift + F5`
