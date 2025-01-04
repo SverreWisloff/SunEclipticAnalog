@@ -2,7 +2,8 @@
 
     <property id="ForegroundColor" type="number">0x00AAFF</property>
     <property id="DrawDate" type="boolean">true</property>
-    <property id="BatteryLevel" type="boolean">false</property>
+    <property id="BatteryLevel" type="boolean">true</property>
+    <property id="StatusIcons" type="boolean">true</property>
     <property id="DebugInfo" type="boolean">false</property>
 
 </properties>

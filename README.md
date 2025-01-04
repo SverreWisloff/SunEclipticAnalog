@@ -49,8 +49,7 @@ License: BSD 2-Clause "Simplified" License
 enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fenix6spro, fenix6xpro, fenix7, fenix7pro
 
 ## TODO
-- [ ] check memory usage, and cpu-usage
-- [ ] status-iconer som [fonter](https://github.com/sennescheepers/Forerunner745Watchface/). Her et [annet alternativ](https://github.com/blotspot/garmin-watchface-protomolecule) 1) alarm 2) bluetooth 3) messages 4) minutes 5) body-battery 6) puls 7) altitude 8) barometer 9) skritt. Og her enda [en kilde](https://github.com/warmsound/crystal-face/)
+- [x] status-iconer som [fonter](https://github.com/sennescheepers/Forerunner745Watchface/). Her et [annet alternativ](https://github.com/blotspot/garmin-watchface-protomolecule) ~~1) alarm 2) bluetooth 3) messages~~ 4) minutes 5) body-battery 6) puls 7) altitude 8) barometer 9) skritt. Og her enda [en kilde](https://github.com/warmsound/crystal-face/). Denner kanskje [bedre?](https://github.com/fevieira27/MoveToBeActive). Bilder av [origial-iconer](https://www8.garmin.com/manuals/webhelp/GUID-C001C335-A8EC-4A41-AB0E-BAC434259F92/NB-NO/GUID-700E76C4-F7E2-4984-8199-D59D6A31DFB9.html)
 - [ ] Add and test more watches (Forerunner?)
 - [ ] Test south hemisphere
 - [ ] Sjekk ut fontene [her](https://github.com/sunpazed/garmin-flags/tree/master/resources/fonts)
@@ -61,6 +60,7 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 
 ## Realease-log
 **Dev**
+- Status-icons for connected phone, alarm and notifications.
 
 **1.3**
 - Showing battery level and charging status

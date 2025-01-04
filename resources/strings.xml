@@ -5,6 +5,7 @@
     <string id="DrawDate">Date</string>
     <string id="DebugInfo">Debug info</string>
     <string id="BatteryLevel">Battery level</string>
+    <string id="StatusIcons">Status icons</string>
 
     <string id="ColorBlack">Black</string>
     <string id="ColorDarkGray">Dark Gray</string>

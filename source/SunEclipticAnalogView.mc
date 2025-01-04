@@ -21,6 +21,7 @@ import SunCalcModule;
 class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var _font22 as FontResource?;
     private var _font24 as FontResource?;
+    private var _fontIconMTBA as FontResource?;
     private var _isAwake as Boolean?;
     private var _dndIcon as BitmapResource?;
     private var _offscreenBuffer as BufferedBitmap?;
@@ -76,7 +77,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     }
 
     private function getWeatherPos() {
-        if (Toybox has :Weather){
+        if (Toybox has :Weather and Toybox.Weather has :getCurrentConditions){
             var conditions = Weather.getCurrentConditions();
             if (conditions == null || conditions.observationLocationPosition == null) {
                 return null;
@@ -123,6 +124,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         // Load the custom font we use for drawing the 3, 6, 9, and 12 on the watchface.
         _font24 = WatchUi.loadResource($.Rez.Fonts.id_font_24_Condensed) as FontResource;
         _font22 = WatchUi.loadResource($.Rez.Fonts.id_font_22) as FontResource;
+        _fontIconMTBA = WatchUi.loadResource($.Rez.Fonts.id_font_IconMTBA) as FontResource;
 
         // If this device supports the Do Not Disturb feature,
         // load the associated Icon into memory.
@@ -335,7 +337,13 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         if (Application.Properties.getValue("DebugInfo")){
             drawLocation(targetDc);
         }
-        drawSun(targetDc);          
+
+        //Draw sun-efemeris and sun on sky-view
+        drawSun(targetDc);
+
+        if (Application.Properties.getValue("StatusIcons")){
+            _ui.drawStatusIcons(targetDc, _fontIconMTBA);
+        }
 
         // Draw the tick marks around the edges of the screen
         //_ui.drawIndex(targetDc, 60, 8, 1, Graphics.COLOR_LT_GRAY); //60 Minute marks
@@ -404,7 +412,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             var dateDc = _dateBuffer.getDc();
 
             // Draw the background image buffer into the date buffer to set the background
-            dateDc.drawBitmap(0, -(2.6 * height / 4), offscreenBuffer);
+            dateDc.drawBitmap(0, -(26.5 * height / 40), offscreenBuffer); //##
 
             // Draw the date string into the buffer.
             dateDc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
@@ -529,7 +537,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         // Draw the date
         if (null != _dateBuffer) {
             // If the date is saved in a Buffered Bitmap, just copy it from there.
-            dc.drawBitmap(0, 2.6 * height / 4, _dateBuffer);
+            dc.drawBitmap(0, 26.5 * height / 40, _dateBuffer); //##
         } else {
             // Otherwise, draw it from scratch.
             // TODO - whats this?

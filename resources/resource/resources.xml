@@ -4,6 +4,7 @@
         <font id="id_font_22" filename="fonts/futura22mdscandi.fnt"  antialias="false" />
         <font id="id_font_31_num" filename="fonts/futura31num.fnt"  antialias="false" />
         <font id="id_font_24_Condensed" filename="fonts/futura-condensed24i18nmajor.fnt"  antialias="false" />
-        <font id="id_font_Icon" filename="fonts/icons.fnt" antialias="true" />
+        <font id="id_font_Icon" filename="fonts/icons.fnt" antialias="false" />
+        <font id="id_font_IconMTBA" filename="fonts/mtba-icons-small.fnt" antialias="false" />
         </fonts>
 </resources>

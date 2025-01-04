@@ -324,4 +324,20 @@ class UiAnalog {
             dc.fillPolygon(chargingCoords);
         }
     }
+    public function drawStatusIcons(dc as Dc, font as Graphics.FontType) as Void {
+        var strStatus="";
+        var phoneConnected = System.getDeviceSettings().phoneConnected;
+        var alarmCount = System.getDeviceSettings().alarmCount;
+        var notificationCount = System.getDeviceSettings().notificationCount;// null
+        if (phoneConnected)     {strStatus = strStatus+"I";} 
+        if (alarmCount>0)       {strStatus = strStatus+" K";}
+        if (notificationCount>0){strStatus = strStatus+" F"+notificationCount.format("%d");}
+
+        dc.setColor(Application.Properties.getValue("ForegroundColor") as Number, Graphics.COLOR_BLACK);
+//        dc.drawText(dc.getWidth() / 2,  11*dc.getHeight() / 20, font, "*(b!xsacf", Graphics.TEXT_JUSTIFY_CENTER);
+//        dc.drawText(dc.getWidth() / 2,  11*dc.getHeight() / 20, font, "ABCDEFGIJK", Graphics.TEXT_JUSTIFY_CENTER);
+//        dc.drawText(dc.getWidth() / 2,  11*dc.getHeight() / 20, font, "12 34 56 78 90", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.drawText(dc.getWidth() / 2,  23*dc.getHeight() / 40, font, strStatus, Graphics.TEXT_JUSTIFY_CENTER);
+    }
 }
