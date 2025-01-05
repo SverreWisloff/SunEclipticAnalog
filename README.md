@@ -59,6 +59,9 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 
 ## Realease-log
 **Dev**
+- 
+
+**1.4**
 - Status-icons for connected phone, alarm and notifications.
 - Adding support for fr965, fr955, fr945, fr945lte, fr265, fr265s
 
