@@ -46,13 +46,12 @@ License: BSD 2-Clause "Simplified" License
 [Sundance](https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc): Both a  mc-fork, and rotated fonts for 24-hours at the perimeter  
 
 # Supported Devices
-enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fenix6spro, fenix6xpro, fenix7, fenix7pro
+enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fenix6spro, fenix6xpro, fenix7, fenix7pro, fr965, fr955, fr945, fr945lte, fr265, fr265s
 
 ## TODO
-- [x] status-iconer som [fonter](https://github.com/sennescheepers/Forerunner745Watchface/). Her et [annet alternativ](https://github.com/blotspot/garmin-watchface-protomolecule) ~~1) alarm 2) bluetooth 3) messages~~ 4) minutes 5) body-battery 6) puls 7) altitude 8) barometer 9) skritt. Og her enda [en kilde](https://github.com/warmsound/crystal-face/). Denner kanskje [bedre?](https://github.com/fevieira27/MoveToBeActive). Bilder av [origial-iconer](https://www8.garmin.com/manuals/webhelp/GUID-C001C335-A8EC-4A41-AB0E-BAC434259F92/NB-NO/GUID-700E76C4-F7E2-4984-8199-D59D6A31DFB9.html)
-- [ ] Add and test more watches (Forerunner?)
+- [x] status-iconer  ~~1) alarm 2) bluetooth 3) messages~~ 4) minutes 5) body-battery 6) puls 7) altitude 8) barometer 9) skritt. Og her enda ). Bilder av [origial-iconer](https://www8.garmin.com/manuals/webhelp/GUID-C001C335-A8EC-4A41-AB0E-BAC434259F92/NB-NO/GUID-700E76C4-F7E2-4984-8199-D59D6A31DFB9.html)
+- [ ] Add and test more watches (Forerunner? 965, 265, 255, 55, 165, 955, 245, 9xx). Compatible [devices](https://developer.garmin.com/connect-iq/compatible-devices/). Device [Reference](https://developer.garmin.com/connect-iq/reference-guides/devices-reference/). Popular [watches](https://runningwithrock.com/which-are-the-most-popular-garmin-running-watches/)
 - [ ] Test south hemisphere
-- [ ] Sjekk ut fontene [her](https://github.com/sunpazed/garmin-flags/tree/master/resources/fonts)
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
 
 ## Screenshot
@@ -61,6 +60,7 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 ## Realease-log
 **Dev**
 - Status-icons for connected phone, alarm and notifications.
+- Adding support for fr965, fr955, fr945, fr945lte, fr265, fr265s
 
 **1.3**
 - Showing battery level and charging status
@@ -105,6 +105,9 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
     - bin (Choose a directory for the output and click Select Folder)
     - Copy the generated `PRG` files to your device’s `GARMIN/APPS` directory
  - WatchFace [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
+ - Fonter. Her er noen prosjekter å la seg inspirere av: [Forerunner745](https://github.com/sennescheepers/Forerunner745Watchface/). [Protomolecule](https://github.com/blotspot/garmin-watchface-protomolecule). [MoveToBeActive](https://github.com/fevieira27/MoveToBeActive). [Crystal-face](https://github.com/warmsound/crystal-face/). 
+ - Supporting devices. [Compatible devices](https://developer.garmin.com/connect-iq/compatible-devices/). [Device Reference](https://developer.garmin.com/connect-iq/reference-guides/devices-reference/)
+
 
 ### VS Code
 - VS Code: Stop running: `shift + F5`
