@@ -55,11 +55,12 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
 
 ## Screenshot
-![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241230_sim.png?raw=true)
+![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20250105_sim.jpg?raw=true)
 
 ## Realease-log
+
 **Dev**
-- 
+- ...
 
 **1.4**
 - Status-icons for connected phone, alarm and notifications.
