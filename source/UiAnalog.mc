@@ -206,11 +206,12 @@ class UiAnalog {
     public function calcPolarToScreenCoord(dc as Dc, posPolar as SunCalcModule.SunCoord_LocalPosition, forceOnScreen as Lang.Boolean) as Graphics.Point2D{
         var width = dc.getWidth();
         var height = dc.getHeight();
+        var scaleRadius = 1;//pix
         
         var az = posPolar.azimuth;
         var alt = posPolar.altitude;
         var theta = (az) * Math.PI / 180.0; //RAD
-        var r = (90.0-alt)/90.0 * width/2.0;
+        var r = (90.0-alt)/90.0 * (width-scaleRadius)/2.0;
         var x = width/2  + r*Math.sin(theta);
         var y = height/2 - r*Math.cos(theta);
         if (x<0 || x>width || y<0 || y>height){ // if not on screen
