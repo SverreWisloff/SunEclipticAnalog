@@ -56,6 +56,7 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 
 **Dev**
 - compute and draw solar noon as a dot at sun ephemeris, and draw solar noon as text to watchface
+- add settings for drawing sunset/sunrise and solar noon as text to watchface
 
 **1.4**
 - Status-icons for connected phone, alarm and notifications.

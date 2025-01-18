@@ -21,6 +21,14 @@
         <settingConfig type="boolean" />
     </setting>
 
+    <setting propertyKey="@Properties.SolarNoon" title="@Strings.SolarNoon">
+        <settingConfig type="boolean" />
+    </setting>
+
+    <setting propertyKey="@Properties.SunSetRise" title="@Strings.SunSetRise">
+        <settingConfig type="boolean" />
+    </setting>
+
     <setting propertyKey="@Properties.DebugInfo" title="@Strings.DebugInfo">
         <settingConfig type="boolean" />
     </setting>

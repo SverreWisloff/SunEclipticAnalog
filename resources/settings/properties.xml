@@ -5,5 +5,7 @@
     <property id="BatteryLevel" type="boolean">true</property>
     <property id="StatusIcons" type="boolean">true</property>
     <property id="DebugInfo" type="boolean">false</property>
+    <property id="SolarNoon" type="boolean">false</property>
+    <property id="SunSetRise" type="boolean">true</property>
 
 </properties>

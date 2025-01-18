@@ -37,7 +37,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var _secondHandWidth = 0;
  
     private var DRAW_SUN_ARC_ON_PERIMETER = false;
-    private var DRAW_SUN_TIMES = true;
+//    private var DRAW_SUN_TIMES = true;
     private var DRAW_INDEX_LABELS = false;
     private var DRAW_A_GREY_BACKGROUND_TRIANGLE = false;
 
@@ -217,7 +217,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         _sunNoonTime = _sc.solarNoon as Double;
        
         //Draw sun to background
-        if (DRAW_SUN_TIMES){
+        if (Application.Properties.getValue("SunSetRise") || Application.Properties.getValue("SolarNoon")){
             if (_sc.polarPhenomena==0){
                 // polarPhenomena: 0=normal, 1=midnight sun, 2=Polar Night
         
@@ -239,7 +239,9 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
                     coordSunrise = _ui.calcHour2clockCoord(dc, 4.0, offsetFromPerimeter) as Point2D;
                     coordSunrise[0] = coordSunrise[0] + 20; //move text to the right
                     }
-                dc.drawText(coordSunrise[0], coordSunrise[1], _font22, solarRiseString, Graphics.TEXT_JUSTIFY_LEFT);
+                if (Application.Properties.getValue("SunSetRise")){
+                    dc.drawText(coordSunrise[0], coordSunrise[1], _font22, solarRiseString, Graphics.TEXT_JUSTIFY_LEFT);
+                }
 
                 //Sunset
                 var solarSetDesimal  = SunCalcModule.LocaleTimeAsDesimalHour(_sunSetTime);
@@ -256,13 +258,17 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
                     coordSunset = _ui.calcHour2clockCoord(dc, 20.0, offsetFromPerimeter) as Point2D;
                     coordSunset[0] = coordSunset[0] - 20; //move text to the left
                     }
-                dc.drawText(coordSunset[0], coordSunset[1], _font22, solarSetString, Graphics.TEXT_JUSTIFY_RIGHT);
+                if (Application.Properties.getValue("SunSetRise")){
+                    dc.drawText(coordSunset[0], coordSunset[1], _font22, solarSetString, Graphics.TEXT_JUSTIFY_RIGHT);
+                }
                 
                 //Sun-noon
-                var solarNoonDesimal  = SunCalcModule.LocaleTimeAsDesimalHour(_sunNoonTime);
-                var solarNoonString  = SunCalcModule.PrintLocaleTime(_sunNoonTime);
-                var coordSunNoon = _ui.calcHour2clockCoord(dc, solarNoonDesimal, 35) as Point2D;
-                dc.drawText(coordSunNoon[0], coordSunNoon[1], _font22, solarNoonString, Graphics.TEXT_JUSTIFY_CENTER);
+                if (Application.Properties.getValue("SolarNoon")){
+                    var solarNoonDesimal  = SunCalcModule.LocaleTimeAsDesimalHour(_sunNoonTime);
+                    var solarNoonString  = SunCalcModule.PrintLocaleTime(_sunNoonTime);
+                    var coordSunNoon = _ui.calcHour2clockCoord(dc, solarNoonDesimal, 35) as Point2D;
+                    dc.drawText(coordSunNoon[0], coordSunNoon[1], _font22, solarNoonString, Graphics.TEXT_JUSTIFY_CENTER);
+                }
             }
             else if (_sc.polarPhenomena==1){
                 //Midnight sun
