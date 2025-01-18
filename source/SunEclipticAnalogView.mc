@@ -275,7 +275,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
         //Draw sun ephemeris
         var sunPositions = new Array<SunCoord_LocalPosition>[24];
-        sunPositions = _sc.getSunTrajectoryForDay();
+        sunPositions = _sc.getSunTrajectoryForDay(1);
         dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_YELLOW);
         dc.setPenWidth(2);
         _ui.drawPolygonSkyView(dc, sunPositions);

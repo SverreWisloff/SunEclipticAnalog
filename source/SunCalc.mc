@@ -315,6 +315,7 @@ module SunCalcModule
         private var _knownDate = false as Boolean;
         private var _date;
         private var _solarEventsCalculated = false as Boolean;
+        public var solarNoon;
         public var polarPhenomena as Number; //0=normal, 1=midnight sun, 2=Polar Night
 
         // 12 solar events, each with 
@@ -382,6 +383,7 @@ module SunCalcModule
             var dec = declination(L, 0.0);
 
             var Jnoon = solarTransitJ(ds, M, L);
+            solarNoon = fromJulian(Jnoon);
 
 //            System.println("calcSolarEvents:" + "M=" + M + "L=" + L + "dec=" + dec + "Jnoon=" + Jnoon);
 
@@ -435,7 +437,9 @@ module SunCalcModule
         }
 
         // calculates sun position through the day for a given date and latitude/longitude
-        public function getSunTrajectoryForDay() as Array<SunCoord_LocalPosition> or Null{
+        // mode = 0: sun position relative to clock time ([0] = 12:00) (default)
+        // mode = 1: sun position relative to solar time ([0] = solar noon)
+        public function getSunTrajectoryForDay(mode) as Array<SunCoord_LocalPosition> or Null{
             if (_knownPosition && _knownDate) {
                 var sunCoordLocal = new SunCoord_LocalPosition();
                 var result = new Array<SunCoord_LocalPosition>[24];
@@ -443,21 +447,44 @@ module SunCalcModule
                 var Moment = new Time.Moment(_date);
                 var infoDate = Gregorian.info(Moment, Time.FORMAT_SHORT);
 
+                // Get daylight savings offset
+                var where = new Position.Location({:latitude  => _lat,  :longitude => _lon, :format    => :degrees });
+                var local = Gregorian.localMoment(where, _date);
+                var offset = local.getDaylightSavingsTimeOffset()/3600.0;
+                
+                // Find start time for i=0
+                var hour = 12;
+                var minute = 0;
+                var azCorr = 0.0;
+                if (mode==1){
+                    var solarNoonDesimal = LocaleTimeAsDesimalHour(solarNoon);
+                    var solarNoonHour = Math.floor(solarNoonDesimal);
+                    var solarNoonMinute = Math.round((solarNoonDesimal - solarNoonHour) * 60.0);
+                    hour = solarNoonHour-offset;
+                    minute = solarNoonMinute;
+                    azCorr = (solarNoonDesimal-12.0)/12.0*180.0;
+                } else {
+                    hour = 12-offset;
+                    minute = 0;
+                }   
+
                 // Loop for every hour through the day 
                 for (var i = 0; i <= 23; i += 1) {
-
+                    
                     var options = {
                         :year   => infoDate.year,
                         :month  => infoDate.month,
                         :day    => infoDate.day,
-                        :hour   => i,
-                        :minute => 0
+                        :hour   => hour,
+                        :minute => minute
                     };
 
                     var time_i = Gregorian.moment(options);
                     sunCoordLocal = getPosition(time_i.value(), _lat, _lon);
                     var az = sunCoordLocal.azimuth ;
-                    var alt = sunCoordLocal.altitude ;
+                    var alt = sunCoordLocal.altitude ;  
+
+                    az = az + azCorr;            
                     
                     var resultAA = new SunCoord_LocalPosition();
                     resultAA.azimuth = az; 
@@ -466,6 +493,12 @@ module SunCalcModule
 
                     //DEBUG
                     //System.println("zi=" + i + " time=" + PrintLocaleTime(time_i.value()) + " az=" + az.format("%.4f")+ " alt=" + alt.format("%.4f"));
+
+                    hour += 1;
+                    if (hour>23){
+                        hour = 0;
+                    }
+
                 }        
                 return result;
             }

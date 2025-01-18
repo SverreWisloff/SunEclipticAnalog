@@ -188,12 +188,16 @@ class UiAnalog {
         }   
     }
 
-        //   o-----------------> x
-        //   |        |   P
-        //   |        |az/
+        //   o---------------------|---------> x
+        //   |        |   P       width
+        //   |        |az/         |
         //   |        | /alt
         //   |        |/
         //   |        O   
+        //   |          
+        //   |          
+        //   |           
+        //   -- height --
         //   |
         //   |
         //   V
@@ -209,7 +213,7 @@ class UiAnalog {
         var r = (90.0-alt)/90.0 * width/2.0;
         var x = width/2  + r*Math.sin(theta);
         var y = height/2 - r*Math.cos(theta);
-        if (x<0 ||x>width || y<0 || y>height){
+        if (x<0 || x>width || y<0 || y>height){ // if not on screen
             if (forceOnScreen){
                 x = width/2  + (width/2)*Math.sin(theta);
                 y = height/2 - (width/2)*Math.cos(theta);
@@ -235,6 +239,13 @@ class UiAnalog {
                 var pointXY = calcPolarToScreenCoord(dc , posPolar, false);
                 startX = pointXY[0];
                 startY = pointXY[1];
+
+                if (i==0){
+                    dc.fillCircle(startX, startY, 2); //draw solar noon
+                } 
+                else {
+                    //dc.drawCircle(startX, startY, 5);
+                }
 
                 //DEBUG
                 //System.println("i=" + i + " az=" + posPolar.azimuth.format("%.4f") + " alt=" + posPolar.altitude.format("%.4f"));
