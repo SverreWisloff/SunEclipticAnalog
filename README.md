@@ -10,7 +10,7 @@ This simple analog round wathcface shows the sun's path across the sky. Its insp
 
 The user can see where the sun is in the sky. Both direction (azimuth) and height above the horizon. After the sun has set, the direction of the sun is displayed along the watch perimeter.
 
-There are settings for the color of the second hand and whether the date, battery-level or status-icons should be displayed.
+There are settings for the color of the second hand and whether the date, battery-level or status-icons should be displayed. And settings for showing sunset/rise and solar noon as times.
 
 [Sales pitch that chatGPT helped me with](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/STORE.md)
 
@@ -55,6 +55,9 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 ## Realease-log
 
 **Dev**
+- ...
+
+**1.5**
 - compute and draw solar noon as a dot at sun ephemeris, and draw solar noon as text to watchface
 - add settings for drawing sunset/sunrise and solar noon as text to watchface
 
