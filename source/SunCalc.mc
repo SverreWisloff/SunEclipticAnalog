@@ -519,6 +519,10 @@ module SunCalcModule
                 sunCoordLocal.azimuth = azimuth(H, phi, sunCoordSphere.declination)/RAD;
                 sunCoordLocal.altitude = altitude(H, phi, sunCoordSphere.declination)/RAD;
 
+                var solarNoonDesimal = LocaleTimeAsDesimalHour(solarNoon);
+                var azCorr = (solarNoonDesimal-12.0)/12.0*180.0;
+                sunCoordLocal.azimuth = sunCoordLocal.azimuth + azCorr;
+
                 return sunCoordLocal;
             }
             return null;

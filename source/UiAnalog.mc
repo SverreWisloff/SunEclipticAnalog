@@ -223,7 +223,7 @@ class UiAnalog {
         return point;
     }
 
-    public function drawPolygonSkyView(dc as Dc, pointsPolar as Array<SunCalcModule.SunCoord_LocalPosition>) as Void {
+    public function drawPolygonSkyView(dc as Dc, pointsPolar as Array<SunCalcModule.SunCoord_LocalPosition>, font as Graphics.FontType) as Void {
         if (pointsPolar==null || dc==null){
             return;
         }
@@ -241,7 +241,8 @@ class UiAnalog {
                 startY = pointXY[1];
 
                 if (i==0){
-                    dc.fillCircle(startX, startY, 2); //draw solar noon
+                    dc.fillCircle(startX, startY, 3); //draw solar noon
+                    dc.drawText(startX, startY, font, "s", Graphics.TEXT_JUSTIFY_CENTER);
                 } 
                 else {
                     //dc.drawCircle(startX, startY, 5);
