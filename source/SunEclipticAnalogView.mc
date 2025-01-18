@@ -45,6 +45,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     private var _sc;
     private var _sunRiseTime;
     private var _sunSetTime;
+    private var _sunNoonTime;
 
     private var _lastGoodPosition;
 
@@ -213,6 +214,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
 
         _sunRiseTime = _sc.getTimeOfSolarEvent(_sc.SUNRISE) as Double;
         _sunSetTime  = _sc.getTimeOfSolarEvent(_sc.SUNSET) as Double;
+        _sunNoonTime = _sc.solarNoon as Double;
        
         //Draw sun to background
         if (DRAW_SUN_TIMES){
@@ -255,6 +257,12 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
                     coordSunset[0] = coordSunset[0] - 20; //move text to the left
                     }
                 dc.drawText(coordSunset[0], coordSunset[1], _font22, solarSetString, Graphics.TEXT_JUSTIFY_RIGHT);
+                
+                //Sun-noon
+                var solarNoonDesimal  = SunCalcModule.LocaleTimeAsDesimalHour(_sunNoonTime);
+                var solarNoonString  = SunCalcModule.PrintLocaleTime(_sunNoonTime);
+                var coordSunNoon = _ui.calcHour2clockCoord(dc, solarNoonDesimal, 35) as Point2D;
+                dc.drawText(coordSunNoon[0], coordSunNoon[1], _font22, solarNoonString, Graphics.TEXT_JUSTIFY_CENTER);
             }
             else if (_sc.polarPhenomena==1){
                 //Midnight sun
