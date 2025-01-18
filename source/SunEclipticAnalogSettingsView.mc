@@ -52,6 +52,12 @@ class SunEclipticAnalogSettingsDelegate extends WatchUi.BehaviorDelegate {
         var bBatteryLevel = Application.Properties.getValue("BatteryLevel") ? true : false;
         menu.addItem(new WatchUi.ToggleMenuItem("BatteryLevel", null, "BatteryLevel", bBatteryLevel, null));
 
+        var bSolarNoon = Application.Properties.getValue("SolarNoon") ? true : false;
+        menu.addItem(new WatchUi.ToggleMenuItem("SolarNoon", null, "SolarNoon", bSolarNoon, null));
+
+        var bSunSetRise = Application.Properties.getValue("SunSetRise") ? true : false;
+        menu.addItem(new WatchUi.ToggleMenuItem("SunSetRise", null, "SunSetRise", bSunSetRise, null));
+
         var bDebugInfo = Application.Properties.getValue("DebugInfo") ? true : false;
         menu.addItem(new WatchUi.ToggleMenuItem("DebugInfo", null, "DebugInfo", bDebugInfo, null));
 
