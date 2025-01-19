@@ -446,12 +446,18 @@ module SunCalcModule
 
                 var Moment = new Time.Moment(_date);
                 var infoDate = Gregorian.info(Moment, Time.FORMAT_SHORT);
+                var utcInfoDate = Gregorian.utcInfo(Moment, Time.FORMAT_SHORT);
 
+                // Calculate daylight savings offset
+                var localHour = infoDate.hour + (infoDate.min / 60.0);
+                var utcHour = utcInfoDate.hour + (utcInfoDate.min / 60.0);
+                var offset = localHour - utcHour;
+/*
                 // Get daylight savings offset
                 var where = new Position.Location({:latitude  => _lat,  :longitude => _lon, :format    => :degrees });
                 var local = Gregorian.localMoment(where, _date);
                 var offset = local.getDaylightSavingsTimeOffset()/3600.0;
-                
+*/                
                 // Find start time for i=0
                 var hour = 12;
                 var minute = 0;
