@@ -221,7 +221,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             if (_sc.polarPhenomena==0){
                 // polarPhenomena: 0=normal, 1=midnight sun, 2=Polar Night
         
-                dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
+                dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_BLACK);
 
                 //Sunrise
                 var solarRiseDesimal = _sc.LocaleTimeAsDesimalHour(_sunRiseTime);

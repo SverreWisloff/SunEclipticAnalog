@@ -143,11 +143,11 @@ Screen images will be displayed on your app’s detail page in the Connect IQ St
 
 
 ## TODO
-- [ ] Bug: Compensate for solar noon
 - [ ] Add and test more watches (Forerunner? 965, 265, 255, 55, 165, 955, 245, 9xx). Compatible [devices](https://developer.garmin.com/connect-iq/compatible-devices/). Device [Reference](https://developer.garmin.com/connect-iq/reference-guides/devices-reference/). Popular [watches](https://runningwithrock.com/which-are-the-most-popular-garmin-running-watches/)
 - [ ] Test south hemisphere
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
 - [ ] status-iconer  4) minutes 5) body-battery 6) puls 7) altitude 8) barometer 9) skritt. Og her enda ).
+- [x] Bug: Compensate for solar noon
 - [x] Add settings
 - [x] Add and test more watches 
 - [x] drawBattery. Look at this [code](https://github.com/dennybiasiolli/garmin-connect-iq/tree/main/Analog24hour/source) [IQ](https://apps.garmin.com/nb-NO/apps/292387a3-611e-49bd-add4-dee28edc1d57)
