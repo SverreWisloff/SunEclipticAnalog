@@ -103,13 +103,16 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 - [Storage](https://developer.garmin.com/connect-iq/core-topics/properties-and-app-settings/)
     - only make calls that hit the file system as infrequently as possible as those calls are expensive
     - Simulatoren lagrer data her: %Temp%\com.garmin.connectiq\GARMIN\APPS\DATA
-- Build for device:
+- **Build for device**:
     - Ctrl + Shift + P -> Monkey C: Build for Device
     - bin (Choose a directory for the output and click Select Folder)
     - Copy the generated `PRG` files to your device’s `GARMIN/APPS` directory
  - WatchFace [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
- - Fonter. Her er noen prosjekter å la seg inspirere av: [Forerunner745](https://github.com/sennescheepers/Forerunner745Watchface/). [Protomolecule](https://github.com/blotspot/garmin-watchface-protomolecule). [MoveToBeActive](https://github.com/fevieira27/MoveToBeActive). [Crystal-face](https://github.com/warmsound/crystal-face/). 
- - Supporting devices. [Compatible devices](https://developer.garmin.com/connect-iq/compatible-devices/). [Device Reference](https://developer.garmin.com/connect-iq/reference-guides/devices-reference/)
+ - **Fonter.** Her er noen prosjekter å la seg inspirere av: [Forerunner745](https://github.com/sennescheepers/Forerunner745Watchface/). [Protomolecule](https://github.com/blotspot/garmin-watchface-protomolecule). [MoveToBeActive](https://github.com/fevieira27/MoveToBeActive). [Crystal-face](https://github.com/warmsound/crystal-face/). 
+ - **Supporting devices** 
+ Compatible [devices](https://developer.garmin.com/connect-iq/compatible-devices/). 
+ Device [Reference](https://developer.garmin.com/connect-iq/reference-guides/devices-reference/). [Popular](https://runningwithrock.com/which-are-the-most-popular-garmin-running-watches/) watches.
+
  - IF THEN ELSE
     - (batteryLevel > 20) ? "Battery OK" : "Low Battery";
 
@@ -143,7 +146,8 @@ Screen images will be displayed on your app’s detail page in the Connect IQ St
 
 
 ## TODO
-- [ ] Add and test more watches (Forerunner? 965, 265, 255, 55, 165, 955, 245, 9xx). Compatible [devices](https://developer.garmin.com/connect-iq/compatible-devices/). Device [Reference](https://developer.garmin.com/connect-iq/reference-guides/devices-reference/). Popular [watches](https://runningwithrock.com/which-are-the-most-popular-garmin-running-watches/)
+- [ ] Some screenshots to IQ app store
+- [ ] Test and add more watches (Forerunner? 965, 265, 255, 55, 165, 955, 245, 9xx) and evt (MARQ, Descent MK2, vívoactive). 
 - [ ] Test south hemisphere
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
 - [ ] status-iconer  4) minutes 5) body-battery 6) puls 7) altitude 8) barometer 9) skritt. Og her enda ).
