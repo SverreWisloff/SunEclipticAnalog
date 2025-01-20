@@ -146,6 +146,8 @@ Screen images will be displayed on your app’s detail page in the Connect IQ St
 
 
 ## TODO
+- [ ] Fix Fenix 5x
+- [ ] Fix drawing of second hand
 - [ ] Some screenshots to IQ app store
 - [ ] Test and add more watches (Forerunner? 965, 265, 255, 55, 165, 955, 245, 9xx) and evt (MARQ, Descent MK2, vívoactive). 
 - [ ] Test south hemisphere
