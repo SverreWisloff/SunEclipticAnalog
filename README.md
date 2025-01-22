@@ -62,7 +62,7 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 
 
 ## Screenshot
-![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/fenix7pro_bleu_all_info.jpg?raw=true)
+![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241225_hero.jpg?raw=true)
 
 ## Realease-log
 
