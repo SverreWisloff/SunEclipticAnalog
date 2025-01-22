@@ -2,7 +2,7 @@
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 
-## SunEclipticAnalog
+## Sun Ecliptic Analog Watchface
 
 *The goal of this project is to create an analog watchface that displays the sun's path on the sky*
 
@@ -12,7 +12,19 @@ The user can see where the sun is in the sky. Both direction (azimuth) and heigh
 
 There are settings for the color of the second hand and whether the date, battery-level or status-icons should be displayed. And settings for showing sunset/rise and solar noon as times.
 
-[Sales pitch that chatGPT helped me with](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/STORE.md)
+Info:
+- **Sunrise**: The time in the morning when the upper edge of the Sun becomes visible above the horizon, marking the start of daylight hours.
+- **Solar noon**: The moment during the day when the Sun is at its highest point in the sky, directly above the observer's meridian. It typically marks the midpoint between sunrise and sunset.
+- **Sunset**: The time in the evening when the Sun dips below the horizon, marking the end of daylight hours.
+- **Sun ephemeris**: A chart that describes the Sun's position (elevation, azimuth, declination) in the sky at specific times during the day.
+- **Sun position**: Suns current location.
+- **Date**: The current day.
+- **Battery level**: The current charge level of a device's battery.
+- **Phone notifications**: Alerts, messages, app notifications, texts, or reminders received on a mobile device.
+
+[Sales pitch that chatGPT helped me with](https://github.com/SverreWisloff/SunEclipticAnalog/blob/
+main/STORE.md)
+
 
 ## Resources
 
@@ -50,7 +62,7 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 
 
 ## Screenshot
-![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20250105_sim.jpg?raw=true)
+![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/fenix7pro_bleu_all_info.jpg?raw=true)
 
 ## Realease-log
 
@@ -126,7 +138,7 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 
 **Update store**
 1. Update version number: manifest.xml
-2. Update [STORE.md](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/STORE.md)
+~~2. Update [STORE.md](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/STORE.md)~~
 3. Update [README.md](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/README.md)
 4. Update release-log: check [activity](https://github.com/SverreWisloff/SunEclipticAnalog/activity)
 5. Update screenshot (over Image - 500x500)
@@ -148,7 +160,7 @@ Screen images will be displayed on your app’s detail page in the Connect IQ St
 ## TODO
 - [ ] Fix Fenix 5x
 - [ ] Fix drawing of second hand
-- [ ] Some screenshots to IQ app store
+- [ ] Some screenshots to IQ app store (midnight sun, red/blue, icons on/off, night/day)
 - [ ] Test and add more watches (Forerunner? 965, 265, 255, 55, 165, 955, 245, 9xx) and evt (MARQ, Descent MK2, vívoactive). 
 - [ ] Test south hemisphere
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/

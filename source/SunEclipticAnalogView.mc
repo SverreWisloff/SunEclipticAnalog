@@ -449,8 +449,15 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             var secondHand = (clockTime.sec / 60.0) * Math.PI * 2;
 
             if (_screenCenterPoint != null) {
-                dc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, secondHand, _secondHandLength, 20, _secondHandWidth, _secondHandWidth));
+                //dc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, secondHand, _secondHandLength, 20, _secondHandWidth, _secondHandWidth));
                 //System.println("draw second hand");
+
+                _ui.drawPolygon(dc, _ui.calcHandCoordinates(_screenCenterPoint, secondHand, _secondHandLength, 20, _secondHandWidth, _secondHandWidth));
+                //Draw the center of the second hand
+                dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
+                dc.fillCircle(dc.getWidth() / 2, dc.getHeight() / 2, 4);
+
+
             }
         }
 
