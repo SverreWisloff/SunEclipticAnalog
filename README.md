@@ -72,6 +72,7 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 **1.5**
 - compute and draw solar noon as a dot at sun ephemeris, and draw solar noon as text to watchface
 - add settings for drawing sunset/sunrise and solar noon as text to watchface
+- Bug-fix
 
 **1.4**
 - Status-icons for connected phone, alarm and notifications.
@@ -120,13 +121,13 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
     - bin (Choose a directory for the output and click Select Folder)
     - Copy the generated `PRG` files to your device’s `GARMIN/APPS` directory
  - WatchFace [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
- - **Fonter.** Her er noen prosjekter å la seg inspirere av: [Forerunner745](https://github.com/sennescheepers/Forerunner745Watchface/). [Protomolecule](https://github.com/blotspot/garmin-watchface-protomolecule). [MoveToBeActive](https://github.com/fevieira27/MoveToBeActive). [Crystal-face](https://github.com/warmsound/crystal-face/). 
+ - **Fonter.** Her er noen prosjekter å la seg inspirere av: [Forerunner745](https://github.com/sennescheepers/Forerunner745Watchface/). [Protomolecule](https://github.com/blotspot/garmin-watchface-protomolecule). [MoveToBeActive](https://github.com/fevieira27/MoveToBeActive). [Crystal-face](https://github.com/warmsound/crystal-face/). Making fonts: Garmin graphic tool [GGT](https://ggt.teretto.com/)
  - **Supporting devices** 
  Compatible [devices](https://developer.garmin.com/connect-iq/compatible-devices/). 
  Device [Reference](https://developer.garmin.com/connect-iq/reference-guides/devices-reference/). [Popular](https://runningwithrock.com/which-are-the-most-popular-garmin-running-watches/) watches.
-
- - IF THEN ELSE
-    - (batteryLevel > 20) ? "Battery OK" : "Low Battery";
+ - IF THEN ELSE Example: 
+    - _min = value < _min ? value : _min;
+    - proportion = value.toFloat() / ( count > 0 ? count : 1);
 
 
 ### VS Code
@@ -158,11 +159,13 @@ Screen images will be displayed on your app’s detail page in the Connect IQ St
 
 
 ## TODO
+- [ ] IF THEN ELSE
 - [ ] Fix Fenix 5x
 - [ ] Fix drawing of second hand
 - [ ] Some screenshots to IQ app store (midnight sun, red/blue, icons on/off, night/day)
 - [ ] Test and add more watches (Forerunner? 965, 265, 255, 55, 165, 955, 245, 9xx) and evt (MARQ, Descent MK2, vívoactive). 
 - [ ] Test south hemisphere
+- [ ] Tegne sol-efemeride for sommer og vintersolverv
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
 - [ ] status-iconer  4) minutes 5) body-battery 6) puls 7) altitude 8) barometer 9) skritt. Og her enda ).
 - [x] Bug: Compensate for solar noon
