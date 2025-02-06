@@ -25,6 +25,7 @@ Info:
 [Sales pitch that chatGPT helped me with](https://github.com/SverreWisloff/SunEclipticAnalog/blob/
 main/STORE.md)
 
+Download and install on your watch from [Garmin Connect IQ Store](https://apps.garmin.com/apps/d0ded73c-1e8f-4b92-97f8-a3fb0db12d9c)
 
 ## Resources
 
