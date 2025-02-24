@@ -12,7 +12,7 @@ The user can see where the sun is in the sky. Both direction (azimuth) and heigh
 
 There are settings for the color of the second hand and whether the date, battery-level or status-icons should be displayed. And settings for showing sunset/rise and solar noon as times.
 
-Info:
+### Info:
 - **Sunrise**: The time in the morning when the upper edge of the Sun becomes visible above the horizon, marking the start of daylight hours.
 - **Solar noon**: The moment during the day when the Sun is at its highest point in the sky, directly above the observer's meridian. It typically marks the midpoint between sunrise and sunset.
 - **Sunset**: The time in the evening when the Sun dips below the horizon, marking the end of daylight hours.
@@ -22,8 +22,8 @@ Info:
 - **Battery level**: The current charge level of a device's battery.
 - **Phone notifications**: Alerts, messages, app notifications, texts, or reminders received on a mobile device.
 
-[Sales pitch that chatGPT helped me with](https://github.com/SverreWisloff/SunEclipticAnalog/blob/
-main/STORE.md)
+[Sales pitch](https://github.com/SverreWisloff/SunEclipticAnalog/blob/
+main/STORE.md) that chatGPT helped me with.
 
 Download and install on your watch from [Garmin Connect IQ Store](https://apps.garmin.com/apps/d0ded73c-1e8f-4b92-97f8-a3fb0db12d9c)
 
@@ -68,7 +68,7 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 ## Realease-log
 
 **Dev**
-- ...
+- Bug fix
 
 **1.5**
 - compute and draw solar noon as a dot at sun ephemeris, and draw solar noon as text to watchface
@@ -130,7 +130,6 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
     - _min = value < _min ? value : _min;
     - proportion = value.toFloat() / ( count > 0 ? count : 1);
 
-
 ### VS Code
 - VS Code: Stop running: `shift + F5`
 - VS Code: Build + run: `F5`
@@ -158,17 +157,15 @@ The colors in the device icons should be reduced as labeled and should only be 1
 #### Screen Images
 Screen images will be displayed on your app’s detail page in the Connect IQ Store. Image must be a JPG, GIF or PNG less than 150 KB
 
-
 ## TODO
-- [ ] IF THEN ELSE
 - [ ] Fix Fenix 5x
 - [ ] Fix drawing of second hand
-- [ ] Some screenshots to IQ app store (midnight sun, red/blue, icons on/off, night/day)
 - [ ] Test and add more watches (Forerunner? 965, 265, 255, 55, 165, 955, 245, 9xx) and evt (MARQ, Descent MK2, vívoactive). 
 - [ ] Test south hemisphere
 - [ ] Tegne sol-efemeride for sommer og vintersolverv
 - [ ] Read https://developer.garmin.com/connect-iq/core-topics/build-configuration/
 - [ ] status-iconer  4) minutes 5) body-battery 6) puls 7) altitude 8) barometer 9) skritt. Og her enda ).
+- [x] Some screenshots to IQ app store (midnight sun, red/blue, icons on/off, night/day)
 - [x] Bug: Compensate for solar noon
 - [x] Add settings
 - [x] Add and test more watches 
