@@ -115,7 +115,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     //! @param dc Device context
     public function onLayout(dc as Dc) as Void {
 
-        _secondHandLength = dc.getWidth() / 2.0;   // 130
+        _secondHandLength = (dc.getWidth() / 2.0)-1;   // 130
         _minuteHandLength = dc.getWidth() / 2.1;   // 124
         _hourHandLength   = dc.getWidth() / 3.2;   // 81
         _arborWidth       = 13;                 //dc.getWidth() / 18;
@@ -445,13 +445,13 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         } else if (_isAwake) {
             // Otherwise, if we are out of sleep mode, draw the second hand
             // directly in the full update method.
-            dc.setColor(Application.Properties.getValue("ForegroundColor") as Number, Graphics.COLOR_TRANSPARENT);
             var secondHand = (clockTime.sec / 60.0) * Math.PI * 2;
 
             if (_screenCenterPoint != null) {
                 //dc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, secondHand, _secondHandLength, 20, _secondHandWidth, _secondHandWidth));
                 //System.println("draw second hand");
 
+                dc.setColor(Application.Properties.getValue("ForegroundColor") as Number, Graphics.COLOR_TRANSPARENT);
                 _ui.drawPolygon(dc, _ui.calcHandCoordinates(_screenCenterPoint, secondHand, _secondHandLength, 20, _secondHandWidth, _secondHandWidth));
                 //Draw the center of the second hand
                 dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
