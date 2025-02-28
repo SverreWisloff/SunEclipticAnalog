@@ -115,7 +115,7 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
     //! @param dc Device context
     public function onLayout(dc as Dc) as Void {
 
-        _secondHandLength = (dc.getWidth() / 2.0)-1;   // 130
+        _secondHandLength = (dc.getWidth() / 2.0)-2;   // 130
         _minuteHandLength = dc.getWidth() / 2.1;   // 124
         _hourHandLength   = dc.getWidth() / 3.2;   // 81
         _arborWidth       = 13;                 //dc.getWidth() / 18;
@@ -453,7 +453,12 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             if (_screenCenterPoint != null) {
                 //dc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, secondHand, _secondHandLength, 20, _secondHandWidth, _secondHandWidth));
                 //System.println("draw second hand");
+                
+                dc.setPenWidth(4);
+                dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
+                _ui.drawPolygon(dc, _ui.calcHandCoordinates(_screenCenterPoint, secondHand, _secondHandLength, 20, _secondHandWidth, _secondHandWidth));
 
+                dc.setPenWidth(2);
                 dc.setColor(Application.Properties.getValue("ForegroundColor") as Number, Graphics.COLOR_TRANSPARENT);
                 _ui.drawPolygon(dc, _ui.calcHandCoordinates(_screenCenterPoint, secondHand, _secondHandLength, 20, _secondHandWidth, _secondHandWidth));
                 //Draw the center of the second hand
@@ -501,8 +506,14 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             if (Application.Properties.getValue("DrawDate")){
                 secondHandColor = Application.Properties.getValue("ForegroundColor") as Number;//TODO - fix this error
             }
+            dc.setPenWidth(4);
+            dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
+            _ui.drawPolygon(dc, secondHandPoints);
+
+            dc.setPenWidth(2);
             dc.setColor(secondHandColor, secondHandColor);
             _ui.drawPolygon(dc, secondHandPoints);
+
             //Draw the center of the second hand
             dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
             //dc.setPenWidth(1);
