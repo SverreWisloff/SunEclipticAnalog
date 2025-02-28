@@ -396,8 +396,11 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             var minuteHandAngle = (clockTime.min / 60.0) * Math.PI * 2;
             var minuteHandPoints = _ui.calcHandCoordinates(_screenCenterPoint, minuteHandAngle, _minuteHandLength, 0, _arborWidth , _arrowWidth);
             targetDc.setColor(Graphics.COLOR_BLACK,Graphics.COLOR_BLACK);
+            targetDc.setPenWidth(5);
             targetDc.fillPolygon(minuteHandPoints);
+            _ui.drawPolygon(targetDc, minuteHandPoints);
             targetDc.setColor(Graphics.COLOR_WHITE,Graphics.COLOR_WHITE);
+            targetDc.setPenWidth(3);
             _ui.drawPolygon(targetDc, minuteHandPoints);
             targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, minuteHandAngle, 14, 0, _arborWidth, _arborWidth));
             targetDc.fillPolygon(_ui.calcHandCoordinates(_screenCenterPoint, minuteHandAngle, _minuteHandLength, -_minuteHandLength+20, _arrowWidth, _arrowWidth));
