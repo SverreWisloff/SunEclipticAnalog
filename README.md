@@ -69,6 +69,7 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 
 **Dev**
 - Bug fix
+- Add StatusIcons to settings-menu
 
 **1.5**
 - compute and draw solar noon as a dot at sun ephemeris, and draw solar noon as text to watchface
