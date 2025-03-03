@@ -46,6 +46,9 @@ class SunEclipticAnalogSettingsDelegate extends WatchUi.BehaviorDelegate {
         //var number = Storage.getValue(1) ? true : false;
         //menu.addItem(new WatchUi.ToggleMenuItem("ForegroundColor", null, 1, number, null));
 
+        var bStatusIcons = Application.Properties.getValue("StatusIcons") ? true : false;
+        menu.addItem(new WatchUi.ToggleMenuItem("StatusIcons", null, "StatusIcons", bStatusIcons, null));
+
         var bDrawDate = Application.Properties.getValue("DrawDate") ? true : false;
         menu.addItem(new WatchUi.ToggleMenuItem("DrawDate", null, "DrawDate", bDrawDate, null));
 

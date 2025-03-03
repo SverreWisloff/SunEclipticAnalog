@@ -159,8 +159,9 @@ The colors in the device icons should be reduced as labeled and should only be 1
 Screen images will be displayed on your app’s detail page in the Connect IQ Store. Image must be a JPG, GIF or PNG less than 150 KB
 
 ## TODO
+- [ ] Support daylight saving (summertime) 
+- [ ] Remove "s"
 - [ ] Fix Fenix 5x
-- [ ] Fix drawing of second hand
 - [ ] Test and add more watches (Forerunner? 965, 265, 255, 55, 165, 955, 245, 9xx) and evt (MARQ, Descent MK2, vívoactive). 
 - [ ] Test south hemisphere
 - [ ] Tegne sol-efemeride for sommer og vintersolverv
@@ -176,4 +177,5 @@ Screen images will be displayed on your app’s detail page in the Connect IQ St
 - [x] Sjekk ut fontene her: https://github.com/sunpazed/garmin-flags/tree/master/resources/fonts
 - [x] Calculate the size of graphic elements (clock hands) proportional to the clock's size (in pixels)
 - [x] [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
+- [x] Fix drawing of second hand
 
