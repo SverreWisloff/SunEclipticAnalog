@@ -70,7 +70,10 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 **Dev**
 - Bug fix
 - Add StatusIcons to settings-menu
-- contour / shadow around hourhand and minutehand
+- Contour / shadow around hourhand and minutehand
+- Remove "s"
+- draw the battery behind the clock hands
+- Nicer index's
 
 **1.5**
 - compute and draw solar noon as a dot at sun ephemeris, and draw solar noon as text to watchface
@@ -182,4 +185,5 @@ Screen images will be displayed on your app’s detail page in the Connect IQ St
 - [x] contour / shadow around hourhand and minutehand
 - [x] Remove "s"
 - [x] draw the battery behind the clock hands
+- [x] Bug: floating-point precision error. Result - nicer index's
 

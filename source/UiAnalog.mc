@@ -115,6 +115,14 @@ class UiAnalog {
         
     }
 
+    // floating-point precision
+    public function zeroPrecision(value as Double) as Double {
+        if (value < 0.0001 && value > -0.0001) {
+            value = 0.0;
+        }
+        return value;
+    }
+
     // draw Index ala Quatix 5
     //USE:
     //    _ui.drawIndex(  targetDc, 12, 30, 11, Graphics.COLOR_BLACK);  //12 Houre marks
@@ -136,6 +144,9 @@ class UiAnalog {
 
             var deltaSin = (hashWidth/2.0) * Math.sin(i);
             var deltaCos = (hashWidth/2.0) * Math.cos(i);
+
+            deltaSin = zeroPrecision(deltaSin);
+            deltaCos = zeroPrecision(deltaCos);
 
             var aX = sX - deltaSin;
             var aY = sY + deltaCos;
