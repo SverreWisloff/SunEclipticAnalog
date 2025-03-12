@@ -70,6 +70,7 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 **Dev**
 - Bug fix
 - Add StatusIcons to settings-menu
+- contour / shadow around hourhand and minutehand
 
 **1.5**
 - compute and draw solar noon as a dot at sun ephemeris, and draw solar noon as text to watchface
@@ -179,4 +180,6 @@ Screen images will be displayed on your app’s detail page in the Connect IQ St
 - [x] Calculate the size of graphic elements (clock hands) proportional to the clock's size (in pixels)
 - [x] [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
 - [x] Fix drawing of second hand
+- [x] contour / shadow around hourhand and minutehand
+
 
