@@ -243,7 +243,7 @@ class UiAnalog {
 
                 if (i==0){
                     dc.fillCircle(startX, startY, 4); //draw solar noon
-                    dc.drawText(startX, startY+2, font, "S", Graphics.TEXT_JUSTIFY_CENTER);
+                    //dc.drawText(startX, startY+2, font, "S", Graphics.TEXT_JUSTIFY_CENTER);
                 } 
                 else {
                     //dc.drawCircle(startX, startY, 5);
