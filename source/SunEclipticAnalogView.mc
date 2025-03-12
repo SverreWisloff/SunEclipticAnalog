@@ -375,6 +375,11 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
         if (DRAW_INDEX_LABELS){
             _ui.drawIndexLabels(targetDc , _font24);
         }
+
+        // Draw the battery level
+        if (Application.Properties.getValue("BatteryLevel")){
+            _ui.drawBatterylevel(targetDc, width / 2,  16*height / 20, Graphics.COLOR_WHITE);   
+        }
         
         // Use white to draw the hour and minute hands
         targetDc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
@@ -420,14 +425,6 @@ class SunEclipticAnalogView extends WatchUi.WatchFace {
             targetDc.drawCircle(targetDc.getWidth() / 2, targetDc.getHeight() / 2, (_arborWidth/2)+3); 
             targetDc.fillCircle(dc.getWidth() / 2, dc.getHeight() / 2, 4);
             //System.println("draw minute hand");
-        }
-
-        // Draw the arbor in the center of the screen.
-        //_ui.drawArbor(targetDc);
-
-        // Draw the battery level
-        if (Application.Properties.getValue("BatteryLevel")){
-            _ui.drawBatterylevel(targetDc, width / 2,  16*height / 20, Graphics.COLOR_WHITE);   
         }
 
         // If we have an offscreen buffer that we are using for the date string,

@@ -162,7 +162,6 @@ Screen images will be displayed on your app’s detail page in the Connect IQ St
 
 ## TODO
 - [ ] Support daylight saving (summertime) 
-- [ ] Remove "s"
 - [ ] Fix Fenix 5x
 - [ ] Test and add more watches (Forerunner? 965, 265, 255, 55, 165, 955, 245, 9xx) and evt (MARQ, Descent MK2, vívoactive). 
 - [ ] Test south hemisphere
@@ -181,5 +180,6 @@ Screen images will be displayed on your app’s detail page in the Connect IQ St
 - [x] [Power optimizing](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html)
 - [x] Fix drawing of second hand
 - [x] contour / shadow around hourhand and minutehand
-
+- [x] Remove "s"
+- [x] draw the battery behind the clock hands
 
