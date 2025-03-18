@@ -323,6 +323,7 @@ class UiAnalog {
             primaryColor=Graphics.COLOR_YELLOW;
         }
 
+        dc.setPenWidth(1);
         dc.setColor(primaryColor, Graphics.COLOR_TRANSPARENT);
         dc.drawRectangle(batt_x, batt_y, batt_width_rect, batt_height_rect);
         dc.setColor(background_color, Graphics.COLOR_TRANSPARENT);
