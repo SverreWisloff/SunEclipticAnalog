@@ -1,8 +1,8 @@
-# README.md
+# Sun Ecliptic Analog Watchface
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 
-## Sun Ecliptic Analog Watchface
+## Purpose
 
 *The goal of this project is to create an analog watchface that displays the sun's path on the sky*
 
@@ -12,7 +12,10 @@ The user can see where the sun is in the sky. Both direction (azimuth) and heigh
 
 There are settings for the color of the second hand and whether the date, battery-level or status-icons should be displayed. And settings for showing sunset/rise and solar noon as times.
 
-### Info:
+## Usage
+Screenshot
+![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241225_hero.jpg?raw=true)
+
 - **Sunrise**: The time in the morning when the upper edge of the Sun becomes visible above the horizon, marking the start of daylight hours.
 - **Solar noon**: The moment during the day when the Sun is at its highest point in the sky, directly above the observer's meridian. It typically marks the midpoint between sunrise and sunset.
 - **Sunset**: The time in the evening when the Sun dips below the horizon, marking the end of daylight hours.
@@ -22,48 +25,21 @@ There are settings for the color of the second hand and whether the date, batter
 - **Battery level**: The current charge level of a device's battery.
 - **Phone notifications**: Alerts, messages, app notifications, texts, or reminders received on a mobile device.
 
-[Sales pitch](https://github.com/SverreWisloff/SunEclipticAnalog/blob/
-main/STORE.md) that chatGPT helped me with.
+[Sales pitch](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/STORE.md) that chatGPT helped me with.
 
-Download and install on your watch from [Garmin Connect IQ Store](https://apps.garmin.com/apps/d0ded73c-1e8f-4b92-97f8-a3fb0db12d9c)
+## Installation
 
-## Resources
+The app can be installed by the Garmin Connect Store. [Download](https://apps.garmin.com/apps/d0ded73c-1e8f-4b92-97f8-a3fb0db12d9c)
 
-A huge collection of Garmin applications: https://github.com/bombsimon/awesome-garmin
+## Supported Devices
+enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fenix6spro, fenix6xpro, fenix7, fenix7pro, fr965, fr955, fr945, fr945lte, fr265, fr265s
 
-## Example code for sun calculations
-It seems that it is "leaflet" Agafonkin who is behind the suncalc code that is used almost everywhere to calculate sunrise, sunset, and the sun's path in the sky. These are some projects I've been looking at:
-
-| Navn  | språk | link   |
-|-------|-------|--------|
-| SunCalc - @mourner | `js` | [Github](https://github.com/mourner/suncalc) |
-| SunCalc - haraldh | `monkeyC` | [Github](https://github.com/haraldh/SunCalc) [mc](https://github.com/haraldh/SunCalc/blob/master/source/SunCalc.mc)|
-| Sundance - cizi (rotated fonts)| `monkeyC` | [Github](https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc) |
-|Late (nice fonts)|`monkeyC`|[Github](https://github.com/myneur/late/) [mc](https://github.com/myneur/late/blob/master/source/sunrisetCompute.mc)|
-|runst-sun | `rust` |[Github](https://github.imc.re/flosse/rust-sun) [rust](https://github.imc.re/flosse/rust-sun/blob/master/src/lib.rs)|
-|Python port of suncalc.js | `Pyton` | [link](https://pypi.org/project/suncalc/) |
-|R|`R`|[link](https://cran.r-project.org/web/packages/suncalc/index.html) [Github](https://github.com/datastorm-open/suncalc)
-|klausbrunner/solarpositioning|`java`|[Github](https://github.com/klausbrunner/solarpositioning) [java](https://github.com/KlausBrunner/solarpositioning/blob/master/src/main/java/net/e175/klaus/solarpositioning/Grena3.java)
-|Grena/ENEA #3 algorithm| `Go` |[Github](https://github.com/klausbrunner/gosolarpos) [go](https://github.com/klausbrunner/gosolarpos/blob/master/grena3.go)
-|SolarPosition - Arduino Library|`C`|[Github](https://github.com/KenWillmott/SolarPosition) [C](https://github.com/KenWillmott/SolarPosition/blob/master/SolarPosition.cpp)
-|Sunrise equation|`Python` `pseudo`|[Wiki](https://en.wikipedia.org/wiki/Sunrise_equation)
-|PostgreSQL|`sql`|[Github](https://github.com/olithissen/suncalc_postgres)|
-
-Another nice website for sunset/sunrise calculations: [stjärnhimlen](https://www.stjarnhimlen.se/comp/riset.html)
-
-### **Acknowledgments**
+## **Acknowledgments**
 This project uses code from suncalc by Vladimir Agafonkin.
 Repository: https://github.com/mourner/suncalc 
 License: BSD 2-Clause "Simplified" License
 
 [Sundance](https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc): Both a  mc-fork, and rotated fonts for 24-hours at the perimeter  
-
-# Supported Devices
-enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fenix6spro, fenix6xpro, fenix7, fenix7pro, fr965, fr955, fr945, fr945lte, fr265, fr265s
-
-
-## Screenshot
-![screehot](https://github.com/SverreWisloff/SunEclipticAnalog/blob/main/screenshot/screenshot_20241225_hero.jpg?raw=true)
 
 ## Realease-log
 
@@ -107,9 +83,33 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
 **1.0**
 - First version
 
-## Notes to self while coding
+# Notes to self while coding
 
-### Monkey C
+## Resources
+
+A huge collection of Garmin applications: https://github.com/bombsimon/awesome-garmin
+
+## Example code for sun calculations
+It seems that it is "leaflet" Agafonkin who is behind the suncalc code that is used almost everywhere to calculate sunrise, sunset, and the sun's path in the sky. These are some projects I've been looking at:
+
+| Navn  | språk | link   |
+|-------|-------|--------|
+| SunCalc - @mourner | `js` | [Github](https://github.com/mourner/suncalc) |
+| SunCalc - haraldh | `monkeyC` | [Github](https://github.com/haraldh/SunCalc) [mc](https://github.com/haraldh/SunCalc/blob/master/source/SunCalc.mc)|
+| Sundance - cizi (rotated fonts)| `monkeyC` | [Github](https://github.com/cizi/Sundance/blob/master/source/SunCalc.mc) |
+|Late (nice fonts)|`monkeyC`|[Github](https://github.com/myneur/late/) [mc](https://github.com/myneur/late/blob/master/source/sunrisetCompute.mc)|
+|runst-sun | `rust` |[Github](https://github.imc.re/flosse/rust-sun) [rust](https://github.imc.re/flosse/rust-sun/blob/master/src/lib.rs)|
+|Python port of suncalc.js | `Pyton` | [link](https://pypi.org/project/suncalc/) |
+|R|`R`|[link](https://cran.r-project.org/web/packages/suncalc/index.html) [Github](https://github.com/datastorm-open/suncalc)
+|klausbrunner/solarpositioning|`java`|[Github](https://github.com/klausbrunner/solarpositioning) [java](https://github.com/KlausBrunner/solarpositioning/blob/master/src/main/java/net/e175/klaus/solarpositioning/Grena3.java)
+|Grena/ENEA #3 algorithm| `Go` |[Github](https://github.com/klausbrunner/gosolarpos) [go](https://github.com/klausbrunner/gosolarpos/blob/master/grena3.go)
+|SolarPosition - Arduino Library|`C`|[Github](https://github.com/KenWillmott/SolarPosition) [C](https://github.com/KenWillmott/SolarPosition/blob/master/SolarPosition.cpp)
+|Sunrise equation|`Python` `pseudo`|[Wiki](https://en.wikipedia.org/wiki/Sunrise_equation)
+|PostgreSQL|`sql`|[Github](https://github.com/olithissen/suncalc_postgres)|
+
+Another nice website for sunset/sunrise calculations: [stjärnhimlen](https://www.stjarnhimlen.se/comp/riset.html)
+
+## Monkey C
 - Forskjell på `import` / `using`: [Svar](https://developer.garmin.com/connect-iq/monkey-c/monkey-types/)
     - `import` and `using` bring a module into your scoping level
     - `import` it will bring the module suffix and all classes in the module into the type namespace. This allows classes in a module to be accessed without the modul suffix, making for easier typing. Function invocations still require the module suffix pto be accessed.
@@ -139,12 +139,12 @@ enduro, fenix5, fenix5plus, fenix5x, fenix5xplus, fenix6, fenix6pro, fenix6s, fe
     - _min = value < _min ? value : _min;
     - proportion = value.toFloat() / ( count > 0 ? count : 1);
 
-### VS Code
+## VS Code
 - VS Code: Stop running: `shift + F5`
 - VS Code: Build + run: `F5`
 - VS Code: Ctrl + Shift + P: `Monkey C`
 
-### Store
+## Store check-list
 
 **Update store**
 1. Update version number: manifest.xml
@@ -187,6 +187,6 @@ Screen images will be displayed on your app’s detail page in the Connect IQ St
 - [x] Fix drawing of second hand
 - [x] contour / shadow around hourhand and minutehand
 - [x] Remove "s"
-- [x] draw the battery behind the clock hands
+- [x] draw the battery behind the clock hands 
 - [x] Bug: floating-point precision error. Result - nicer index's
 
