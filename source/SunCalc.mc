@@ -545,12 +545,12 @@ module SunCalcModule
 
         private function hourAngle_PP(h, phi, d) {
             var cosLHA = ((Math.sin(h) - Math.sin(phi) * Math.sin(d)))/(Math.cos(phi) * Math.cos(d));
-            if (cosLHA<-1.0000001){
+            if (cosLHA<-0.999999990){
                 System.println("midnight sun");
                 // midnight sun: Sun is always above our altitude limit
                 polarPhenomena = 1; //midnight sun
             }
-            else if (cosLHA>1.0000001){
+            else if (cosLHA>0.999999990){
                 System.println("polar niht");
                 // polar niht: Sun is always below our altitude limit
                 polarPhenomena = 2; //polar niht
