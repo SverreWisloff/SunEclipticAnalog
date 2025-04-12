@@ -387,7 +387,7 @@ module SunCalcModule
 
 //            System.println("calcSolarEvents:" + "M=" + M + "L=" + L + "dec=" + dec + "Jnoon=" + Jnoon);
 
-            for (var i=0; i<6; i+=1){
+            for (var i=0; i<solarEvents.size(); i+=1){
                 var angle_deg = solarEvents[i][0] as Double;
 
                 var h0 = (angle_deg + dh) * RAD;
@@ -441,6 +441,9 @@ module SunCalcModule
         // mode = 1: sun position relative to solar time ([0] = solar noon)
         public function getSunTrajectoryForDay(mode) as Array<SunCoord_LocalPosition> or Null{
             if (_knownPosition && _knownDate) {
+                if (_date == null || _lat == null || _lon == null) {
+                    return null;
+                }
                 var sunCoordLocal = new SunCoord_LocalPosition();
                 var result = new Array<SunCoord_LocalPosition>[24];
 
