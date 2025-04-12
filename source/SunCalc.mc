@@ -398,7 +398,7 @@ module SunCalcModule
                 solarEvents[i][2] = fromJulian(Jrise);
 
                 //DEBUG
-                System.println("calcSolarEvents:" + "i=" + i + " angle_deg=" + solarEvents[i][0] + " SetName=" + solarEvents[i][1] + " Settime=" + solarEvents[i][2] + " SetTime=" + PrintLocaleTime(solarEvents[i][2])+ " RiseName=" + solarEvents[i][3] + " Risetime=" + solarEvents[i][4] + " RiseTime=" + PrintLocaleTime(solarEvents[i][4]) );
+                //System.println("calcSolarEvents:" + "i=" + i + " angle_deg=" + solarEvents[i][0] + " SetName=" + solarEvents[i][1] + " Settime=" + solarEvents[i][2] + " SetTime=" + PrintLocaleTime(solarEvents[i][2])+ " RiseName=" + solarEvents[i][3] + " Risetime=" + solarEvents[i][4] + " RiseTime=" + PrintLocaleTime(solarEvents[i][4]) );
 
             }
             _solarEventsCalculated = true;
@@ -455,6 +455,11 @@ module SunCalcModule
                 var localHour = infoDate.hour + (infoDate.min / 60.0);
                 var utcHour = utcInfoDate.hour + (utcInfoDate.min / 60.0);
                 var offset = localHour - utcHour;
+                if (offset < -12.0) {
+                    offset += 24.0;
+                } else if (offset > 12.0) {
+                    offset -= 24.0;
+                }
 /*
                 // Get daylight savings offset
                 var where = new Position.Location({:latitude  => _lat,  :longitude => _lon, :format    => :degrees });
@@ -488,7 +493,7 @@ module SunCalcModule
                         :minute => minute
                     };
 
-                    var time_i = Gregorian.moment(options);
+                    var time_i = Gregorian.moment(options);//TODO Crashes at 23:59:59
                     sunCoordLocal = getPosition(time_i.value(), _lat, _lon);
                     var az = sunCoordLocal.azimuth ;
                     var alt = sunCoordLocal.altitude ;  
