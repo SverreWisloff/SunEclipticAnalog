@@ -46,6 +46,9 @@ License: BSD 2-Clause "Simplified" License
 **Dev**
 - Bug fix
 
+**1.6.2**
+- fix midnight crash for fenix 6 pro
+
 **1.6**
 - Bug fix
 - Add StatusIcons to settings-menu
